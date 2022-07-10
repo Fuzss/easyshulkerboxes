@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v4.0.2-1.19] - 2022-07-10
+### Changed
+- Added a check for the mod to only work on shulker boxes with a stack size of one to prevent item duplication with some mods that allow for empty shulker box items to stack (such as the Carpet mod)
+
 ## [v4.0.1-1.19] - 2022-07-09
 ### Changed
 - Slightly reduced mod loader specific code by moving some parts to Puzzles Lib 

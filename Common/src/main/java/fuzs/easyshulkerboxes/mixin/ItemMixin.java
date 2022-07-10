@@ -27,7 +27,8 @@ public abstract class ItemMixin {
 
     @Inject(method = "overrideStackedOnOther", at = @At("HEAD"), cancellable = true)
     public void overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction clickAction, Player player, CallbackInfoReturnable<Boolean> callbackInfo) {
-        if (Block.byItem(stack.getItem()) instanceof ShulkerBoxBlock) {
+        // some mods make empty shulker boxes stackable, disable this mod then as it would allow for item duplication otherwise
+        if (Block.byItem(stack.getItem()) instanceof ShulkerBoxBlock && stack.getCount() == 1) {
             boolean success = ContainerItemHelper.overrideStackedOnOther(stack, BlockEntityType.SHULKER_BOX, 3, slot, clickAction, player, s -> s.getItem().canFitInsideContainerItems(), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
             callbackInfo.setReturnValue(success);
         }
@@ -35,7 +36,8 @@ public abstract class ItemMixin {
 
     @Inject(method = "overrideOtherStackedOnMe", at = @At("HEAD"), cancellable = true)
     public void overrideOtherStackedOnMe(ItemStack stack, ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, CallbackInfoReturnable<Boolean> callbackInfo) {
-        if (Block.byItem(stack.getItem()) instanceof ShulkerBoxBlock) {
+        // some mods make empty shulker boxes stackable, disable this mod then as it would allow for item duplication otherwise
+        if (Block.byItem(stack.getItem()) instanceof ShulkerBoxBlock && stack.getCount() == 1) {
             boolean success = ContainerItemHelper.overrideOtherStackedOnMe(stack, BlockEntityType.SHULKER_BOX, 3, stackOnMe, slot, clickAction, player, slotAccess, s -> s.getItem().canFitInsideContainerItems(), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
             callbackInfo.setReturnValue(success);
         }
@@ -43,7 +45,8 @@ public abstract class ItemMixin {
 
     @Inject(method = "getTooltipImage", at = @At("HEAD"), cancellable = true)
     public void getTooltipImage(ItemStack stack, CallbackInfoReturnable<Optional<TooltipComponent>> callbackInfo) {
-        if (Block.byItem(stack.getItem()) instanceof ShulkerBoxBlock) {
+        // some mods make empty shulker boxes stackable, disable this mod then as it would allow for item duplication otherwise
+        if (Block.byItem(stack.getItem()) instanceof ShulkerBoxBlock && stack.getCount() == 1) {
             DyeColor color = ShulkerBoxBlock.getColorFromItem(stack.getItem());
             Optional<TooltipComponent> component = ContainerItemHelper.getTooltipImage(stack, BlockEntityType.SHULKER_BOX, 3, color);
             callbackInfo.setReturnValue(component);
