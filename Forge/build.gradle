@@ -111,10 +111,10 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // Quality of Life Mods
-//    runtimeOnly fg.deobf("curse.maven:catalogue-459701:3822882")
-//    runtimeOnly fg.deobf("curse.maven:bettermodsbutton-541584:3516115")
+    runtimeOnly fg.deobf("curse.maven:catalogue-459701:3873264")
+    runtimeOnly fg.deobf("fuzs.bettermodsbutton:bettermodsbutton-forge:4.0.1")
 //    runtimeOnly fg.deobf("curse.maven:configmenusforge-544048:3822820")
-//    runtimeOnly fg.deobf("curse.maven:configured-457570:3822820")
+    runtimeOnly fg.deobf("curse.maven:configured-457570:3872190")
 
     // Puzzles Lib
     implementation fg.deobf("fuzs.puzzleslib:puzzleslib-forge:${puzzlesVersion}")
@@ -213,7 +213,8 @@ publishing {
             // from https://stackoverflow.com/a/50121790
             pom.withXml {
                 asNode().dependencies.dependency.each { dep ->
-                    if (["catalogue", "bettermodsbutton", "configmenusforge", "configured"].stream().anyMatch(mod -> dep.artifactId.last().value().last().contains(mod))) {
+                    // we need to exclude Forge itself, which could be problematic for any mod containing 'forge' in its name, but shouldn't really affect many though
+                    if (["catalogue", "bettermodsbutton", "configmenusforge", "configured", "forge"].stream().anyMatch(mod -> dep.artifactId.last().value().last().contains(mod))) {
                         assert dep.parent().remove(dep)
                     }
                 }
@@ -249,7 +250,7 @@ publishing {
     repositories {
         maven {
             name = 'FuzsModResources'
-            url "file://${project.modResources}/maven"
+            url "file://" + project.hasProperty('modResources') ? "${project.findProperty('modResources')}/maven" : System.getenv('local_maven')
         }
     }
 }
@@ -272,7 +273,7 @@ signJar.mustRunAfter 'reobfJar'
 
 curseforge {
     if (!file('../CHANGELOG.md').canRead()) { throw new FileNotFoundException("Could not read changelog file") }
-    apiKey = project.findProperty('curseApiToken')
+    apiKey = project.hasProperty('curseApiToken') ? project.findProperty('curseApiToken') : ''
     project {
         id = projectCurseId
         changelogType = 'markdown'
@@ -299,10 +300,10 @@ curseforge {
 
 modrinth {
     if (!file('../CHANGELOG.md').canRead()) { throw new FileNotFoundException("Could not read changelog file") }
-    token = project.findProperty('modrinthApiToken')
+    token = project.hasProperty('modrinthApiToken') ? project.findProperty('modrinthApiToken') : ''
     projectId = projectModrinthId
     versionNumber = project.version
-    versionName = "${rootProject.name}-v${modVersion}"
+    versionName = "[FORGE] [${minecraftVersion}] ${rootProject.name}-v${modVersion}"
     changelog = file('../CHANGELOG.md').text
     versionType = projectReleaseType
     uploadFile = jar // This is the java jar task

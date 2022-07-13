@@ -25,8 +25,26 @@ dependencies {
 
 loom {
     mixin {
+        // not sure if this is necessary for common...
+        defaultRefmapName = "${modId}.refmap.json"
         // fix for java.lang.NoClassDefFoundError: org/objectweb/asm/tree/MethodNode
         useLegacyMixinAp = false
+    }
+
+    // this should hopeful prevent an empty run directory being generated in common during initial project setup
+    runs {
+        client {
+            client()
+            setConfigName("Common Client")
+            ideConfigGenerated(false)
+            runDir("../run")
+        }
+        server {
+            server()
+            setConfigName("Common Server")
+            ideConfigGenerated(false)
+            runDir("../run")
+        }
     }
 }
 
@@ -104,7 +122,7 @@ publishing {
     repositories {
         maven {
             name = 'FuzsModResources'
-            url "file://${project.modResources}/maven"
+            url "file://" + project.hasProperty('modResources') ? "${project.findProperty('modResources')}/maven" : System.getenv('local_maven')
         }
     }
 }

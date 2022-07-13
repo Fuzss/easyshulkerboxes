@@ -3,10 +3,10 @@ package fuzs.easyshulkerboxes;
 import fuzs.easyshulkerboxes.data.ModLanguageProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 @Mod(EasyShulkerBoxes.MOD_ID)
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)

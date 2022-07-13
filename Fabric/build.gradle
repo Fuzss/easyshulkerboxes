@@ -192,7 +192,7 @@ publishing {
     repositories {
         maven {
             name = 'FuzsModResources'
-            url "file://${project.modResources}/maven"
+            url "file://" + project.hasProperty('modResources') ? "${project.findProperty('modResources')}/maven" : System.getenv('local_maven')
         }
     }
 }
@@ -203,7 +203,7 @@ signing {
 
 curseforge {
     if (!file('../CHANGELOG.md').canRead()) { throw new FileNotFoundException("Could not read changelog file") }
-    apiKey = project.findProperty('curseApiToken')
+    apiKey = project.hasProperty('curseApiToken') ? project.findProperty('curseApiToken') : ''
     project {
         id = projectCurseId
         changelogType = 'markdown'
@@ -232,10 +232,10 @@ curseforge {
 
 modrinth {
     if (!file('../CHANGELOG.md').canRead()) { throw new FileNotFoundException("Could not read changelog file") }
-    token = project.findProperty('modrinthApiToken')
+    token = project.hasProperty('modrinthApiToken') ? project.findProperty('modrinthApiToken') : ''
     projectId = projectModrinthId
     versionNumber = project.version
-    versionName = "${rootProject.name}-v${modVersion}"
+    versionName = "[FABRIC] [${minecraftVersion}] ${rootProject.name}-v${modVersion}"
     changelog = file('../CHANGELOG.md').text
     versionType = projectReleaseType
     uploadFile = remapJar // This is the java jar task
