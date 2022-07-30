@@ -1,6 +1,7 @@
 package fuzs.easyshulkerboxes;
 
 import fuzs.easyshulkerboxes.data.ModLanguageProvider;
+import fuzs.puzzleslib.core.CoreServices;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -14,7 +15,7 @@ public class EasyShulkerBoxesForge {
 
     @SubscribeEvent
     public static void onConstructMod(final FMLConstructModEvent evt) {
-        EasyShulkerBoxes.onConstructMod();
+        CoreServices.FACTORIES.modConstructor(EasyShulkerBoxes.MOD_ID).accept(new EasyShulkerBoxes());
     }
 
     @SubscribeEvent

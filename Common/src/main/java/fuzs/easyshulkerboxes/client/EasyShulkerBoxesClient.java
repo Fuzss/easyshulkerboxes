@@ -2,11 +2,12 @@ package fuzs.easyshulkerboxes.client;
 
 import fuzs.easyshulkerboxes.client.gui.screens.inventory.tooltip.ClientContainerItemTooltip;
 import fuzs.easyshulkerboxes.world.inventory.tooltip.ContainerItemTooltip;
-import fuzs.puzzleslib.client.core.ClientCoreServices;
+import fuzs.puzzleslib.client.core.ClientModConstructor;
 
-public class EasyShulkerBoxesClient {
+public class EasyShulkerBoxesClient implements ClientModConstructor {
 
-    public static void onConstructMod() {
-        ClientCoreServices.CLIENT_REGISTRATION.registerClientTooltipComponent(ContainerItemTooltip.class, ClientContainerItemTooltip::new);
+    @Override
+    public void onRegisterClientTooltipComponents(ClientTooltipComponentsContext context) {
+        context.registerClientTooltipComponent(ContainerItemTooltip.class, ClientContainerItemTooltip::new);
     }
 }

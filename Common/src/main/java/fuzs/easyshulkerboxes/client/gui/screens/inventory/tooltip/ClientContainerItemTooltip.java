@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
+import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.world.inventory.tooltip.ContainerItemTooltip;
 import fuzs.puzzleslib.proxy.Proxy;
 import net.minecraft.ChatFormatting;
@@ -78,11 +79,11 @@ public class ClientContainerItemTooltip implements ClientTooltipComponent {
    }
 
    private boolean hideInventoryContents() {
-      return EasyShulkerBoxes.CONFIG.client().contentsRequireShift && !Proxy.INSTANCE.hasShiftDown();
+      return EasyShulkerBoxes.CONFIG.get(ClientConfig.class).contentsRequireShift && !Proxy.INSTANCE.hasShiftDown();
    }
 
    private int getLastFilledSlot() {
-      if (EasyShulkerBoxes.CONFIG.client().slotOverlay) {
+      if (EasyShulkerBoxes.CONFIG.get(ClientConfig.class).slotOverlay) {
          for (int i = this.items.size() - 1; i >= 0; i--) {
             if (!this.items.get(i).isEmpty()) {
                return i;
@@ -132,7 +133,7 @@ public class ClientContainerItemTooltip implements ClientTooltipComponent {
    }
 
    private float[] getBackgroundColor() {
-      if (!EasyShulkerBoxes.CONFIG.client().colorfulTooltips || this.backgroundColor == null) {
+      if (!EasyShulkerBoxes.CONFIG.get(ClientConfig.class).colorfulTooltips || this.backgroundColor == null) {
          return new float[]{1.0F, 1.0F, 1.0F};
       } else if (this.backgroundColor == DyeColor.WHITE) {
          return new float[]{0.9019608F, 0.9019608F, 0.9019608F};

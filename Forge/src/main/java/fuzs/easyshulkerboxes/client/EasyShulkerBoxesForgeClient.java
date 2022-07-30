@@ -1,6 +1,7 @@
 package fuzs.easyshulkerboxes.client;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
+import fuzs.puzzleslib.client.core.ClientCoreServices;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -11,6 +12,6 @@ public class EasyShulkerBoxesForgeClient {
 
     @SubscribeEvent
     public static void onConstructMod(final FMLConstructModEvent evt) {
-        EasyShulkerBoxesClient.onConstructMod();
+        ClientCoreServices.FACTORIES.clientModConstructor(EasyShulkerBoxes.MOD_ID).accept(new EasyShulkerBoxesClient());
     }
 }
