@@ -35,10 +35,11 @@ public abstract class ItemMixin {
     @Inject(method = "overrideStackedOnOther", at = @At("HEAD"), cancellable = true)
     public void overrideStackedOnOther$inject$head(ItemStack stack, Slot slot, ClickAction clickAction, Player player, CallbackInfoReturnable<Boolean> callbackInfo) {
         // some mods make empty shulker boxes stackable, disable this mod then as it would allow for item duplication otherwise
-        if (EasyShulkerBoxes.CONFIG.get(ServerConfig.class).allowShulkerBox && Block.byItem(stack.getItem()) instanceof ShulkerBoxBlock && stack.getCount() != 1) {
+        if (stack.getCount() != 1) return;
+        if (EasyShulkerBoxes.CONFIG.get(ServerConfig.class).allowShulkerBox && Block.byItem(stack.getItem()) instanceof ShulkerBoxBlock) {
             boolean success = ContainerItemHelper.overrideStackedOnOther(stack, BlockEntityType.SHULKER_BOX, 3, slot, clickAction, player, s -> s.getItem().canFitInsideContainerItems(), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
             callbackInfo.setReturnValue(success);
-        } else if (EasyShulkerBoxes.CONFIG.get(ServerConfig.class).allowEnderChest && Block.byItem(stack.getItem()) instanceof EnderChestBlock && (stack.getCount() != 1 || EasyShulkerBoxes.CONFIG.get(ServerConfig.class).singleItemEnderChest)) {
+        } else if (EasyShulkerBoxes.CONFIG.get(ServerConfig.class).allowEnderChest && Block.byItem(stack.getItem()) instanceof EnderChestBlock) {
             boolean success = ContainerItemHelper.overrideStackedOnOther(player::getEnderChestInventory, slot, clickAction, player, s -> true, SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
             // will only actually broadcast when in creative menu as that menu needs manual syncing
             if (success && player.level.isClientSide) ModRegistry.ENDER_CHEST_MENU_CAPABILITY.maybeGet(player).map(EnderChestMenuCapability::getEnderChestMenu).ifPresent(AbstractContainerMenu::broadcastChanges);
@@ -49,10 +50,11 @@ public abstract class ItemMixin {
     @Inject(method = "overrideOtherStackedOnMe", at = @At("HEAD"), cancellable = true)
     public void overrideOtherStackedOnMe$inject$head(ItemStack stack, ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, CallbackInfoReturnable<Boolean> callbackInfo) {
         // some mods make empty shulker boxes stackable, disable this mod then as it would allow for item duplication otherwise
-        if (EasyShulkerBoxes.CONFIG.get(ServerConfig.class).allowShulkerBox && Block.byItem(stack.getItem()) instanceof ShulkerBoxBlock && stack.getCount() != 1) {
+        if (stack.getCount() != 1) return;
+        if (EasyShulkerBoxes.CONFIG.get(ServerConfig.class).allowShulkerBox && Block.byItem(stack.getItem()) instanceof ShulkerBoxBlock) {
             boolean success = ContainerItemHelper.overrideOtherStackedOnMe(stack, BlockEntityType.SHULKER_BOX, 3, stackOnMe, slot, clickAction, player, slotAccess, s -> s.getItem().canFitInsideContainerItems(), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
             callbackInfo.setReturnValue(success);
-        } else if (EasyShulkerBoxes.CONFIG.get(ServerConfig.class).allowEnderChest && Block.byItem(stack.getItem()) instanceof EnderChestBlock && (stack.getCount() != 1 || EasyShulkerBoxes.CONFIG.get(ServerConfig.class).singleItemEnderChest)) {
+        } else if (EasyShulkerBoxes.CONFIG.get(ServerConfig.class).allowEnderChest && Block.byItem(stack.getItem()) instanceof EnderChestBlock) {
             boolean success = ContainerItemHelper.overrideOtherStackedOnMe(player::getEnderChestInventory, stackOnMe, slot, clickAction, player, slotAccess, s -> true, SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
             // will only actually broadcast when in creative menu as that menu needs manual syncing
             if (success && player.level.isClientSide) ModRegistry.ENDER_CHEST_MENU_CAPABILITY.maybeGet(player).map(EnderChestMenuCapability::getEnderChestMenu).ifPresent(AbstractContainerMenu::broadcastChanges);
@@ -63,11 +65,12 @@ public abstract class ItemMixin {
     @Inject(method = "getTooltipImage", at = @At("HEAD"), cancellable = true)
     public void getTooltipImage$inject$head(ItemStack stack, CallbackInfoReturnable<Optional<TooltipComponent>> callbackInfo) {
         // some mods make empty shulker boxes stackable, disable this mod then as it would allow for item duplication otherwise
-        if (EasyShulkerBoxes.CONFIG.get(ServerConfig.class).allowShulkerBox && Block.byItem(stack.getItem()) instanceof ShulkerBoxBlock && stack.getCount() != 1) {
+        if (stack.getCount() != 1) return;
+        if (EasyShulkerBoxes.CONFIG.get(ServerConfig.class).allowShulkerBox && Block.byItem(stack.getItem()) instanceof ShulkerBoxBlock) {
             DyeColor color = ShulkerBoxBlock.getColorFromItem(stack.getItem());
             Optional<TooltipComponent> component = ContainerItemHelper.getTooltipImage(stack, BlockEntityType.SHULKER_BOX, 3, color);
             callbackInfo.setReturnValue(component);
-        } else if (EasyShulkerBoxes.CONFIG.get(ServerConfig.class).allowEnderChest && Block.byItem(stack.getItem()) instanceof EnderChestBlock && (stack.getCount() != 1 || EasyShulkerBoxes.CONFIG.get(ServerConfig.class).singleItemEnderChest)) {
+        } else if (EasyShulkerBoxes.CONFIG.get(ServerConfig.class).allowEnderChest && Block.byItem(stack.getItem()) instanceof EnderChestBlock) {
             Optional<TooltipComponent> component = ContainerItemHelper.getTooltipImage(Proxy.INSTANCE.getClientPlayer().getEnderChestInventory(), 3, null);
             callbackInfo.setReturnValue(component);
         }
