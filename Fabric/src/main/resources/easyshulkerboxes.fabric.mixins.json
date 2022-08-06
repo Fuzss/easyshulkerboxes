@@ -6,11 +6,8 @@
   "refmap": "easyshulkerboxes.refmap.json",
   "mixins": [
     "LivingEntityMixin",
-    "PersistentEntitySectionManagerMixin",
-    "ServerLevelMixin"
   ],
   "client": [
-    "client.ClientLevelMixin"
   ],
   "injectors": {
     "defaultRequire": 1

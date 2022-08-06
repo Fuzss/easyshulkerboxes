@@ -9,9 +9,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public class S2CEnderChestSetSlotMessage implements Message<S2CEnderChestSetSlotMessage> {
-    private int stateId;
-    private int slot;
-    private ItemStack itemStack;
+    public int stateId;
+    public int slot;
+    public ItemStack itemStack;
 
     public S2CEnderChestSetSlotMessage() {
         

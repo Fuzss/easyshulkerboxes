@@ -1,6 +1,7 @@
 package fuzs.easyshulkerboxes.network.message;
 
 import fuzs.easyshulkerboxes.capability.EnderChestMenuCapability;
+import fuzs.easyshulkerboxes.client.world.inventory.EnderChestClientSynchronizer;
 import fuzs.easyshulkerboxes.init.ModRegistry;
 import fuzs.puzzleslib.network.message.Message;
 import net.minecraft.core.NonNullList;
@@ -23,7 +24,7 @@ public class S2CEnderChestSetContentMessage implements Message<S2CEnderChestSetC
         this.stateId = stateId;
         this.items = NonNullList.withSize(items.size(), ItemStack.EMPTY);
 
-        for(int k = 0; k < items.size(); ++k) {
+        for (int k = 0; k < items.size(); ++k) {
             this.items.set(k, items.get(k).copy());
         }
 
@@ -55,7 +56,13 @@ public class S2CEnderChestSetContentMessage implements Message<S2CEnderChestSetC
         public void handle(S2CEnderChestSetContentMessage packet, Player player, Object gameInstance) {
             ModRegistry.ENDER_CHEST_MENU_CAPABILITY.maybeGet(player)
                     .map(EnderChestMenuCapability::getEnderChestMenu)
-                    .ifPresent(menu -> menu.initializeContents(packet.stateId, packet.items, packet.carriedItem));
+                    .ifPresent(menu -> {
+                        menu.initializeContents(packet.stateId, packet.items, packet.carriedItem);
+                        // run this here so all values sent from server are set as last state,
+                        // so when client synchronizer is called only changes since sending full data will be sent
+                        menu.broadcastChanges();
+                        menu.setSynchronizer(new EnderChestClientSynchronizer());
+                    });
         }
     }
 }

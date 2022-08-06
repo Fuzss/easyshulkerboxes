@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v4.2.0-1.19.1] - 2022-08-06
+### Added
+- Inventory interactions and tooltips now work on ender chests
+- Added server config to disable individual interactions
+
 ## [v4.1.0-1.19.1] - 2022-07-30
 - Compiled for Minecraft 1.19.1
 - Updated to Puzzles Lib v4.1.0
