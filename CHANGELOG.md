@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v4.2.1-1.19.1] - 2022-08-06
+### Fixed
+- Fixed Cardinal Components not being set as a proper dependency in `fabric.mod.json`
+
 ## [v4.2.0-1.19.1] - 2022-08-06
 ### Added
 - Inventory interactions and tooltips now work on ender chests

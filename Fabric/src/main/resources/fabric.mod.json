@@ -36,7 +36,9 @@
     "fabric": ">=${minFabricApiVersion}",
     "puzzleslib": ">=${minPuzzlesVersion}",
     "minecraft": ">=${minMinecraftVersion} <${nextMinecraftVersion}",
-    "java": ">=17"
+    "java": ">=17",
+    "cardinal-components-base": "*",
+    "cardinal-components-entity": "*"
   },
 
   "custom": {
