@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
  * copied from ender chest, as over there only difference from simple container is that slot ids are saved along with items
  */
 public class SimpleContainerWithSlots extends SimpleContainer {
+
     public SimpleContainerWithSlots(int containerRows) {
         super(containerRows * 9);
     }

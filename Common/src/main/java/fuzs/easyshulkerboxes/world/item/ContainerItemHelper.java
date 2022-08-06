@@ -20,8 +20,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class ContainerItemHelper {
+
     public static SimpleContainer loadItemContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerRows) {
         CompoundTag compoundtag = getDataTagFromItem(stack, blockEntityType);
         SimpleContainer simpleContainer = new SimpleContainerWithSlots(containerRows);
@@ -52,16 +54,20 @@ public class ContainerItemHelper {
     }
 
     public static boolean overrideStackedOnOther(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerRows, Slot slot, ClickAction clickAction, Player player, Predicate<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
+        return overrideStackedOnOther(() -> loadItemContainer(stack, blockEntityType, containerRows), slot, clickAction, player, itemFilter, insertSound, removeSound);
+    }
+
+    public static boolean overrideStackedOnOther(Supplier<SimpleContainer> supplier, Slot slot, ClickAction clickAction, Player player, Predicate<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
         if (clickAction != ClickAction.SECONDARY) return false;
         ItemStack hoveredStack = slot.getItem();
         if (hoveredStack.isEmpty()) {
-            removeLastStack(stack, blockEntityType, containerRows).ifPresent(stack1 -> {
+            removeLastStack(supplier).ifPresent(stack1 -> {
                 player.playSound(removeSound, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
-                addStack(stack1, blockEntityType, containerRows, slot.safeInsert(stack1), itemFilter);
+                addStack(supplier, slot.safeInsert(stack1), itemFilter);
             });
         } else {
             hoveredStack = slot.safeTake(hoveredStack.getCount(), hoveredStack.getCount(), player);
-            int transferredCount = addStack(stack, blockEntityType, containerRows, hoveredStack, itemFilter);
+            int transferredCount = addStack(supplier, hoveredStack, itemFilter);
             hoveredStack.shrink(transferredCount);
             if (!hoveredStack.isEmpty()) {
                 slot.safeInsert(hoveredStack);
@@ -74,14 +80,18 @@ public class ContainerItemHelper {
     }
 
     public static boolean overrideOtherStackedOnMe(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerRows, ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, Predicate<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
+        return overrideOtherStackedOnMe(() -> loadItemContainer(stack, blockEntityType, containerRows), stackOnMe, slot, clickAction, player, slotAccess, itemFilter, insertSound, removeSound);
+    }
+
+    public static boolean overrideOtherStackedOnMe(Supplier<SimpleContainer> supplier, ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, Predicate<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
         if (clickAction != ClickAction.SECONDARY || !slot.allowModification(player)) return false;
         if (stackOnMe.isEmpty()) {
-            removeLastStack(stack, blockEntityType, containerRows).ifPresent((p_186347_) -> {
+            removeLastStack(supplier).ifPresent((p_186347_) -> {
                 player.playSound(removeSound, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
                 slotAccess.set(p_186347_);
             });
         } else {
-            int transferredCount = addStack(stack, blockEntityType, containerRows, stackOnMe, itemFilter);
+            int transferredCount = addStack(supplier, stackOnMe, itemFilter);
             if (transferredCount > 0) {
                 player.playSound(insertSound, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
                 stackOnMe.shrink(transferredCount);
@@ -90,15 +100,15 @@ public class ContainerItemHelper {
         return true;
     }
 
-    private static int addStack(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerRows, ItemStack newStack, Predicate<ItemStack> itemFilter) {
+    private static int addStack(Supplier<SimpleContainer> supplier, ItemStack newStack, Predicate<ItemStack> itemFilter) {
         if (newStack.isEmpty() || !itemFilter.test(newStack)) return 0;
-        SimpleContainer container = loadItemContainer(stack, blockEntityType, containerRows);
+        SimpleContainer container = supplier.get();
         ItemStack remainingStack = container.addItem(newStack);
         return newStack.getCount() - remainingStack.getCount();
     }
 
-    private static Optional<ItemStack> removeLastStack(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerRows) {
-        SimpleContainer container = loadItemContainer(stack, blockEntityType, containerRows);
+    private static Optional<ItemStack> removeLastStack(Supplier<SimpleContainer> supplier) {
+        SimpleContainer container = supplier.get();
         for (int i = container.getContainerSize() - 1; i >= 0; i--) {
             ItemStack stack1 = container.getItem(i);
             if (!stack1.isEmpty()) {
@@ -113,8 +123,12 @@ public class ContainerItemHelper {
         if (compoundtag == null || !compoundtag.contains("Items")) {
             return Optional.empty();
         }
-        NonNullList<ItemStack> items = NonNullList.create();
         SimpleContainer container = loadItemContainer(stack, blockEntityType, containerRows);
+        return getTooltipImage(container, containerRows, backgroundColor);
+    }
+
+    public static Optional<TooltipComponent> getTooltipImage(SimpleContainer container, int containerRows, @Nullable DyeColor backgroundColor) {
+        NonNullList<ItemStack> items = NonNullList.create();
         for (int i = 0; i < container.getContainerSize(); i++) {
             items.add(container.getItem(i));
         }
