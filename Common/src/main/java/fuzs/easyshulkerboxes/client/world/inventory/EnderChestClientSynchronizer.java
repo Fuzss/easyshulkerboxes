@@ -1,7 +1,7 @@
 package fuzs.easyshulkerboxes.client.world.inventory;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.network.client.message.C2SEnderChestSetSlotMessage;
+import fuzs.easyshulkerboxes.network.client.C2SEnderChestSetSlotMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.core.NonNullList;

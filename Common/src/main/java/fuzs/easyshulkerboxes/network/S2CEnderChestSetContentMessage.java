@@ -1,9 +1,9 @@
-package fuzs.easyshulkerboxes.network.message;
+package fuzs.easyshulkerboxes.network;
 
 import fuzs.easyshulkerboxes.capability.EnderChestMenuCapability;
 import fuzs.easyshulkerboxes.client.world.inventory.EnderChestClientSynchronizer;
 import fuzs.easyshulkerboxes.init.ModRegistry;
-import fuzs.puzzleslib.network.message.Message;
+import fuzs.puzzleslib.network.Message;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -46,23 +46,19 @@ public class S2CEnderChestSetContentMessage implements Message<S2CEnderChestSetC
     }
 
     @Override
-    public PacketHandler<S2CEnderChestSetContentMessage> makeHandler() {
-        return new EnderChestSetContentHandler();
-    }
-    
-    private static class EnderChestSetContentHandler extends PacketHandler<S2CEnderChestSetContentMessage> {
+    public MessageHandler<S2CEnderChestSetContentMessage> makeHandler() {
+        return new MessageHandler<>() {
 
-        @Override
-        public void handle(S2CEnderChestSetContentMessage packet, Player player, Object gameInstance) {
-            ModRegistry.ENDER_CHEST_MENU_CAPABILITY.maybeGet(player)
-                    .map(EnderChestMenuCapability::getEnderChestMenu)
-                    .ifPresent(menu -> {
-                        menu.initializeContents(packet.stateId, packet.items, packet.carriedItem);
-                        // run this here so all values sent from server are set as last state,
-                        // so when client synchronizer is called only changes since sending full data will be sent
-                        menu.broadcastChanges();
-                        menu.setSynchronizer(new EnderChestClientSynchronizer());
-                    });
-        }
+            @Override
+            public void handle(S2CEnderChestSetContentMessage message, Player player, Object gameInstance) {
+                ModRegistry.ENDER_CHEST_MENU_CAPABILITY.maybeGet(player).map(EnderChestMenuCapability::getEnderChestMenu).ifPresent(menu -> {
+                    menu.initializeContents(message.stateId, message.items, message.carriedItem);
+                    // run this here so all values sent from server are set as last state,
+                    // so when client synchronizer is called only changes since sending full data will be sent
+                    menu.broadcastChanges();
+                    menu.setSynchronizer(new EnderChestClientSynchronizer());
+                });
+            }
+        };
     }
 }

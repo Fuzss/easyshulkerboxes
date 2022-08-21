@@ -39,7 +39,7 @@ dependencies {
     minecraft "com.mojang:minecraft:${minecraftVersion}"
     mappings loom.layered() {
         officialMojangMappings()
-//        parchment("org.parchmentmc.data:parchment-${minecraftVersion}:${parchmentMappingsVersion}@zip")
+        parchment("org.parchmentmc.data:parchment-${minecraftVersion}:${parchmentMappingsVersion}@zip")
     }
 
     // Fabric
@@ -47,17 +47,13 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}"
 
     // Forge Configs
-    modImplementation "net.minecraftforge:forgeconfigapiport-fabric:4.1.2"
+    modImplementation "net.minecraftforge:forgeconfigapiport-fabric:4.2.0"
 
     // Mod Menu
-    modRuntimeOnly "com.terraformersmc:modmenu:4.0.5"
+    modRuntimeOnly "com.terraformersmc:modmenu:4.0.6"
 
     // Puzzles Lib
     modImplementation "fuzs.puzzleslib:puzzleslib-fabric:${puzzlesVersion}"
-
-    // Additional libraries (included with our jar)
-    modImplementation(include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.0.1"))
-    modImplementation(include("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.0.1"))
 }
 
 loom {
@@ -225,7 +221,7 @@ curseforge {
                 requiredDependency 'fabric-api'
                 requiredDependency 'forge-config-api-port-fabric'
                 requiredDependency 'puzzles-lib'
-                embeddedLibrary 'cardinal-components'
+                requiredDependency 'cardinal-components'
             }
         }
         addArtifact sourcesJar
@@ -255,7 +251,7 @@ modrinth {
         required.project 'fabric-api'
         required.project 'forge-config-api-port'
         required.project 'puzzles-lib'
-        embedded.project 'cardinal-components-api'
+        required.project 'cardinal-components-api'
     }
 //	debugMode = true
 }

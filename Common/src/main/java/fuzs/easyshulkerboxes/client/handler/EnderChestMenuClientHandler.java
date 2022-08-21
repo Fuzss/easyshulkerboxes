@@ -2,7 +2,7 @@ package fuzs.easyshulkerboxes.client.handler;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
 import fuzs.easyshulkerboxes.handler.EnderChestMenuHandler;
-import fuzs.easyshulkerboxes.network.client.message.C2SEnderChestMenuMessage;
+import fuzs.easyshulkerboxes.network.client.C2SEnderChestMenuMessage;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;

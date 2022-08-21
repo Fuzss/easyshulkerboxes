@@ -1,8 +1,8 @@
-package fuzs.easyshulkerboxes.network.message;
+package fuzs.easyshulkerboxes.network;
 
 import fuzs.easyshulkerboxes.capability.EnderChestMenuCapability;
 import fuzs.easyshulkerboxes.init.ModRegistry;
-import fuzs.puzzleslib.network.message.Message;
+import fuzs.puzzleslib.network.Message;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -38,18 +38,14 @@ public class S2CEnderChestSetSlotMessage implements Message<S2CEnderChestSetSlot
     }
 
     @Override
-    public PacketHandler<S2CEnderChestSetSlotMessage> makeHandler() {
-        return new EnderChestSetSlotHandler();
-    }
+    public MessageHandler<S2CEnderChestSetSlotMessage> makeHandler() {
+        return new MessageHandler<>() {
 
-    private static class EnderChestSetSlotHandler extends PacketHandler<S2CEnderChestSetSlotMessage> {
-
-        @Override
-        public void handle(S2CEnderChestSetSlotMessage packet, Player player, Object gameInstance) {
-            ((Minecraft) gameInstance).getTutorial().onGetItem(packet.itemStack);
-            ModRegistry.ENDER_CHEST_MENU_CAPABILITY.maybeGet(player)
-                    .map(EnderChestMenuCapability::getEnderChestMenu)
-                    .ifPresent(menu -> menu.setItem(packet.slot, packet.stateId, packet.itemStack));
-        }
+            @Override
+            public void handle(S2CEnderChestSetSlotMessage message, Player player, Object gameInstance) {
+                ((Minecraft) gameInstance).getTutorial().onGetItem(message.itemStack);
+                ModRegistry.ENDER_CHEST_MENU_CAPABILITY.maybeGet(player).map(EnderChestMenuCapability::getEnderChestMenu).ifPresent(menu -> menu.setItem(message.slot, message.stateId, message.itemStack));
+            }
+        };
     }
 }

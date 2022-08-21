@@ -1,14 +1,16 @@
 package fuzs.easyshulkerboxes;
 
+import fuzs.easyshulkerboxes.capability.EnderChestMenuCapability;
 import fuzs.easyshulkerboxes.data.ModLanguageProvider;
 import fuzs.easyshulkerboxes.handler.EnderChestMenuHandler;
-import fuzs.easyshulkerboxes.init.ForgeModRegistry;
+import fuzs.easyshulkerboxes.init.ModRegistry;
+import fuzs.puzzleslib.capability.ForgeCapabilityController;
 import fuzs.puzzleslib.core.CoreServices;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -21,8 +23,12 @@ public class EasyShulkerBoxesForge {
     @SubscribeEvent
     public static void onConstructMod(final FMLConstructModEvent evt) {
         CoreServices.FACTORIES.modConstructor(EasyShulkerBoxes.MOD_ID).accept(new EasyShulkerBoxes());
-        ForgeModRegistry.touch();
+        registerCapabilities();
         registerHandlers();
+    }
+
+    private static void registerCapabilities() {
+        ForgeCapabilityController.setCapabilityToken(ModRegistry.ENDER_CHEST_MENU_CAPABILITY, new CapabilityToken<EnderChestMenuCapability>() {});
     }
 
     private static void registerHandlers() {
