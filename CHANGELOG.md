@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog].
 
 ## [v4.3.1-1.19.2] - 2022-08-28
 ### Added
-- Added a `+` indicator that is shown on shulker boxes, ender chests and bundles when the stack carried by the cursor can be added to them in the inventory
+- Added a `+` indicator that is shown on shulker boxes, ender chests and bundles when the stack carried by the cursor can be added to them in your inventory
 
 ## [v4.3.0-1.19.2] - 2022-08-21
 - Compiled for Minecraft 1.19.2
