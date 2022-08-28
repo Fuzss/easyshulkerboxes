@@ -25,14 +25,20 @@ import java.util.function.Supplier;
 public class ContainerItemHelper {
 
     public static SimpleContainer loadItemContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerRows) {
+        return loadItemContainer(stack, blockEntityType, containerRows, true);
+    }
+
+    public static SimpleContainer loadItemContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerRows, boolean allowSaving) {
         CompoundTag compoundtag = getDataTagFromItem(stack, blockEntityType);
         SimpleContainer simpleContainer = new SimpleContainerWithSlots(containerRows);
         if (compoundtag != null && compoundtag.contains("Items")) {
             simpleContainer.fromTag(compoundtag.getList("Items", 10));
         }
-        simpleContainer.addListener(container -> {
-            saveItemContainer(stack, blockEntityType, (SimpleContainer) container);
-        });
+        if (allowSaving) {
+            simpleContainer.addListener(container -> {
+                saveItemContainer(stack, blockEntityType, (SimpleContainer) container);
+            });
+        }
         return simpleContainer;
     }
 

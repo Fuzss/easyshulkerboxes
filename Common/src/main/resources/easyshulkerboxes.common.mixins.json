@@ -9,7 +9,8 @@
     "ShulkerBoxBlockMixin"
   ],
   "client": [
-    "client.TutorialMixin"
+    "client.TutorialMixin",
+    "client.accessor.BundleItemAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
