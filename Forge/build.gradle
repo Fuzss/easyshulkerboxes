@@ -201,6 +201,8 @@ javadoc {
     source project(":Common").sourceSets.main.allJava
 }
 
+// important: the task may not run before 'compileJava', otherwise overridden/shadowed fields and methods in mixin classes will not be reobfuscated
+jar.finalizedBy("configureReobfTaskForReobfJar")
 jar.finalizedBy('reobfJar')
 
 publishing {
