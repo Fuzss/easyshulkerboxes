@@ -50,9 +50,13 @@ public class EasyShulkerBoxesClient implements ClientModConstructor {
         for (Item item : Registry.ITEM) {
             if (item instanceof BundleItem) {
                 context.register(item, getDynamicItemDecorator((ItemStack containerStack, ItemStack carriedStack) -> {
-                    // yeah, not copying those methods...
-                    int remainingWeight = (64 - BundleItemAccessor.callGetContentWeight(containerStack)) / BundleItemAccessor.callGetWeight(carriedStack);
-                    return remainingWeight > 0;
+                    int weight = BundleItemAccessor.callGetWeight(carriedStack);
+                    // fix java.lang.ArithmeticException: / by zero from Numismatic Overhaul as their coins stack to 99 instead of 64
+                    if (weight > 0) {
+                        int remainingWeight = (64 - BundleItemAccessor.callGetContentWeight(containerStack)) / weight;
+                        return remainingWeight > 0;
+                    }
+                    return false;
                 }));
             }
         }

@@ -76,6 +76,8 @@ public class ClientContainerItemTooltip implements ClientTooltipComponent {
       }
 
       this.drawBorder(p_194043_, p_194044_, i, j, p_194045_, p_194047_);
+      // reset color for other mods
+      RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
    }
 
    private boolean hideInventoryContents() {
