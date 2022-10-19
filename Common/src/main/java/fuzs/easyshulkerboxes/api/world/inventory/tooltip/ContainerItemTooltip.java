@@ -1,4 +1,4 @@
-package fuzs.easyshulkerboxes.world.inventory.tooltip;
+package fuzs.easyshulkerboxes.api.world.inventory.tooltip;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;

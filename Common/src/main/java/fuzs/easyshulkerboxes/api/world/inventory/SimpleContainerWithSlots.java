@@ -1,4 +1,4 @@
-package fuzs.easyshulkerboxes.world.inventory;
+package fuzs.easyshulkerboxes.api.world.inventory;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

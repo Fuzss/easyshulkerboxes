@@ -1,6 +1,6 @@
 package fuzs.easyshulkerboxes.mixin.client;
 
-import fuzs.easyshulkerboxes.client.tutorial.ContainerItemTutorial;
+import fuzs.easyshulkerboxes.api.client.tutorial.ContainerItemTutorial;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.tutorial.Tutorial;

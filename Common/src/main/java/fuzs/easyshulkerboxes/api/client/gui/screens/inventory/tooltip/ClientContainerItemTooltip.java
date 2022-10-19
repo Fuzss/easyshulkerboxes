@@ -1,11 +1,10 @@
-package fuzs.easyshulkerboxes.client.gui.screens.inventory.tooltip;
+package fuzs.easyshulkerboxes.api.client.gui.screens.inventory.tooltip;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
-import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.config.ClientConfig;
-import fuzs.easyshulkerboxes.world.inventory.tooltip.ContainerItemTooltip;
+import fuzs.easyshulkerboxes.api.config.ContainerItemTooltipConfig;
+import fuzs.easyshulkerboxes.api.world.inventory.tooltip.ContainerItemTooltip;
 import fuzs.puzzleslib.proxy.Proxy;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -25,15 +24,17 @@ public class ClientContainerItemTooltip implements ClientTooltipComponent {
    public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/gui/container/bundle.png");
    private static final Component HOLD_SHIFT_COMPONENT = Component.translatable("item.container.tooltip.info", Component.translatable("item.container.tooltip.shift").withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY);
 
+   private final ContainerItemTooltipConfig config;
    private final NonNullList<ItemStack> items;
    private final int containerRows;
    @Nullable
    private final DyeColor backgroundColor;
 
-   public ClientContainerItemTooltip(ContainerItemTooltip tooltip) {
+   public ClientContainerItemTooltip(ContainerItemTooltip tooltip, ContainerItemTooltipConfig config) {
       this.items = tooltip.items();
       this.containerRows = tooltip.containerRows();
       this.backgroundColor = tooltip.backgroundColor();
+      this.config = config;
    }
 
    @Override
@@ -81,11 +82,11 @@ public class ClientContainerItemTooltip implements ClientTooltipComponent {
    }
 
    private boolean hideInventoryContents() {
-      return EasyShulkerBoxes.CONFIG.get(ClientConfig.class).contentsRequireShift && !Proxy.INSTANCE.hasShiftDown();
+      return this.config.contentsRequireShift() && !Proxy.INSTANCE.hasShiftDown();
    }
 
    private int getLastFilledSlot() {
-      if (EasyShulkerBoxes.CONFIG.get(ClientConfig.class).slotOverlay) {
+      if (this.config.slotOverlay()) {
          for (int i = this.items.size() - 1; i >= 0; i--) {
             if (!this.items.get(i).isEmpty()) {
                return i;
@@ -97,10 +98,10 @@ public class ClientContainerItemTooltip implements ClientTooltipComponent {
 
    private void renderSlot(int p_194027_, int p_194028_, int p_194029_, Font p_194031_, PoseStack p_194032_, ItemRenderer p_194033_, int p_194034_, boolean lastFilledSlot) {
       if (p_194029_ >= this.items.size()) {
-         this.blit(p_194032_, p_194027_, p_194028_, p_194034_, ClientContainerItemTooltip.Texture.SLOT);
+         this.blit(p_194032_, p_194027_, p_194028_, p_194034_, Texture.SLOT);
       } else {
          ItemStack itemstack = this.items.get(p_194029_);
-         this.blit(p_194032_, p_194027_, p_194028_, p_194034_, ClientContainerItemTooltip.Texture.SLOT);
+         this.blit(p_194032_, p_194027_, p_194028_, p_194034_, Texture.SLOT);
          p_194033_.renderAndDecorateItem(itemstack, p_194027_ + 1, p_194028_ + 1, p_194029_);
          p_194033_.renderGuiItemDecorations(p_194031_, itemstack, p_194027_ + 1, p_194028_ + 1);
          if (lastFilledSlot) {
@@ -110,24 +111,24 @@ public class ClientContainerItemTooltip implements ClientTooltipComponent {
    }
 
    private void drawBorder(int p_194020_, int p_194021_, int p_194022_, int p_194023_, PoseStack p_194024_, int p_194025_) {
-      this.blit(p_194024_, p_194020_, p_194021_, p_194025_, ClientContainerItemTooltip.Texture.BORDER_CORNER_TOP);
-      this.blit(p_194024_, p_194020_ + p_194022_ * 18 + 1, p_194021_, p_194025_, ClientContainerItemTooltip.Texture.BORDER_CORNER_TOP);
+      this.blit(p_194024_, p_194020_, p_194021_, p_194025_, Texture.BORDER_CORNER_TOP);
+      this.blit(p_194024_, p_194020_ + p_194022_ * 18 + 1, p_194021_, p_194025_, Texture.BORDER_CORNER_TOP);
 
       for(int i = 0; i < p_194022_; ++i) {
-         this.blit(p_194024_, p_194020_ + 1 + i * 18, p_194021_, p_194025_, ClientContainerItemTooltip.Texture.BORDER_HORIZONTAL_TOP);
-         this.blit(p_194024_, p_194020_ + 1 + i * 18, p_194021_ + p_194023_ * 20, p_194025_, ClientContainerItemTooltip.Texture.BORDER_HORIZONTAL_BOTTOM);
+         this.blit(p_194024_, p_194020_ + 1 + i * 18, p_194021_, p_194025_, Texture.BORDER_HORIZONTAL_TOP);
+         this.blit(p_194024_, p_194020_ + 1 + i * 18, p_194021_ + p_194023_ * 20, p_194025_, Texture.BORDER_HORIZONTAL_BOTTOM);
       }
 
       for(int j = 0; j < p_194023_; ++j) {
-         this.blit(p_194024_, p_194020_, p_194021_ + j * 20 + 1, p_194025_, ClientContainerItemTooltip.Texture.BORDER_VERTICAL);
-         this.blit(p_194024_, p_194020_ + p_194022_ * 18 + 1, p_194021_ + j * 20 + 1, p_194025_, ClientContainerItemTooltip.Texture.BORDER_VERTICAL);
+         this.blit(p_194024_, p_194020_, p_194021_ + j * 20 + 1, p_194025_, Texture.BORDER_VERTICAL);
+         this.blit(p_194024_, p_194020_ + p_194022_ * 18 + 1, p_194021_ + j * 20 + 1, p_194025_, Texture.BORDER_VERTICAL);
       }
 
-      this.blit(p_194024_, p_194020_, p_194021_ + p_194023_ * 20, p_194025_, ClientContainerItemTooltip.Texture.BORDER_CORNER_BOTTOM);
-      this.blit(p_194024_, p_194020_ + p_194022_ * 18 + 1, p_194021_ + p_194023_ * 20, p_194025_, ClientContainerItemTooltip.Texture.BORDER_CORNER_BOTTOM);
+      this.blit(p_194024_, p_194020_, p_194021_ + p_194023_ * 20, p_194025_, Texture.BORDER_CORNER_BOTTOM);
+      this.blit(p_194024_, p_194020_ + p_194022_ * 18 + 1, p_194021_ + p_194023_ * 20, p_194025_, Texture.BORDER_CORNER_BOTTOM);
    }
 
-   private void blit(PoseStack p_194036_, int p_194037_, int p_194038_, int p_194039_, ClientContainerItemTooltip.Texture p_194040_) {
+   private void blit(PoseStack p_194036_, int p_194037_, int p_194038_, int p_194039_, Texture p_194040_) {
       float[] color = this.getBackgroundColor();
       RenderSystem.setShaderColor(color[0], color[1], color[2], 1.0F);
       RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
@@ -135,7 +136,7 @@ public class ClientContainerItemTooltip implements ClientTooltipComponent {
    }
 
    private float[] getBackgroundColor() {
-      if (!EasyShulkerBoxes.CONFIG.get(ClientConfig.class).colorfulTooltips || this.backgroundColor == null) {
+      if (!this.config.colorfulTooltips() || this.backgroundColor == null) {
          return new float[]{1.0F, 1.0F, 1.0F};
       } else if (this.backgroundColor == DyeColor.WHITE) {
          return new float[]{0.9019608F, 0.9019608F, 0.9019608F};

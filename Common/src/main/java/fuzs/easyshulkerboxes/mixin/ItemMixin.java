@@ -4,7 +4,7 @@ import fuzs.easyshulkerboxes.EasyShulkerBoxes;
 import fuzs.easyshulkerboxes.capability.EnderChestMenuCapability;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.init.ModRegistry;
-import fuzs.easyshulkerboxes.world.item.ContainerItemHelper;
+import fuzs.easyshulkerboxes.api.world.item.ContainerItemHelper;
 import fuzs.puzzleslib.proxy.Proxy;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.SlotAccess;

@@ -1,4 +1,4 @@
-package fuzs.easyshulkerboxes.client.tutorial;
+package fuzs.easyshulkerboxes.api.client.tutorial;
 
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.toasts.TutorialToast;

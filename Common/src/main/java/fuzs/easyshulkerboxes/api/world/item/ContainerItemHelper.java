@@ -1,7 +1,7 @@
-package fuzs.easyshulkerboxes.world.item;
+package fuzs.easyshulkerboxes.api.world.item;
 
-import fuzs.easyshulkerboxes.world.inventory.SimpleContainerWithSlots;
-import fuzs.easyshulkerboxes.world.inventory.tooltip.ContainerItemTooltip;
+import fuzs.easyshulkerboxes.api.world.inventory.SimpleContainerWithSlots;
+import fuzs.easyshulkerboxes.api.world.inventory.tooltip.ContainerItemTooltip;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
