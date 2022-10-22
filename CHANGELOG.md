@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v4.3.3-1.19.2] - 2022-10-22
+### Changed
+- When extracting an item from a shulker box/ender chest in an inventory menu via right-clicking the last item is no longer the one taken out first. Instead, use the scroll wheel to choose which item you want to take from the shulker box/ender chest.
+
 ## [v4.3.2-1.19.2] - 2022-09-15
 ### Fixed
 - Fixed compatibility with Numismatic Overhaul mod

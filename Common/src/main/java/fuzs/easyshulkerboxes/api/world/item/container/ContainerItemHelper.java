@@ -1,4 +1,4 @@
-package fuzs.easyshulkerboxes.api.world.item;
+package fuzs.easyshulkerboxes.api.world.item.container;
 
 import fuzs.easyshulkerboxes.api.world.inventory.SimpleContainerWithSlots;
 import fuzs.easyshulkerboxes.api.world.inventory.tooltip.ContainerItemTooltip;
@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -67,13 +68,13 @@ public class ContainerItemHelper {
         if (clickAction != ClickAction.SECONDARY) return false;
         ItemStack hoveredStack = slot.getItem();
         if (hoveredStack.isEmpty()) {
-            removeLastStack(supplier).ifPresent(stack1 -> {
+            removeLastStack(supplier, player).ifPresent(stack1 -> {
                 player.playSound(removeSound, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
-                addStack(supplier, slot.safeInsert(stack1), itemFilter);
+                addStack(supplier, player, slot.safeInsert(stack1), itemFilter);
             });
         } else {
             hoveredStack = slot.safeTake(hoveredStack.getCount(), hoveredStack.getCount(), player);
-            int transferredCount = addStack(supplier, hoveredStack, itemFilter);
+            int transferredCount = addStack(supplier, player, hoveredStack, itemFilter);
             hoveredStack.shrink(transferredCount);
             if (!hoveredStack.isEmpty()) {
                 slot.safeInsert(hoveredStack);
@@ -92,12 +93,12 @@ public class ContainerItemHelper {
     public static boolean overrideOtherStackedOnMe(Supplier<SimpleContainer> supplier, ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, Predicate<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
         if (clickAction != ClickAction.SECONDARY || !slot.allowModification(player)) return false;
         if (stackOnMe.isEmpty()) {
-            removeLastStack(supplier).ifPresent((p_186347_) -> {
+            removeLastStack(supplier, player).ifPresent((p_186347_) -> {
                 player.playSound(removeSound, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
                 slotAccess.set(p_186347_);
             });
         } else {
-            int transferredCount = addStack(supplier, stackOnMe, itemFilter);
+            int transferredCount = addStack(supplier, player, stackOnMe, itemFilter);
             if (transferredCount > 0) {
                 player.playSound(insertSound, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
                 stackOnMe.shrink(transferredCount);
@@ -106,22 +107,34 @@ public class ContainerItemHelper {
         return true;
     }
 
-    private static int addStack(Supplier<SimpleContainer> supplier, ItemStack newStack, Predicate<ItemStack> itemFilter) {
+    private static int addStack(Supplier<SimpleContainer> supplier, Player player, ItemStack newStack, Predicate<ItemStack> itemFilter) {
         if (newStack.isEmpty() || !itemFilter.test(newStack)) return 0;
         SimpleContainer container = supplier.get();
         ItemStack remainingStack = container.addItem(newStack);
+        ContainerSlotHelper.resetCurrentContainerSlot(player);
         return newStack.getCount() - remainingStack.getCount();
     }
 
-    private static Optional<ItemStack> removeLastStack(Supplier<SimpleContainer> supplier) {
+    private static Optional<ItemStack> removeLastStack(Supplier<SimpleContainer> supplier, Player player) {
         SimpleContainer container = supplier.get();
-        for (int i = container.getContainerSize() - 1; i >= 0; i--) {
-            ItemStack stack1 = container.getItem(i);
-            if (!stack1.isEmpty()) {
-                return Optional.of(container.removeItem(i, stack1.getCount()));
+        return findSlotWithContent(container, player).stream().mapToObj(index -> container.removeItem(index, container.getItem(index).getCount())).findAny();
+    }
+
+    private static OptionalInt findSlotWithContent(SimpleContainer container, Player player) {
+        int currentContainerSlot = ContainerSlotHelper.getCurrentContainerSlot(player);
+        if (currentContainerSlot >= 0 && currentContainerSlot < container.getContainerSize()) {
+            if (!container.getItem(currentContainerSlot).isEmpty()) {
+                ContainerSlotHelper.cycleCurrentSlotBackwards(player, container);
+                return OptionalInt.of(currentContainerSlot);
             }
         }
-        return Optional.empty();
+        for (int i = container.getContainerSize() - 1; i >= 0; i--) {
+            if (!container.getItem(i).isEmpty()) {
+                ContainerSlotHelper.resetCurrentContainerSlot(player);
+                return OptionalInt.of(i);
+            }
+        }
+        return OptionalInt.empty();
     }
 
     public static Optional<TooltipComponent> getTooltipImage(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerRows, @Nullable DyeColor backgroundColor) {

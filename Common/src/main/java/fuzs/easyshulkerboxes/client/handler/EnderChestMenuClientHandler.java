@@ -9,7 +9,7 @@ import net.minecraft.world.level.Level;
 
 public class EnderChestMenuClientHandler {
 
-    public void onEntityJoinLevel(Entity entity, Level level) {
+    public static void onEntityJoinLevel(Entity entity, Level level) {
         // client needs to notify server it has created its menu, otherwise server runs way too early and client isn't ready for syncing menu data
         if (entity instanceof LocalPlayer player && level.isClientSide) {
             EnderChestMenuHandler.openEnderChestMenu(player).ifPresent(menu -> {

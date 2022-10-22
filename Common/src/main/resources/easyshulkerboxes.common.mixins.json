@@ -9,6 +9,7 @@
     "ShulkerBoxBlockMixin"
   ],
   "client": [
+    "client.MultiPlayerGameModeMixin",
     "client.TutorialMixin",
     "client.accessor.BundleItemAccessor"
   ],

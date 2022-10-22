@@ -1,11 +1,13 @@
 package fuzs.easyshulkerboxes;
 
+import fuzs.easyshulkerboxes.api.SimpleInventoryContainersApi;
+import fuzs.easyshulkerboxes.api.capability.ContainerSlotCapability;
 import fuzs.easyshulkerboxes.capability.EnderChestMenuCapability;
 import fuzs.easyshulkerboxes.data.ModLanguageProvider;
 import fuzs.easyshulkerboxes.handler.EnderChestMenuHandler;
 import fuzs.easyshulkerboxes.init.ModRegistry;
 import fuzs.puzzleslib.capability.ForgeCapabilityController;
-import fuzs.puzzleslib.core.CoreServices;
+import fuzs.puzzleslib.core.CommonFactories;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -22,13 +24,15 @@ public class EasyShulkerBoxesForge {
 
     @SubscribeEvent
     public static void onConstructMod(final FMLConstructModEvent evt) {
-        CoreServices.FACTORIES.modConstructor(EasyShulkerBoxes.MOD_ID).accept(new EasyShulkerBoxes());
+        CommonFactories.INSTANCE.modConstructor(EasyShulkerBoxes.MOD_ID).accept(new SimpleInventoryContainersApi());
+        CommonFactories.INSTANCE.modConstructor(EasyShulkerBoxes.MOD_ID).accept(new EasyShulkerBoxes());
         registerCapabilities();
         registerHandlers();
     }
 
     private static void registerCapabilities() {
         ForgeCapabilityController.setCapabilityToken(ModRegistry.ENDER_CHEST_MENU_CAPABILITY, new CapabilityToken<EnderChestMenuCapability>() {});
+        ForgeCapabilityController.setCapabilityToken(fuzs.easyshulkerboxes.api.init.ModRegistry.CONTAINER_SLOT_CAPABILITY, new CapabilityToken<ContainerSlotCapability>() {});
     }
 
     private static void registerHandlers() {

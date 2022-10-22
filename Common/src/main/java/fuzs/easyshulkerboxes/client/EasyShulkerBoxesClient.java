@@ -4,7 +4,7 @@ import fuzs.easyshulkerboxes.EasyShulkerBoxes;
 import fuzs.easyshulkerboxes.api.client.gui.screens.inventory.tooltip.ClientContainerItemTooltip;
 import fuzs.easyshulkerboxes.api.client.helper.ItemDecorationHelper;
 import fuzs.easyshulkerboxes.api.world.inventory.tooltip.ContainerItemTooltip;
-import fuzs.easyshulkerboxes.api.world.item.ContainerItemHelper;
+import fuzs.easyshulkerboxes.api.world.item.container.ContainerItemHelper;
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.mixin.client.accessor.BundleItemAccessor;
 import fuzs.puzzleslib.client.core.ClientModConstructor;
