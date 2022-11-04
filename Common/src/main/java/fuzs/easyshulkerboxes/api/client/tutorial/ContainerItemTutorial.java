@@ -4,6 +4,7 @@ import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.toasts.TutorialToast;
 import net.minecraft.client.tutorial.Tutorial;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.item.ItemStack;
 
@@ -33,8 +34,8 @@ public class ContainerItemTutorial {
          this.tutorial.removeTimedToast(this.toast);
       }
 
-      Component component = Component.translatable("tutorial.container.itemInsert.title", this.itemComponent);
-      Component component1 = Component.translatable("tutorial.bundleInsert.description");
+      Component component = new TranslatableComponent("tutorial.container.itemInsert.title", this.itemComponent);
+      Component component1 = new TranslatableComponent("tutorial.bundleInsert.description");
       this.toast = new TutorialToast(TutorialToast.Icons.RIGHT_CLICK, component, component1, true);
       this.tutorial.addTimedToast(this.toast, 160);
    }

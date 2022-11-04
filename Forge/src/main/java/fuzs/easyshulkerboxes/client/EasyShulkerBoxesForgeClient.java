@@ -9,7 +9,7 @@ import fuzs.puzzleslib.client.core.ClientFactories;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
@@ -24,10 +24,11 @@ public class EasyShulkerBoxesForgeClient {
     }
 
     private static void registerHandlers() {
-        MinecraftForge.EVENT_BUS.addListener((final EntityJoinLevelEvent evt) -> {
-            EnderChestMenuClientHandler.onEntityJoinLevel(evt.getEntity(), evt.getLevel());
+        MinecraftForge.EVENT_BUS.addListener((final EntityJoinWorldEvent evt) -> {
+            EnderChestMenuClientHandler.onEntityJoinLevel(evt.getEntity(), evt.getWorld());
         });
-        MinecraftForge.EVENT_BUS.addListener((final ScreenEvent.MouseScrolled.Pre evt) -> {
+        MinecraftForge.EVENT_BUS.addListener((final ScreenEvent.MouseScrollEvent.Pre evt) -> {
+            if (!EasyShulkerBoxes.CONFIG.getHolder(ServerConfig.class).isAvailable()) return;
             MouseScrollHandler.onMouseScroll(evt.getScreen(), evt.getMouseX(), evt.getMouseY(), evt.getScrollDelta(), evt.getScrollDelta(), EasyShulkerBoxes.CONFIG.get(ClientConfig.class), EasyShulkerBoxes.CONFIG.get(ServerConfig.class)).ifPresent(unit -> evt.setCanceled(true));
         });
 //        MinecraftForge.EVENT_BUS.addListener((final TickEvent.ClientTickEvent evt) -> {

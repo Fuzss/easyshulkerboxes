@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 public class ClientContainerItemTooltip implements ClientTooltipComponent {
     public static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/widgets.png");
     public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/gui/container/bundle.png");
-    private static final Component HOLD_SHIFT_COMPONENT = Component.translatable("item.container.tooltip.info", Component.translatable("item.container.tooltip.shift").withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY);
+    private static final Component HOLD_SHIFT_COMPONENT = new TranslatableComponent("item.container.tooltip.info", new TranslatableComponent("item.container.tooltip.shift").withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY);
 
     private final ClientConfigCore config;
     private final NonNullList<ItemStack> items;
