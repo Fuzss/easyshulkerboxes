@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v4.3.4-1.19.2] - 2022-11-23
+### Changed
+- Reversed tooltip scrolling direction
+### Fixed
+- Fixed block entity data other from items being deleted when interacting with the item stack in your inventory
+
 ## [v4.3.3-1.19.2] - 2022-10-22
 ### Changed
 - When extracting an item from a shulker box/ender chest in an inventory menu via right-clicking the last item is no longer the one taken out first. Instead, use the scroll wheel to choose which item you want to take from the shulker box/ender chest.

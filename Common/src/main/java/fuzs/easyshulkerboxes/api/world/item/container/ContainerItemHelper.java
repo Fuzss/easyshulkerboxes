@@ -52,8 +52,10 @@ public class ContainerItemHelper {
                 stack.addTagElement("Items", listTag);
             }
         } else {
-            CompoundTag tag = new CompoundTag();
+            CompoundTag tag = BlockItem.getBlockEntityData(stack);
+            if (tag == null) tag = new CompoundTag();
             if (!listTag.isEmpty()) {
+                tag.remove("Items");
                 tag.put("Items", listTag);
             }
             BlockItem.setBlockEntityData(stack, blockEntityType, tag);
@@ -156,7 +158,6 @@ public class ContainerItemHelper {
 
     @Nullable
     private static CompoundTag getDataTagFromItem(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType) {
-        if (blockEntityType != null) return BlockItem.getBlockEntityData(stack);
-        return stack.getTag();
+        return blockEntityType != null ? BlockItem.getBlockEntityData(stack) : stack.getTag();
     }
 }

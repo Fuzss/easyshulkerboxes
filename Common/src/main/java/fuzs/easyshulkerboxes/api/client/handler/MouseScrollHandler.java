@@ -34,7 +34,7 @@ public class MouseScrollHandler {
                     if (signum != 0) {
                         Player player = CommonScreens.INSTANCE.getMinecraft(screen).player;
                         int currentContainerSlot = ContainerSlotHelper.getCurrentContainerSlot(player);
-                        currentContainerSlot = ContainerSlotHelper.findClosestSlotWithContent(ContainerItemProvider.get(stack.getItem()).getItemContainer(player, stack).get(), currentContainerSlot, signum > 0);
+                        currentContainerSlot = ContainerSlotHelper.findClosestSlotWithContent(ContainerItemProvider.get(stack.getItem()).getItemContainer(player, stack).get(), currentContainerSlot, signum < 0);
                         ContainerSlotHelper.setCurrentContainerSlot(player, currentContainerSlot);
                     }
                     return Optional.of(Unit.INSTANCE);
