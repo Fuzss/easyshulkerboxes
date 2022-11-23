@@ -23,7 +23,7 @@ import java.util.Optional;
 public abstract class ItemMixin {
 
     @Inject(method = "overrideStackedOnOther", at = @At("HEAD"), cancellable = true)
-    public void easyshulkerboxes$overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction clickAction, Player player, CallbackInfoReturnable<Boolean> callback) {
+    public void simpleinventorycontainers$overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction clickAction, Player player, CallbackInfoReturnable<Boolean> callback) {
         if (ContainerItemProvider.suppliesContainerProvider(stack)) {
             ContainerItemProvider itemProvider = ContainerItemProvider.get(stack.getItem());
             if (itemProvider.isAllowed()) {
@@ -35,7 +35,7 @@ public abstract class ItemMixin {
     }
 
     @Inject(method = "overrideOtherStackedOnMe", at = @At("HEAD"), cancellable = true)
-    public void easyshulkerboxes$overrideOtherStackedOnMe(ItemStack stack, ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, CallbackInfoReturnable<Boolean> callback) {
+    public void simpleinventorycontainers$overrideOtherStackedOnMe(ItemStack stack, ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, CallbackInfoReturnable<Boolean> callback) {
         if (ContainerItemProvider.suppliesContainerProvider(stack)) {
             ContainerItemProvider itemProvider = ContainerItemProvider.get(stack.getItem());
             if (itemProvider.isAllowed()) {
@@ -47,7 +47,7 @@ public abstract class ItemMixin {
     }
 
     @Inject(method = "getTooltipImage", at = @At("HEAD"), cancellable = true)
-    public void easyshulkerboxes$getTooltipImage(ItemStack stack, CallbackInfoReturnable<Optional<TooltipComponent>> callback) {
+    public void simpleinventorycontainers$getTooltipImage(ItemStack stack, CallbackInfoReturnable<Optional<TooltipComponent>> callback) {
         if (ContainerItemProvider.suppliesContainerProvider(stack)) {
             ContainerItemProvider itemProvider = ContainerItemProvider.get(stack.getItem());
             if (itemProvider.isAllowed()) {

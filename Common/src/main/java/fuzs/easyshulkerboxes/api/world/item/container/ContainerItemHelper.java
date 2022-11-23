@@ -150,11 +150,25 @@ public class ContainerItemHelper {
     }
 
     public static Optional<TooltipComponent> getTooltipImage(SimpleContainer container, int containerRows, @Nullable DyeColor backgroundColor) {
+        return getTooltipImageWithColor(container, containerRows, getBackgroundColor(backgroundColor));
+    }
+
+    public static Optional<TooltipComponent> getTooltipImageWithColor(SimpleContainer container, int containerRows, float[] backgroundColor) {
         NonNullList<ItemStack> items = NonNullList.create();
         for (int i = 0; i < container.getContainerSize(); i++) {
             items.add(container.getItem(i));
         }
         return Optional.of(new ContainerItemTooltip(items, 9, containerRows, backgroundColor));
+    }
+
+    public static float[] getBackgroundColor(@Nullable DyeColor backgroundColor) {
+        if (backgroundColor == null) {
+            return new float[]{1.0F, 1.0F, 1.0F};
+        } else if (backgroundColor == DyeColor.WHITE) {
+            return new float[]{0.9019608F, 0.9019608F, 0.9019608F};
+        } else {
+            return backgroundColor.getTextureDiffuseColors();
+        }
     }
 
     @Nullable

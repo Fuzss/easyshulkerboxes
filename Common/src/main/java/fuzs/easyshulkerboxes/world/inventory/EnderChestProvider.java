@@ -1,8 +1,8 @@
 package fuzs.easyshulkerboxes.world.inventory;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.api.world.item.container.ContainerItemHelper;
 import fuzs.easyshulkerboxes.api.world.inventory.ContainerItemProvider;
+import fuzs.easyshulkerboxes.api.world.item.container.ContainerItemHelper;
 import fuzs.easyshulkerboxes.capability.EnderChestMenuCapability;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.init.ModRegistry;
@@ -39,7 +39,8 @@ public class EnderChestProvider implements ContainerItemProvider {
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
-        return ContainerItemHelper.getTooltipImage(Proxy.INSTANCE.getClientPlayer().getEnderChestInventory(), 3, null);
+        // pretty ender color from tinted mod
+        return ContainerItemHelper.getTooltipImageWithColor(Proxy.INSTANCE.getClientPlayer().getEnderChestInventory(), 3, new float[]{0.16470589F, 0.38431373F, 0.33333334F});
     }
 
     @Override

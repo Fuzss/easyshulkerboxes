@@ -9,8 +9,11 @@ The format is based on [Keep a Changelog].
 - Other mods can manually register their content though for support
 - Tooltips now have a thicker border, so they look more pretty (actually had to redo most of that rendering code so this could work, oof)
 - Reverse tooltip scrolling direction
+- Ender Chests have a fancy custom tooltip color
 ### Fixed
 - Fixed shulker box block entity data other than stored items being deleted when interacting with the item stack in your inventory (this ifx allows for compatibility with mods that e.g. add shulker box enchantments)
+### Removed
+- Removed bundle-like tutorial banners when using newly added item interactions for the first time
 
 ## [v4.3.3-1.19.2] - 2022-10-22
 ### Changed

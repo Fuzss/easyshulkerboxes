@@ -20,9 +20,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 public class ClientContainerItemTooltip implements ClientTooltipComponent {
     public static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/widgets.png");
@@ -34,8 +32,7 @@ public class ClientContainerItemTooltip implements ClientTooltipComponent {
     private final NonNullList<ItemStack> items;
     private final int gridSizeX;
     private final int gridSizeY;
-    @Nullable
-    private final DyeColor backgroundColor;
+    private final float[] backgroundColor;
 
     public ClientContainerItemTooltip(ContainerItemTooltip tooltip, ClientConfigCore config) {
         this.items = tooltip.items();
@@ -99,13 +96,10 @@ public class ClientContainerItemTooltip implements ClientTooltipComponent {
     }
 
     private float[] getBackgroundColor() {
-        if (!this.config.colorfulTooltips() || this.backgroundColor == null) {
+        if (!this.config.colorfulTooltips()) {
             return new float[]{1.0F, 1.0F, 1.0F};
-        } else if (this.backgroundColor == DyeColor.WHITE) {
-            return new float[]{0.9019608F, 0.9019608F, 0.9019608F};
-        } else {
-            return this.backgroundColor.getTextureDiffuseColors();
         }
+        return this.backgroundColor;
     }
 
     private int getLastFilledSlot() {
