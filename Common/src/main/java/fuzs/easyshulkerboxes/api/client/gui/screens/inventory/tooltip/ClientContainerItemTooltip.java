@@ -7,7 +7,6 @@ import fuzs.easyshulkerboxes.api.SimpleInventoryContainersApi;
 import fuzs.easyshulkerboxes.api.client.handler.MouseScrollHandler;
 import fuzs.easyshulkerboxes.api.config.ClientConfigCore;
 import fuzs.easyshulkerboxes.api.world.inventory.ContainerSlotHelper;
-import fuzs.easyshulkerboxes.api.world.inventory.tooltip.ContainerItemTooltip;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -22,25 +21,27 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-public class ClientContainerItemTooltip implements ClientTooltipComponent {
+public abstract class ClientContainerItemTooltip implements ClientTooltipComponent {
     public static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/widgets.png");
     public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(SimpleInventoryContainersApi.MOD_ID, "textures/gui/container/inventory_tooltip.png");
     private static final Component HOLD_SHIFT_COMPONENT = Component.translatable("item.container.tooltip.info", Component.translatable("item.container.tooltip.shift").withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY);
     private static final int BORDER_SIZE = 7;
 
-    private final ClientConfigCore config;
-    private final NonNullList<ItemStack> items;
-    private final int gridSizeX;
-    private final int gridSizeY;
+    protected final NonNullList<ItemStack> items;
     private final float[] backgroundColor;
+    private final ClientConfigCore config;
 
-    public ClientContainerItemTooltip(ContainerItemTooltip tooltip, ClientConfigCore config) {
-        this.items = tooltip.items();
-        this.gridSizeX = tooltip.gridSizeX();
-        this.gridSizeY = tooltip.gridSizeY();
-        this.backgroundColor = tooltip.backgroundColor();
+    public ClientContainerItemTooltip(NonNullList<ItemStack> items, float[] backgroundColor, ClientConfigCore config) {
+        this.items = items;
+        this.backgroundColor = backgroundColor;
         this.config = config;
     }
+
+    protected abstract int getGridSizeX();
+
+    protected abstract int getGridSizeY();
+
+    protected abstract boolean isBundleFull();
 
     @Override
     public void renderText(Font p_169943_, int p_169944_, int p_169945_, Matrix4f p_169946_, MultiBufferSource.BufferSource p_169947_) {
@@ -54,7 +55,7 @@ public class ClientContainerItemTooltip implements ClientTooltipComponent {
         if (!MouseScrollHandler.showInventoryContents(this.config)) {
             return 10;
         }
-        return this.gridSizeY * 18 + 2 * BORDER_SIZE;
+        return this.getGridSizeY() * 18 + 2 * BORDER_SIZE;
     }
 
     @Override
@@ -62,7 +63,7 @@ public class ClientContainerItemTooltip implements ClientTooltipComponent {
         if (!MouseScrollHandler.showInventoryContents(this.config)) {
             return font.width(HOLD_SHIFT_COMPONENT);
         }
-        return this.gridSizeX * 18 + 2 * BORDER_SIZE;
+        return this.getGridSizeX() * 18 + 2 * BORDER_SIZE;
     }
 
     @Override
@@ -72,15 +73,21 @@ public class ClientContainerItemTooltip implements ClientTooltipComponent {
         if (this.defaultSize()) {
             ContainerTexture.FULL.blit(poseStack, mouseX, mouseY, blitOffset, color);
         } else {
-            this.drawBorder(mouseX, mouseY, this.gridSizeX, this.gridSizeY, poseStack, blitOffset);
+            this.drawBorder(mouseX, mouseY, this.getGridSizeX(), this.getGridSizeY(), poseStack, blitOffset);
         }
         int itemIndex = 0;
         int lastFilledSlot = this.getLastFilledSlot();
-        for (int l = 0; l < this.gridSizeY; ++l) {
-            for (int i1 = 0; i1 < this.gridSizeX; ++i1) {
+        for (int l = 0; l < this.getGridSizeY(); ++l) {
+            for (int i1 = 0; i1 < this.getGridSizeX(); ++i1) {
                 int posX = mouseX + i1 * 18 + BORDER_SIZE;
                 int posY = mouseY + l * 18 + BORDER_SIZE;
-                if (!this.defaultSize()) ContainerTexture.SLOT.blit(poseStack, posX, posY, blitOffset, color);
+                if (!this.defaultSize()) {
+                    if (itemIndex >= this.items.size() && this.isBundleFull()) {
+                        ContainerTexture.BLOCKED_SLOT.blit(poseStack, posX, posY, blitOffset, color);
+                    } else {
+                        ContainerTexture.SLOT.blit(poseStack, posX, posY, blitOffset, color);
+                    }
+                }
                 this.drawSlot(posX, posY, itemIndex, font, poseStack, itemRenderer, blitOffset);
                 if (itemIndex == lastFilledSlot) this.drawSlotOverlay(poseStack, posX, posY, blitOffset);
                 itemIndex++;
@@ -88,11 +95,24 @@ public class ClientContainerItemTooltip implements ClientTooltipComponent {
         }
         // reset color for other mods
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        this.drawSelectedSlotTooltip(mouseX, mouseY, poseStack, lastFilledSlot);
+    }
+
+    private void drawSelectedSlotTooltip(int mouseX, int mouseY, PoseStack poseStack, int lastFilledSlot) {
+        if (lastFilledSlot != -1) {
+            int posX = mouseX + lastFilledSlot / this.getGridSizeX() * 18 + BORDER_SIZE;
+            int posY = mouseY + lastFilledSlot % this.getGridSizeY() * 18 + BORDER_SIZE;
+            ItemStack stack = this.items.get(lastFilledSlot);
+            poseStack.pushPose();
+            poseStack.translate(0.0, 0.0, 500.0);
+            Minecraft.getInstance().screen.renderTooltip(poseStack, Minecraft.getInstance().screen.getTooltipFromItem(stack), stack.getTooltipImage(), posX + 9, posY + 18);
+            poseStack.popPose();
+        }
     }
 
     private boolean defaultSize() {
         // this is by far the most common size, we use a pre-built image for that
-        return this.gridSizeX == 9 && this.gridSizeY == 3;
+        return this.getGridSizeX() == 9 && this.getGridSizeY() == 3;
     }
 
     private float[] getBackgroundColor() {
@@ -160,6 +180,7 @@ public class ClientContainerItemTooltip implements ClientTooltipComponent {
 
     private enum ContainerTexture {
         SLOT(BORDER_SIZE, BORDER_SIZE, 18, 18),
+        BLOCKED_SLOT(BORDER_SIZE * 3 + 18, BORDER_SIZE, 18, 18),
         BORDER_TOP_LEFT(0, 0, BORDER_SIZE, BORDER_SIZE),
         BORDER_TOP(BORDER_SIZE, 0, 18, BORDER_SIZE),
         BORDER_TOP_RIGHT(18 + BORDER_SIZE, 0, BORDER_SIZE, BORDER_SIZE),

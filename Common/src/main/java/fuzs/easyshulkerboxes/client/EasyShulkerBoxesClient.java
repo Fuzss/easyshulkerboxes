@@ -1,11 +1,13 @@
 package fuzs.easyshulkerboxes.client;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.api.client.gui.screens.inventory.tooltip.ClientContainerItemTooltip;
+import fuzs.easyshulkerboxes.api.client.gui.screens.inventory.tooltip.ClientBundleItemTooltipImpl;
+import fuzs.easyshulkerboxes.api.client.gui.screens.inventory.tooltip.ClientContainerItemTooltipImpl;
 import fuzs.easyshulkerboxes.api.client.helper.ItemDecorationHelper;
+import fuzs.easyshulkerboxes.api.world.inventory.tooltip.BundleItemTooltip;
 import fuzs.easyshulkerboxes.api.world.inventory.tooltip.ContainerItemTooltip;
+import fuzs.easyshulkerboxes.api.world.item.container.ContainerItemHelper;
 import fuzs.easyshulkerboxes.config.ClientConfig;
-import fuzs.easyshulkerboxes.mixin.client.accessor.BundleItemAccessor;
 import fuzs.easyshulkerboxes.world.inventory.EnderChestProvider;
 import fuzs.easyshulkerboxes.world.inventory.ShulkerBoxProvider;
 import fuzs.puzzleslib.client.core.ClientModConstructor;
@@ -24,7 +26,8 @@ public class EasyShulkerBoxesClient implements ClientModConstructor {
 
     @Override
     public void onRegisterClientTooltipComponents(ClientTooltipComponentsContext context) {
-        context.registerClientTooltipComponent(ContainerItemTooltip.class, tooltip -> new ClientContainerItemTooltip(tooltip, EasyShulkerBoxes.CONFIG.get(ClientConfig.class)));
+        context.registerClientTooltipComponent(ContainerItemTooltip.class, tooltip -> new ClientContainerItemTooltipImpl(tooltip, EasyShulkerBoxes.CONFIG.get(ClientConfig.class)));
+        context.registerClientTooltipComponent(BundleItemTooltip.class, tooltip -> new ClientBundleItemTooltipImpl(tooltip, EasyShulkerBoxes.CONFIG.get(ClientConfig.class)));
     }
 
     @Override
@@ -41,13 +44,7 @@ public class EasyShulkerBoxesClient implements ClientModConstructor {
             return EnderChestProvider.INSTANCE.getItemContainer(Proxy.INSTANCE.getClientPlayer(), containerStack).canAddItem(carriedStack);
         }, () -> EasyShulkerBoxes.CONFIG.get(ClientConfig.class).containerItemIndicator));
         context.register(Items.BUNDLE, ItemDecorationHelper.getDynamicItemDecorator((AbstractContainerScreen<?> screen, ItemStack containerStack, ItemStack carriedStack) -> {
-            int weight = BundleItemAccessor.callGetWeight(carriedStack);
-            // fix java.lang.ArithmeticException: / by zero from Numismatic Overhaul as their coins stack to 99 instead of 64
-            if (weight > 0) {
-                int remainingWeight = (64 - BundleItemAccessor.callGetContentWeight(containerStack)) / weight;
-                return remainingWeight > 0;
-            }
-            return false;
+            return ContainerItemHelper.getAvailableBundleItemSpace(containerStack, carriedStack, 64) > 0;
         }, () -> EasyShulkerBoxes.CONFIG.get(ClientConfig.class).containerItemIndicator));
     }
 }

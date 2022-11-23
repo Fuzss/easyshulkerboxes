@@ -5,7 +5,7 @@
   "package": "fuzs.easyshulkerboxes.mixin",
   "refmap": "easyshulkerboxes.refmap.json",
   "mixins": [
-    "ItemMixin",
+    "ItemStackMixin",
     "ShulkerBoxBlockMixin"
   ],
   "client": [

@@ -3,6 +3,7 @@ package fuzs.easyshulkerboxes.api.world.item.container;
 import fuzs.easyshulkerboxes.api.world.inventory.ContainerSlotHelper;
 import fuzs.easyshulkerboxes.api.world.inventory.SimpleContainerWithSlots;
 import fuzs.easyshulkerboxes.api.world.inventory.tooltip.ContainerItemTooltip;
+import fuzs.easyshulkerboxes.mixin.client.accessor.BundleItemAccessor;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -21,8 +22,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.OptionalInt;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.function.ToIntFunction;
 
 public class ContainerItemHelper {
 
@@ -31,10 +32,24 @@ public class ContainerItemHelper {
     }
 
     public static SimpleContainer loadItemContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerRows, boolean allowSaving) {
-        CompoundTag compoundtag = getDataTagFromItem(stack, blockEntityType);
-        SimpleContainer simpleContainer = new SimpleContainerWithSlots(containerRows);
-        if (compoundtag != null && compoundtag.contains("Items")) {
-            simpleContainer.fromTag(compoundtag.getList("Items", 10));
+        CompoundTag tag = getItemDataTag(stack, blockEntityType);
+        SimpleContainer simpleContainer;
+        if (tag != null && tag.contains("Items")) {
+            ListTag items = tag.getList("Items", 10);
+            if (containerRows == -1) {
+                // add one additional slot, so we can add items in the inventory
+                simpleContainer = new SimpleContainer(items.size() + 1);
+            } else {
+                simpleContainer = new SimpleContainerWithSlots(containerRows * 9);
+            }
+            simpleContainer.fromTag(items);
+        } else {
+            if (containerRows == -1) {
+                // add one additional slot, so we can add items in the inventory
+                simpleContainer = new SimpleContainer(1);
+            } else {
+                simpleContainer = new SimpleContainerWithSlots(containerRows * 9);
+            }
         }
         if (allowSaving) {
             simpleContainer.addListener(container -> {
@@ -63,11 +78,11 @@ public class ContainerItemHelper {
         }
     }
 
-    public static boolean overrideStackedOnOther(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerRows, Slot slot, ClickAction clickAction, Player player, Predicate<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
+    public static boolean overrideStackedOnOther(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerRows, Slot slot, ClickAction clickAction, Player player, ToIntFunction<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
         return overrideStackedOnOther(() -> loadItemContainer(stack, blockEntityType, containerRows), slot, clickAction, player, itemFilter, insertSound, removeSound);
     }
 
-    public static boolean overrideStackedOnOther(Supplier<SimpleContainer> supplier, Slot slot, ClickAction clickAction, Player player, Predicate<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
+    public static boolean overrideStackedOnOther(Supplier<SimpleContainer> supplier, Slot slot, ClickAction clickAction, Player player, ToIntFunction<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
         if (clickAction != ClickAction.SECONDARY) return false;
         ItemStack hoveredStack = slot.getItem();
         if (hoveredStack.isEmpty()) {
@@ -89,11 +104,11 @@ public class ContainerItemHelper {
         return true;
     }
 
-    public static boolean overrideOtherStackedOnMe(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerRows, ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, Predicate<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
+    public static boolean overrideOtherStackedOnMe(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerRows, ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, ToIntFunction<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
         return overrideOtherStackedOnMe(() -> loadItemContainer(stack, blockEntityType, containerRows), stackOnMe, slot, clickAction, player, slotAccess, itemFilter, insertSound, removeSound);
     }
 
-    public static boolean overrideOtherStackedOnMe(Supplier<SimpleContainer> supplier, ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, Predicate<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
+    public static boolean overrideOtherStackedOnMe(Supplier<SimpleContainer> supplier, ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, ToIntFunction<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
         if (clickAction != ClickAction.SECONDARY || !slot.allowModification(player)) return false;
         if (stackOnMe.isEmpty()) {
             removeLastStack(supplier, player).ifPresent((p_186347_) -> {
@@ -110,12 +125,15 @@ public class ContainerItemHelper {
         return true;
     }
 
-    private static int addStack(Supplier<SimpleContainer> supplier, Player player, ItemStack newStack, Predicate<ItemStack> itemFilter) {
-        if (newStack.isEmpty() || !itemFilter.test(newStack)) return 0;
+    private static int addStack(Supplier<SimpleContainer> supplier, Player player, ItemStack newStack, ToIntFunction<ItemStack> itemFilter) {
+        if (newStack.isEmpty()) return 0;
         SimpleContainer container = supplier.get();
-        ItemStack remainingStack = container.addItem(newStack);
+        ItemStack stackToAdd = newStack.copy();
+        stackToAdd.setCount(itemFilter.applyAsInt(newStack));
+        if (stackToAdd.isEmpty()) return 0;
+        ItemStack remainingStack = container.addItem(stackToAdd);
         ContainerSlotHelper.resetCurrentContainerSlot(player);
-        return newStack.getCount() - remainingStack.getCount();
+        return stackToAdd.getCount() - remainingStack.getCount();
     }
 
     private static Optional<ItemStack> removeLastStack(Supplier<SimpleContainer> supplier, Player player) {
@@ -141,24 +159,31 @@ public class ContainerItemHelper {
     }
 
     public static Optional<TooltipComponent> getTooltipImage(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerRows, @Nullable DyeColor backgroundColor) {
-        CompoundTag compoundtag = getDataTagFromItem(stack, blockEntityType);
-        if (compoundtag == null || !compoundtag.contains("Items")) {
-            return Optional.empty();
-        }
-        SimpleContainer container = loadItemContainer(stack, blockEntityType, containerRows, false);
-        return getTooltipImage(container, containerRows, backgroundColor);
+        return getTooltipImage(getTooltipContainer(stack, blockEntityType, containerRows), containerRows, backgroundColor);
     }
 
-    public static Optional<TooltipComponent> getTooltipImage(SimpleContainer container, int containerRows, @Nullable DyeColor backgroundColor) {
+    public static Optional<TooltipComponent> getTooltipImage(Optional<SimpleContainer> container, int containerRows, @Nullable DyeColor backgroundColor) {
         return getTooltipImageWithColor(container, containerRows, getBackgroundColor(backgroundColor));
     }
 
-    public static Optional<TooltipComponent> getTooltipImageWithColor(SimpleContainer container, int containerRows, float[] backgroundColor) {
+    public static Optional<TooltipComponent> getTooltipImageWithColor(Optional<SimpleContainer> container, int containerRows, float[] backgroundColor) {
+        return container.map(ContainerItemHelper::getContainerItems).map(items -> new ContainerItemTooltip(items, 9, containerRows, backgroundColor));
+    }
+
+    public static Optional<SimpleContainer> getTooltipContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerRows) {
+        CompoundTag compoundtag = getItemDataTag(stack, blockEntityType);
+        if (compoundtag == null || !compoundtag.contains("Items")) {
+            return Optional.empty();
+        }
+        return Optional.of(loadItemContainer(stack, blockEntityType, containerRows, false));
+    }
+
+    public static NonNullList<ItemStack> getContainerItems(SimpleContainer container) {
         NonNullList<ItemStack> items = NonNullList.create();
         for (int i = 0; i < container.getContainerSize(); i++) {
             items.add(container.getItem(i));
         }
-        return Optional.of(new ContainerItemTooltip(items, 9, containerRows, backgroundColor));
+        return items;
     }
 
     public static float[] getBackgroundColor(@Nullable DyeColor backgroundColor) {
@@ -172,7 +197,13 @@ public class ContainerItemHelper {
     }
 
     @Nullable
-    private static CompoundTag getDataTagFromItem(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType) {
+    private static CompoundTag getItemDataTag(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType) {
         return blockEntityType != null ? BlockItem.getBlockEntityData(stack) : stack.getTag();
+    }
+
+    public static int getAvailableBundleItemSpace(ItemStack containerStack, ItemStack stackToAdd, int maxWeight) {
+        int weight = BundleItemAccessor.callGetWeight(stackToAdd);
+        // fix java.lang.ArithmeticException: / by zero from Numismatic Overhaul as their coins stack to 99 instead of 64
+        return weight > 0 ? (maxWeight - BundleItemAccessor.callGetContentWeight(containerStack)) / weight : 0;
     }
 }

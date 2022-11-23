@@ -1,8 +1,8 @@
 package fuzs.easyshulkerboxes.world.inventory;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.api.world.item.container.ContainerItemHelper;
 import fuzs.easyshulkerboxes.api.world.inventory.ContainerItemProvider;
+import fuzs.easyshulkerboxes.api.world.item.container.ContainerItemHelper;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
@@ -27,8 +27,8 @@ public class ShulkerBoxProvider implements ContainerItemProvider {
     }
 
     @Override
-    public boolean canAcceptItem(ItemStack stack) {
-        return stack.getItem().canFitInsideContainerItems();
+    public int acceptableItemCount(ItemStack containerStack, ItemStack stack) {
+        return !stack.getItem().canFitInsideContainerItems() ? 0 : stack.getCount();
     }
 
     @Override
@@ -39,6 +39,10 @@ public class ShulkerBoxProvider implements ContainerItemProvider {
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
         DyeColor color = ShulkerBoxBlock.getColorFromItem(stack.getItem());
-        return ContainerItemHelper.getTooltipImage(stack, BlockEntityType.SHULKER_BOX, 3, color);
+        if (color != null) {
+            return ContainerItemHelper.getTooltipImage(stack, BlockEntityType.SHULKER_BOX, 3, color);
+        } else {
+            return ContainerItemHelper.getTooltipImageWithColor(ContainerItemHelper.getTooltipContainer(stack, BlockEntityType.SHULKER_BOX, 3), 3, new float[]{0.88235295F, 0.6901961F, 0.99607843F});
+        }
     }
 }

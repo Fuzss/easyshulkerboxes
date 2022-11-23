@@ -28,8 +28,8 @@ public class EnderChestProvider implements ContainerItemProvider {
     }
 
     @Override
-    public boolean canAcceptItem(ItemStack stack) {
-        return true;
+    public int acceptableItemCount(ItemStack containerStack, ItemStack stack) {
+        return stack.getCount();
     }
 
     @Override
@@ -40,7 +40,7 @@ public class EnderChestProvider implements ContainerItemProvider {
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
         // pretty ender color from tinted mod
-        return ContainerItemHelper.getTooltipImageWithColor(Proxy.INSTANCE.getClientPlayer().getEnderChestInventory(), 3, new float[]{0.16470589F, 0.38431373F, 0.33333334F});
+        return ContainerItemHelper.getTooltipImageWithColor(Optional.of(Proxy.INSTANCE.getClientPlayer().getEnderChestInventory()), 3, new float[]{0.16470589F, 0.38431373F, 0.33333334F});
     }
 
     @Override

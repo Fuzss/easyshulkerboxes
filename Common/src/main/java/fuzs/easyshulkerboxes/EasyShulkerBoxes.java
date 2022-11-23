@@ -8,6 +8,7 @@ import fuzs.easyshulkerboxes.network.S2CEnderChestSetContentMessage;
 import fuzs.easyshulkerboxes.network.S2CEnderChestSetSlotMessage;
 import fuzs.easyshulkerboxes.network.client.C2SEnderChestMenuMessage;
 import fuzs.easyshulkerboxes.network.client.C2SEnderChestSetSlotMessage;
+import fuzs.easyshulkerboxes.world.inventory.BundleProvider;
 import fuzs.easyshulkerboxes.world.inventory.EnderChestProvider;
 import fuzs.easyshulkerboxes.world.inventory.ShulkerBoxProvider;
 import fuzs.puzzleslib.config.ConfigHolder;
@@ -59,5 +60,6 @@ public class EasyShulkerBoxes implements ModConstructor {
             }
         }
         ContainerItemProvider.register(Items.ENDER_CHEST, EnderChestProvider.INSTANCE);
+        ContainerItemProvider.register(Items.BUNDLE, BundleProvider.INSTANCE);
     }
 }

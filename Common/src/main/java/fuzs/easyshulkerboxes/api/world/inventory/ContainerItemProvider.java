@@ -40,7 +40,7 @@ public interface ContainerItemProvider {
 
     SimpleContainer getItemContainer(Player player, ItemStack stack, boolean allowSaving);
 
-    boolean canAcceptItem(ItemStack stack);
+    int acceptableItemCount(ItemStack containerStack, ItemStack stack);
 
     boolean isAllowed();
 

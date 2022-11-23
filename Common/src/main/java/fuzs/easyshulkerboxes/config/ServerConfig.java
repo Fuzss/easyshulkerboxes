@@ -11,6 +11,8 @@ public class ServerConfig implements ConfigCore, ServerConfigCore {
     public boolean allowShulkerBox = true;
     @Config(description = {"Allow inventory interactions and contents tooltip to work on ender chests.", "The item stack must have just a single ender chest item."})
     public boolean allowEnderChest = true;
+    @Config(description = {"Allow inventory interactions and contents tooltip from this mod to work on bundles, vanilla behavior is replaced.", "A crafting recipe is added for bundles regardless."})
+    public boolean allowBundle = true;
 
     @Override
     public boolean allowSlotCycling() {

@@ -11,14 +11,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity {
+abstract class LivingEntityMixin extends Entity {
 
     public LivingEntityMixin(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
-    public void tick$inject$head(CallbackInfo callback) {
+    public void easyshulkerboxes$tick(CallbackInfo callback) {
         if (!LivingEvents.TICK.invoker().onLivingTick((LivingEntity) (Object) this)) callback.cancel();
     }
 }

@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 @Mixin(ShulkerBoxBlock.class)
-public abstract class ShulkerBoxBlockMixin extends BaseEntityBlock {
+abstract class ShulkerBoxBlockMixin extends BaseEntityBlock {
     protected ShulkerBoxBlockMixin(Properties p_49224_) {
         super(p_49224_);
     }
