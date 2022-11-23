@@ -6,6 +6,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public record ContainerItemTooltip(NonNullList<ItemStack> items, int containerRows, @Nullable DyeColor backgroundColor) implements TooltipComponent {
+public record ContainerItemTooltip(NonNullList<ItemStack> items, int gridSizeX, int gridSizeY, @Nullable DyeColor backgroundColor) implements TooltipComponent {
 
 }

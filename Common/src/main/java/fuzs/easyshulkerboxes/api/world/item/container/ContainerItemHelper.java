@@ -154,7 +154,7 @@ public class ContainerItemHelper {
         for (int i = 0; i < container.getContainerSize(); i++) {
             items.add(container.getItem(i));
         }
-        return Optional.of(new ContainerItemTooltip(items, containerRows, backgroundColor));
+        return Optional.of(new ContainerItemTooltip(items, 9, containerRows, backgroundColor));
     }
 
     @Nullable

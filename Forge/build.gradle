@@ -136,9 +136,13 @@ mixin {
 }
 
 processResources {
-    from project(":Common").sourceSets.main.resources
-    // we need to have this in common so that in a non-production environment the common jar is correctly deobfuscated
-    exclude("**/quilt.mod.json")
+    from(project(":Common").sourceSets.main.resources) {
+        // we need to have this in common so that in a non-production environment the common jar is correctly deobfuscated
+        exclude("quilt.mod.json")
+    }
+    from(file('src/generated/resources')) {
+        exclude('.cache/')
+    }
 
     duplicatesStrategy DuplicatesStrategy.INCLUDE
 
@@ -244,9 +248,8 @@ publishing {
                 // from https://stackoverflow.com/a/50121790
                 pom.withXml {
                     asNode().dependencies.dependency.each { dep ->
-                        // Forge is weird as a dependency, so skip it along with quality of life mods
                         // use this approach to make excluding dependencies from Curse Maven more convenient
-                        if (["curse.maven:catalogue", "curse.maven:configured", "curse.maven:configmenusforge", "fuzs.bettermodsbutton:bettermodsbutton-forge"].stream().anyMatch(mod -> "${dep.groupId.last().value().last()}:${dep.artifactId.last().value().last()}".startsWith(mod))) {
+                        if (["curse.maven:", "fuzs.bettermodsbutton:bettermodsbutton-forge"].stream().anyMatch(mod -> "${dep.groupId.last().value().last()}:${dep.artifactId.last().value().last()}".startsWith(mod))) {
                             assert dep.parent().remove(dep)
                         }
                     }

@@ -5,9 +5,12 @@ The format is based on [Keep a Changelog].
 
 ## [v4.3.4-1.19.2] - 2022-11-23
 ### Changed
-- Reversed tooltip scrolling direction
+- For Easy Shulker Boxes to support an item it must now be manually registered, this means only vanilla items (shulker boxes, ender chests, bundles) will be supported by default, mainly to prevent larger shulker boxes from other mods from breaking
+- Other mods can manually register their content though for support
+- Tooltips now have a thicker border, so they look more pretty (actually had to redo most of that rendering code so this could work, oof)
+- Reverse tooltip scrolling direction
 ### Fixed
-- Fixed block entity data other from items being deleted when interacting with the item stack in your inventory
+- Fixed shulker box block entity data other than stored items being deleted when interacting with the item stack in your inventory (this ifx allows for compatibility with mods that e.g. add shulker box enchantments)
 
 ## [v4.3.3-1.19.2] - 2022-10-22
 ### Changed

@@ -46,11 +46,9 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${fabricVersion}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}"
 
-    // Forge Configs
-    modImplementation "net.minecraftforge:forgeconfigapiport-fabric:4.2.0"
-
-    // Mod Menu
+    // Quality of Life Mods
     modRuntimeOnly "com.terraformersmc:modmenu:4.0.6"
+    modRuntimeOnly "curse.maven:tooltipfix-411557:3820437"
 
     // Puzzles Lib
     modImplementation "fuzs.puzzleslib:puzzleslib-fabric:${puzzlesVersion}"
@@ -78,9 +76,18 @@ loom {
 }
 
 processResources {
-    from project(":Common").sourceSets.main.resources
-    // we need to have this in common so that in a non-production environment the common jar is correctly deobfuscated
-    exclude("**/quilt.mod.json")
+    from(project(":Common").sourceSets.main.resources) {
+        // we need to have this in common so that in a non-production environment the common jar is correctly deobfuscated
+        exclude("quilt.mod.json")
+    }
+    from(project(":Forge").file('src/generated/resources')) {
+        exclude('.cache/')
+    }
+    // Forge's data gen doesn't work with assets placed in the common project, so we place them in Forge and include them here
+    from(project(":Forge").sourceSets.main.resources) {
+        include("assets/")
+        include("data/")
+    }
 
     duplicatesStrategy DuplicatesStrategy.INCLUDE
 
@@ -97,10 +104,10 @@ processResources {
     inputs.property "minFabricApiVersion", 		"${minFabricApiVersion}"
     inputs.property "minMinecraftVersion", 		"${minMinecraftVersion}"
     inputs.property "nextMinecraftVersion", 	rootProject.getNextVersion("${minMinecraftVersion}")
-	inputs.property "minPuzzlesVersion", 		"${minPuzzlesVersion}"
+    inputs.property "minPuzzlesVersion", 		"${minPuzzlesVersion}"
     inputs.property "packFormat", 				"${packFormat}"
-	inputs.property "mainEntryPoint", 			"${project.group}.${rootProject.name}Fabric"
-	inputs.property "clientEntryPoint", 		"${project.group}.client.${rootProject.name}FabricClient"
+    inputs.property "mainEntryPoint", 			"${project.group}.${rootProject.name}Fabric"
+    inputs.property "clientEntryPoint", 		"${project.group}.client.${rootProject.name}FabricClient"
     inputs.property "modFabricEnvironment", 	"${modFabricEnvironment}"
 
     // replace stuff in fabric.mod.json and pack.mcmeta
@@ -118,9 +125,9 @@ processResources {
                 'minFabricApiVersion':  	"${minFabricApiVersion}",
                 'minMinecraftVersion':  	"${minMinecraftVersion}",
                 "nextMinecraftVersion": 	rootProject.getNextVersion("${minMinecraftVersion}"),
-				"minPuzzlesVersion":    	"${minPuzzlesVersion}",
-				"mainEntryPoint": 			"${project.group}.${rootProject.name}Fabric",
-				"clientEntryPoint": 		"${project.group}.client.${rootProject.name}FabricClient",
+                "minPuzzlesVersion":    	"${minPuzzlesVersion}",
+                "mainEntryPoint": 			"${project.group}.${rootProject.name}Fabric",
+                "clientEntryPoint": 		"${project.group}.client.${rootProject.name}FabricClient",
                 "modFabricEnvironment":		"${modFabricEnvironment}"
         )
     }
@@ -183,7 +190,7 @@ publishing {
                 pom.withXml {
                     asNode().dependencies.dependency.each { dep ->
                         // use this approach to make excluding dependencies from Curse Maven more convenient
-                        if (["com.terraformersmc:modmenu"].stream().anyMatch(mod -> "${dep.groupId.last().value().last()}:${dep.artifactId.last().value().last()}".startsWith(mod))) {
+                        if (["curse.maven:", "com.terraformersmc:modmenu"].stream().anyMatch(mod -> "${dep.groupId.last().value().last()}:${dep.artifactId.last().value().last()}".startsWith(mod))) {
                             assert dep.parent().remove(dep)
                         }
                     }
@@ -221,7 +228,6 @@ curseforge {
                 requiredDependency 'fabric-api'
                 requiredDependency 'forge-config-api-port-fabric'
                 requiredDependency 'puzzles-lib'
-                requiredDependency 'cardinal-components'
             }
         }
         addArtifact sourcesJar
@@ -251,7 +257,6 @@ modrinth {
         required.project 'fabric-api'
         required.project 'forge-config-api-port'
         required.project 'puzzles-lib'
-        required.project 'cardinal-components-api'
     }
 //	debugMode = true
 }

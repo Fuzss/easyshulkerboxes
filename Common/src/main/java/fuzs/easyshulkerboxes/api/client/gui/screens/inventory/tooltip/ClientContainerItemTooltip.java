@@ -3,10 +3,11 @@ package fuzs.easyshulkerboxes.api.client.gui.screens.inventory.tooltip;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
+import fuzs.easyshulkerboxes.api.SimpleInventoryContainersApi;
 import fuzs.easyshulkerboxes.api.client.handler.MouseScrollHandler;
 import fuzs.easyshulkerboxes.api.config.ClientConfigCore;
-import fuzs.easyshulkerboxes.api.world.inventory.tooltip.ContainerItemTooltip;
 import fuzs.easyshulkerboxes.api.world.inventory.ContainerSlotHelper;
+import fuzs.easyshulkerboxes.api.world.inventory.tooltip.ContainerItemTooltip;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -25,18 +26,21 @@ import org.jetbrains.annotations.Nullable;
 
 public class ClientContainerItemTooltip implements ClientTooltipComponent {
     public static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/widgets.png");
-    public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/gui/container/bundle.png");
+    public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(SimpleInventoryContainersApi.MOD_ID, "textures/gui/container/inventory_tooltip.png");
     private static final Component HOLD_SHIFT_COMPONENT = Component.translatable("item.container.tooltip.info", Component.translatable("item.container.tooltip.shift").withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY);
+    private static final int BORDER_SIZE = 7;
 
     private final ClientConfigCore config;
     private final NonNullList<ItemStack> items;
-    private final int containerRows;
+    private final int gridSizeX;
+    private final int gridSizeY;
     @Nullable
     private final DyeColor backgroundColor;
 
     public ClientContainerItemTooltip(ContainerItemTooltip tooltip, ClientConfigCore config) {
         this.items = tooltip.items();
-        this.containerRows = tooltip.containerRows();
+        this.gridSizeX = tooltip.gridSizeX();
+        this.gridSizeY = tooltip.gridSizeY();
         this.backgroundColor = tooltip.backgroundColor();
         this.config = config;
     }
@@ -53,7 +57,7 @@ public class ClientContainerItemTooltip implements ClientTooltipComponent {
         if (!MouseScrollHandler.showInventoryContents(this.config)) {
             return 10;
         }
-        return this.gridSizeY() * 20 + 2 + 4;
+        return this.gridSizeY * 18 + 2 * BORDER_SIZE;
     }
 
     @Override
@@ -61,92 +65,37 @@ public class ClientContainerItemTooltip implements ClientTooltipComponent {
         if (!MouseScrollHandler.showInventoryContents(this.config)) {
             return font.width(HOLD_SHIFT_COMPONENT);
         }
-        return this.gridSizeX() * 18 + 2;
+        return this.gridSizeX * 18 + 2 * BORDER_SIZE;
     }
 
     @Override
-    public void renderImage(Font p_194042_, int p_194043_, int p_194044_, PoseStack p_194045_, ItemRenderer p_194046_, int p_194047_) {
+    public void renderImage(Font font, int mouseX, int mouseY, PoseStack poseStack, ItemRenderer itemRenderer, int blitOffset) {
         if (!MouseScrollHandler.showInventoryContents(this.config)) return;
-        int i = this.gridSizeX();
-        int j = this.gridSizeY();
-        int k = 0;
+        float[] color = this.getBackgroundColor();
+        if (this.defaultSize()) {
+            ContainerTexture.FULL.blit(poseStack, mouseX, mouseY, blitOffset, color);
+        } else {
+            this.drawBorder(mouseX, mouseY, this.gridSizeX, this.gridSizeY, poseStack, blitOffset);
+        }
+        int itemIndex = 0;
         int lastFilledSlot = this.getLastFilledSlot();
-        for (int l = 0; l < j; ++l) {
-            for (int i1 = 0; i1 < i; ++i1) {
-                int j1 = p_194043_ + i1 * 18 + 1;
-                int k1 = p_194044_ + l * 20 + 1;
-                this.renderSlot(j1, k1, k, p_194042_, p_194045_, p_194046_, p_194047_, k == lastFilledSlot);
-                k++;
+        for (int l = 0; l < this.gridSizeY; ++l) {
+            for (int i1 = 0; i1 < this.gridSizeX; ++i1) {
+                int posX = mouseX + i1 * 18 + BORDER_SIZE;
+                int posY = mouseY + l * 18 + BORDER_SIZE;
+                if (!this.defaultSize()) ContainerTexture.SLOT.blit(poseStack, posX, posY, blitOffset, color);
+                this.drawSlot(posX, posY, itemIndex, font, poseStack, itemRenderer, blitOffset);
+                if (itemIndex == lastFilledSlot) this.drawSlotOverlay(poseStack, posX, posY, blitOffset);
+                itemIndex++;
             }
         }
-
-        this.drawBorder(p_194043_, p_194044_, i, j, p_194045_, p_194047_);
         // reset color for other mods
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
-    private int getLastFilledSlot() {
-        if (this.config.slotOverlay() != ClientConfigCore.SlotOverlay.NONE) {
-            int currentContainerSlot = ContainerSlotHelper.getCurrentContainerSlot(Minecraft.getInstance().player);
-            if (currentContainerSlot != -1 && currentContainerSlot < this.items.size()) {
-                if (!this.items.get(currentContainerSlot).isEmpty()) {
-                    return currentContainerSlot;
-                }
-            }
-            for (int i = this.items.size() - 1; i >= 0; i--) {
-                if (!this.items.get(i).isEmpty()) {
-                    return i;
-                }
-            }
-        }
-        return -1;
-    }
-
-    private void renderSlot(int posX, int posY, int itemIndex, Font font, PoseStack poseStack, ItemRenderer itemRenderer, int blitOffset, boolean lastFilledSlot) {
-        if (itemIndex >= this.items.size()) {
-            this.blit(poseStack, posX, posY, blitOffset, Texture.SLOT);
-        } else {
-            ItemStack itemstack = this.items.get(itemIndex);
-            this.blit(poseStack, posX, posY, blitOffset, Texture.SLOT);
-            itemRenderer.renderAndDecorateItem(itemstack, posX + 1, posY + 1, itemIndex);
-            itemRenderer.renderGuiItemDecorations(font, itemstack, posX + 1, posY + 1);
-            if (lastFilledSlot) {
-                ClientConfigCore.SlotOverlay slotOverlay = this.config.slotOverlay();
-                if (slotOverlay == ClientConfigCore.SlotOverlay.HOTBAR) {
-                    RenderSystem.setShader(GameRenderer::getPositionTexShader);
-                    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-                    RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-                    GuiComponent.blit(poseStack, posX - 3, posY - 3, blitOffset + 100, 0, 22, 24, 24, 256, 256);
-                } else if (slotOverlay == ClientConfigCore.SlotOverlay.HOVER) {
-                    AbstractContainerScreen.renderSlotHighlight(poseStack, posX + 1, posY + 1, blitOffset);
-                }
-            }
-        }
-    }
-
-    private void drawBorder(int p_194020_, int p_194021_, int p_194022_, int p_194023_, PoseStack p_194024_, int p_194025_) {
-        this.blit(p_194024_, p_194020_, p_194021_, p_194025_, Texture.BORDER_CORNER_TOP);
-        this.blit(p_194024_, p_194020_ + p_194022_ * 18 + 1, p_194021_, p_194025_, Texture.BORDER_CORNER_TOP);
-
-        for (int i = 0; i < p_194022_; ++i) {
-            this.blit(p_194024_, p_194020_ + 1 + i * 18, p_194021_, p_194025_, Texture.BORDER_HORIZONTAL_TOP);
-            this.blit(p_194024_, p_194020_ + 1 + i * 18, p_194021_ + p_194023_ * 20, p_194025_, Texture.BORDER_HORIZONTAL_BOTTOM);
-        }
-
-        for (int j = 0; j < p_194023_; ++j) {
-            this.blit(p_194024_, p_194020_, p_194021_ + j * 20 + 1, p_194025_, Texture.BORDER_VERTICAL);
-            this.blit(p_194024_, p_194020_ + p_194022_ * 18 + 1, p_194021_ + j * 20 + 1, p_194025_, Texture.BORDER_VERTICAL);
-        }
-
-        this.blit(p_194024_, p_194020_, p_194021_ + p_194023_ * 20, p_194025_, Texture.BORDER_CORNER_BOTTOM);
-        this.blit(p_194024_, p_194020_ + p_194022_ * 18 + 1, p_194021_ + p_194023_ * 20, p_194025_, Texture.BORDER_CORNER_BOTTOM);
-    }
-
-    private void blit(PoseStack p_194036_, int p_194037_, int p_194038_, int p_194039_, Texture p_194040_) {
-        float[] color = this.getBackgroundColor();
-        RenderSystem.setShaderColor(color[0], color[1], color[2], 1.0F);
-        RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
-        GuiComponent.blit(p_194036_, p_194037_, p_194038_, p_194039_, (float) p_194040_.x, (float) p_194040_.y, p_194040_.w, p_194040_.h, 128, 128);
+    private boolean defaultSize() {
+        // this is by far the most common size, we use a pre-built image for that
+        return this.gridSizeX == 9 && this.gridSizeY == 3;
     }
 
     private float[] getBackgroundColor() {
@@ -159,33 +108,90 @@ public class ClientContainerItemTooltip implements ClientTooltipComponent {
         }
     }
 
-    private int gridSizeX() {
-        return 9;
+    private int getLastFilledSlot() {
+        if (this.config.slotOverlay() == ClientConfigCore.SlotOverlay.NONE) return -1;
+        int currentContainerSlot = ContainerSlotHelper.getCurrentContainerSlot(Minecraft.getInstance().player);
+        if (currentContainerSlot != -1 && currentContainerSlot < this.items.size()) {
+            if (!this.items.get(currentContainerSlot).isEmpty()) {
+                return currentContainerSlot;
+            }
+        }
+        for (int i = this.items.size() - 1; i >= 0; i--) {
+            if (!this.items.get(i).isEmpty()) {
+                return i;
+            }
+        }
+        return -1;
     }
 
-    private int gridSizeY() {
-        return this.containerRows;
+    private void drawBorder(int mouseX, int mouseY, int gridSizeX, int gridSizeY, PoseStack poseStack, int blitOffset) {
+        float[] color = this.getBackgroundColor();
+        ContainerTexture.BORDER_TOP_LEFT.blit(poseStack, mouseX, mouseY, blitOffset, color);
+        ContainerTexture.BORDER_TOP_RIGHT.blit(poseStack, mouseX + gridSizeX * 18 + BORDER_SIZE, mouseY, blitOffset, color);
+
+        for (int i = 0; i < gridSizeX; ++i) {
+            ContainerTexture.BORDER_TOP.blit(poseStack, mouseX + BORDER_SIZE + i * 18, mouseY, blitOffset, color);
+            ContainerTexture.BORDER_BOTTOM.blit(poseStack, mouseX + BORDER_SIZE + i * 18, mouseY + gridSizeY * 18 + BORDER_SIZE, blitOffset, color);
+        }
+
+        for (int j = 0; j < gridSizeY; ++j) {
+            ContainerTexture.BORDER_LEFT.blit(poseStack, mouseX, mouseY + j * 18 + BORDER_SIZE, blitOffset, color);
+            ContainerTexture.BORDER_RIGHT.blit(poseStack, mouseX + gridSizeX * 18 + BORDER_SIZE, mouseY + j * 18 + BORDER_SIZE, blitOffset, color);
+        }
+
+        ContainerTexture.BORDER_BOTTOM_LEFT.blit(poseStack, mouseX, mouseY + gridSizeY * 18 + BORDER_SIZE, blitOffset, color);
+        ContainerTexture.BORDER_BOTTOM_RIGHT.blit(poseStack, mouseX + gridSizeX * 18 + BORDER_SIZE, mouseY + gridSizeY * 18 + BORDER_SIZE, blitOffset, color);
     }
 
-    enum Texture {
-        SLOT(0, 0, 18, 20),
-        BLOCKED_SLOT(0, 40, 18, 20),
-        BORDER_VERTICAL(0, 18, 1, 20),
-        BORDER_HORIZONTAL_TOP(0, 20, 18, 1),
-        BORDER_HORIZONTAL_BOTTOM(0, 60, 18, 1),
-        BORDER_CORNER_TOP(0, 20, 1, 1),
-        BORDER_CORNER_BOTTOM(0, 60, 1, 1);
+    private void drawSlot(int posX, int posY, int itemIndex, Font font, PoseStack poseStack, ItemRenderer itemRenderer, int blitOffset) {
+        ContainerTexture.SLOT.blit(poseStack, posX, posY, blitOffset, this.getBackgroundColor());
+        if (itemIndex < this.items.size()) {
+            ItemStack itemstack = this.items.get(itemIndex);
+            itemRenderer.renderAndDecorateItem(itemstack, posX + 1, posY + 1, itemIndex);
+            itemRenderer.renderGuiItemDecorations(font, itemstack, posX + 1, posY + 1);
+        }
+    }
 
-        public final int x;
-        public final int y;
-        public final int w;
-        public final int h;
+    private void drawSlotOverlay(PoseStack poseStack, int posX, int posY, int blitOffset) {
+        ClientConfigCore.SlotOverlay slotOverlay = this.config.slotOverlay();
+        if (slotOverlay == ClientConfigCore.SlotOverlay.HOTBAR) {
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
+            GuiComponent.blit(poseStack, posX - 3, posY - 3, blitOffset + 100, 0, 22, 24, 24, 256, 256);
+        } else if (slotOverlay == ClientConfigCore.SlotOverlay.HOVER) {
+            AbstractContainerScreen.renderSlotHighlight(poseStack, posX + 1, posY + 1, blitOffset);
+        }
+    }
 
-        Texture(int p_169928_, int p_169929_, int p_169930_, int p_169931_) {
-            this.x = p_169928_;
-            this.y = p_169929_;
-            this.w = p_169930_;
-            this.h = p_169931_;
+    private enum ContainerTexture {
+        SLOT(BORDER_SIZE, BORDER_SIZE, 18, 18),
+        BORDER_TOP_LEFT(0, 0, BORDER_SIZE, BORDER_SIZE),
+        BORDER_TOP(BORDER_SIZE, 0, 18, BORDER_SIZE),
+        BORDER_TOP_RIGHT(18 + BORDER_SIZE, 0, BORDER_SIZE, BORDER_SIZE),
+        BORDER_RIGHT(18 + BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, 18),
+        BORDER_BOTTOM_RIGHT(18 + BORDER_SIZE, 18 + BORDER_SIZE, BORDER_SIZE, BORDER_SIZE),
+        BORDER_BOTTOM(BORDER_SIZE, 18 + BORDER_SIZE, 18, BORDER_SIZE),
+        BORDER_BOTTOM_LEFT(0, 18 + BORDER_SIZE, BORDER_SIZE, BORDER_SIZE),
+        BORDER_LEFT(0, BORDER_SIZE, BORDER_SIZE, 18),
+        FULL(0, 18 + 2 * BORDER_SIZE, 18 * 9 + 2 * BORDER_SIZE, 18 * 3 + 2 * BORDER_SIZE);
+
+        public final int textureX;
+        public final int textureY;
+        public final int width;
+        public final int height;
+
+        ContainerTexture(int textureX, int textureY, int width, int height) {
+            this.textureX = textureX;
+            this.textureY = textureY;
+            this.width = width;
+            this.height = height;
+        }
+
+        private void blit(PoseStack poseStack, int posX, int posY, int blitOffset, float[] color) {
+            RenderSystem.setShaderColor(color[0], color[1], color[2], 1.0F);
+            RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
+            GuiComponent.blit(poseStack, posX, posY, blitOffset, this.textureX, this.textureY, this.width, this.height, 256, 256);
         }
     }
 }
