@@ -1,7 +1,7 @@
 package fuzs.easyshulkerboxes.api.network;
 
 import fuzs.easyshulkerboxes.api.SimpleInventoryContainersApi;
-import fuzs.easyshulkerboxes.api.world.item.container.ContainerSlotHelper;
+import fuzs.easyshulkerboxes.api.world.inventory.ContainerSlotHelper;
 import fuzs.puzzleslib.network.Message;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;

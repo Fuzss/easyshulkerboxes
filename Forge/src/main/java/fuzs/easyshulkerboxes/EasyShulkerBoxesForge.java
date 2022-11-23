@@ -36,9 +36,8 @@ public class EasyShulkerBoxesForge {
     }
 
     private static void registerHandlers() {
-        EnderChestMenuHandler enderChestMenuHandler = new EnderChestMenuHandler();
         MinecraftForge.EVENT_BUS.addListener((final LivingEvent.LivingTickEvent evt) -> {
-            enderChestMenuHandler.onLivingTick(evt.getEntity());
+            EnderChestMenuHandler.onLivingTick(evt.getEntity());
         });
     }
 

@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class EnderChestMenuHandler {
 
-    public void onLivingTick(LivingEntity entity) {
+    public static void onLivingTick(LivingEntity entity) {
         if (entity instanceof ServerPlayer) {
             // this should be ok to do every tick as only actual changes are sent
             // vanilla also does this every tick for the current menu (inventory most of the time)

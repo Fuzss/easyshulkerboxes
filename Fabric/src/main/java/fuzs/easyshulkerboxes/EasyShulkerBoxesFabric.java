@@ -17,9 +17,8 @@ public class EasyShulkerBoxesFabric implements ModInitializer {
     }
 
     private static void registerHandlers() {
-        EnderChestMenuHandler enderChestMenuHandler = new EnderChestMenuHandler();
         LivingEvents.TICK.register((LivingEntity entity) -> {
-            enderChestMenuHandler.onLivingTick(entity);
+            EnderChestMenuHandler.onLivingTick(entity);
             return true;
         });
     }

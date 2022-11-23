@@ -1,5 +1,6 @@
 package fuzs.easyshulkerboxes.api.world.item.container;
 
+import fuzs.easyshulkerboxes.api.world.inventory.ContainerSlotHelper;
 import fuzs.easyshulkerboxes.api.world.inventory.SimpleContainerWithSlots;
 import fuzs.easyshulkerboxes.api.world.inventory.tooltip.ContainerItemTooltip;
 import net.minecraft.core.NonNullList;
@@ -144,7 +145,7 @@ public class ContainerItemHelper {
         if (compoundtag == null || !compoundtag.contains("Items")) {
             return Optional.empty();
         }
-        SimpleContainer container = loadItemContainer(stack, blockEntityType, containerRows);
+        SimpleContainer container = loadItemContainer(stack, blockEntityType, containerRows, false);
         return getTooltipImage(container, containerRows, backgroundColor);
     }
 

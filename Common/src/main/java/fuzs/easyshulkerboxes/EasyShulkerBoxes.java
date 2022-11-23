@@ -1,7 +1,6 @@
 package fuzs.easyshulkerboxes;
 
-import fuzs.easyshulkerboxes.api.world.item.container.ContainerItemProvider;
-import fuzs.easyshulkerboxes.api.world.item.container.ContainerItemHelper;
+import fuzs.easyshulkerboxes.api.world.inventory.ContainerItemProvider;
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.init.ModRegistry;
@@ -9,18 +8,22 @@ import fuzs.easyshulkerboxes.network.S2CEnderChestSetContentMessage;
 import fuzs.easyshulkerboxes.network.S2CEnderChestSetSlotMessage;
 import fuzs.easyshulkerboxes.network.client.C2SEnderChestMenuMessage;
 import fuzs.easyshulkerboxes.network.client.C2SEnderChestSetSlotMessage;
+import fuzs.easyshulkerboxes.world.inventory.EnderChestProvider;
+import fuzs.easyshulkerboxes.world.inventory.ShulkerBoxProvider;
 import fuzs.puzzleslib.config.ConfigHolder;
 import fuzs.puzzleslib.core.CommonFactories;
 import fuzs.puzzleslib.core.ModConstructor;
 import fuzs.puzzleslib.network.MessageDirection;
 import fuzs.puzzleslib.network.NetworkHandler;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.EnderChestBlock;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 public class EasyShulkerBoxes implements ModConstructor {
     public static final String MOD_ID = "easyshulkerboxes";
@@ -49,11 +52,12 @@ public class EasyShulkerBoxes implements ModConstructor {
 
     @Override
     public void onCommonSetup() {
-        ContainerItemProvider.registerItemLike(ShulkerBoxBlock.class, (Player player, ItemStack stack) -> {
-            return () -> ContainerItemHelper.loadItemContainer(stack, BlockEntityType.SHULKER_BOX, 3, false);
-        });
-        ContainerItemProvider.registerItemLike(EnderChestBlock.class, (Player player, ItemStack stack) -> {
-            return player::getEnderChestInventory;
-        });
+        for (Map.Entry<ResourceKey<Block>, Block> entry : Registry.BLOCK.entrySet()) {
+            // only affect vanilla shulker boxes, other mods might add shulker boxes with a different inventory size
+            if (entry.getValue() instanceof ShulkerBoxBlock && entry.getKey().location().getNamespace().equals("minecraft")) {
+                ContainerItemProvider.register(entry.getValue(), ShulkerBoxProvider.INSTANCE);
+            }
+        }
+        ContainerItemProvider.register(Items.ENDER_CHEST, EnderChestProvider.INSTANCE);
     }
 }

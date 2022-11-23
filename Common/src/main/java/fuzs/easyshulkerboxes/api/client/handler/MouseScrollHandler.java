@@ -4,8 +4,8 @@ import fuzs.easyshulkerboxes.api.SimpleInventoryContainersApi;
 import fuzs.easyshulkerboxes.api.config.ClientConfigCore;
 import fuzs.easyshulkerboxes.api.config.ServerConfigCore;
 import fuzs.easyshulkerboxes.api.network.C2SCurrentSlotMessage;
-import fuzs.easyshulkerboxes.api.world.item.container.ContainerItemProvider;
-import fuzs.easyshulkerboxes.api.world.item.container.ContainerSlotHelper;
+import fuzs.easyshulkerboxes.api.world.inventory.ContainerItemProvider;
+import fuzs.easyshulkerboxes.api.world.inventory.ContainerSlotHelper;
 import fuzs.puzzleslib.client.gui.screens.CommonScreens;
 import fuzs.puzzleslib.proxy.Proxy;
 import net.minecraft.client.Minecraft;
@@ -34,7 +34,7 @@ public class MouseScrollHandler {
                     if (signum != 0) {
                         Player player = CommonScreens.INSTANCE.getMinecraft(screen).player;
                         int currentContainerSlot = ContainerSlotHelper.getCurrentContainerSlot(player);
-                        currentContainerSlot = ContainerSlotHelper.findClosestSlotWithContent(ContainerItemProvider.get(stack.getItem()).getItemContainer(player, stack).get(), currentContainerSlot, signum < 0);
+                        currentContainerSlot = ContainerSlotHelper.findClosestSlotWithContent(ContainerItemProvider.get(stack.getItem()).getItemContainer(player, stack, false), currentContainerSlot, signum < 0);
                         ContainerSlotHelper.setCurrentContainerSlot(player, currentContainerSlot);
                     }
                     return Optional.of(Unit.INSTANCE);

@@ -6,7 +6,7 @@ import com.mojang.math.Matrix4f;
 import fuzs.easyshulkerboxes.api.client.handler.MouseScrollHandler;
 import fuzs.easyshulkerboxes.api.config.ClientConfigCore;
 import fuzs.easyshulkerboxes.api.world.inventory.tooltip.ContainerItemTooltip;
-import fuzs.easyshulkerboxes.api.world.item.container.ContainerSlotHelper;
+import fuzs.easyshulkerboxes.api.world.inventory.ContainerSlotHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
