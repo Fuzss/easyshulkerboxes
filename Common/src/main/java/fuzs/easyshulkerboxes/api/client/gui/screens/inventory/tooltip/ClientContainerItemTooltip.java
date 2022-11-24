@@ -22,6 +22,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
+import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +32,7 @@ public abstract class ClientContainerItemTooltip implements ClientTooltipCompone
     public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(SimpleInventoryContainersApi.MOD_ID, "textures/gui/container/inventory_tooltip.png");
     private static final Component HOLD_SHIFT_COMPONENT = Component.translatable("item.container.tooltip.info", Component.translatable("item.container.tooltip.shift").withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY);
     private static final int BORDER_SIZE = 7;
+    private static final MutableInt ACTIVE_CONTAINER_ITEM_TOOLTIPS = new MutableInt();
 
     protected final NonNullList<ItemStack> items;
     private final float[] backgroundColor;
@@ -76,6 +78,7 @@ public abstract class ClientContainerItemTooltip implements ClientTooltipCompone
     @Override
     public void renderImage(Font font, int mouseX, int mouseY, PoseStack poseStack, ItemRenderer itemRenderer, int blitOffset) {
         if (!this.config.tooltipContentsActivation().isActive()) return;
+        ACTIVE_CONTAINER_ITEM_TOOLTIPS.increment();
         float[] color = this.getBackgroundColor();
         if (this.defaultSize()) {
             ContainerTexture.FULL.blit(poseStack, mouseX, mouseY, blitOffset, color);
@@ -103,10 +106,12 @@ public abstract class ClientContainerItemTooltip implements ClientTooltipCompone
         // reset color for other mods
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         this.drawSelectedSlotTooltip(mouseX, mouseY, poseStack, lastFilledSlot, font);
+        ACTIVE_CONTAINER_ITEM_TOOLTIPS.decrement();
     }
 
     private void drawSelectedSlotTooltip(int mouseX, int mouseY, PoseStack poseStack, int lastFilledSlot, Font font) {
         if (!this.config.selectedItemTooltipActivation().isActive()) return;
+        if (ACTIVE_CONTAINER_ITEM_TOOLTIPS.intValue() > 1) return;
         if (lastFilledSlot >= 0 && lastFilledSlot < this.items.size()) {
             ItemStack stack = this.items.get(lastFilledSlot);
             Screen currentScreen = Minecraft.getInstance().screen;
@@ -176,6 +181,7 @@ public abstract class ClientContainerItemTooltip implements ClientTooltipCompone
     }
 
     private void drawSlotOverlay(PoseStack poseStack, int posX, int posY, int blitOffset) {
+        if (ACTIVE_CONTAINER_ITEM_TOOLTIPS.intValue() > 1) return;
         ClientConfigCore.SlotOverlay slotOverlay = this.config.slotOverlay();
         if (slotOverlay == ClientConfigCore.SlotOverlay.HOTBAR) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
