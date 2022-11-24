@@ -4,13 +4,14 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import fuzs.easyshulkerboxes.api.SimpleInventoryContainersApi;
-import fuzs.easyshulkerboxes.api.client.handler.MouseScrollHandler;
 import fuzs.easyshulkerboxes.api.config.ClientConfigCore;
 import fuzs.easyshulkerboxes.api.world.inventory.ContainerSlotHelper;
+import fuzs.easyshulkerboxes.client.core.ClientAbstractions;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.GameRenderer;
@@ -19,7 +20,11 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.List;
+import java.util.Optional;
 
 public abstract class ClientContainerItemTooltip implements ClientTooltipComponent {
     public static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/widgets.png");
@@ -41,18 +46,20 @@ public abstract class ClientContainerItemTooltip implements ClientTooltipCompone
 
     protected abstract int getGridSizeY();
 
-    protected abstract boolean isBundleFull();
+    protected boolean noCapacityLeft(int itemIndex) {
+        return false;
+    }
 
     @Override
     public void renderText(Font p_169943_, int p_169944_, int p_169945_, Matrix4f p_169946_, MultiBufferSource.BufferSource p_169947_) {
-        if (!MouseScrollHandler.showInventoryContents(this.config)) {
+        if (!this.config.tooltipContentsActivation().isActive()) {
             p_169943_.drawInBatch(HOLD_SHIFT_COMPONENT, (float) p_169944_, (float) p_169945_, -1, true, p_169946_, p_169947_, false, 0, 15728880);
         }
     }
 
     @Override
     public int getHeight() {
-        if (!MouseScrollHandler.showInventoryContents(this.config)) {
+        if (!this.config.tooltipContentsActivation().isActive()) {
             return 10;
         }
         return this.getGridSizeY() * 18 + 2 * BORDER_SIZE;
@@ -60,7 +67,7 @@ public abstract class ClientContainerItemTooltip implements ClientTooltipCompone
 
     @Override
     public int getWidth(Font font) {
-        if (!MouseScrollHandler.showInventoryContents(this.config)) {
+        if (!this.config.tooltipContentsActivation().isActive()) {
             return font.width(HOLD_SHIFT_COMPONENT);
         }
         return this.getGridSizeX() * 18 + 2 * BORDER_SIZE;
@@ -68,7 +75,7 @@ public abstract class ClientContainerItemTooltip implements ClientTooltipCompone
 
     @Override
     public void renderImage(Font font, int mouseX, int mouseY, PoseStack poseStack, ItemRenderer itemRenderer, int blitOffset) {
-        if (!MouseScrollHandler.showInventoryContents(this.config)) return;
+        if (!this.config.tooltipContentsActivation().isActive()) return;
         float[] color = this.getBackgroundColor();
         if (this.defaultSize()) {
             ContainerTexture.FULL.blit(poseStack, mouseX, mouseY, blitOffset, color);
@@ -82,30 +89,33 @@ public abstract class ClientContainerItemTooltip implements ClientTooltipCompone
                 int posX = mouseX + i1 * 18 + BORDER_SIZE;
                 int posY = mouseY + l * 18 + BORDER_SIZE;
                 if (!this.defaultSize()) {
-                    if (itemIndex >= this.items.size() && this.isBundleFull()) {
+                    if (this.noCapacityLeft(itemIndex)) {
                         ContainerTexture.BLOCKED_SLOT.blit(poseStack, posX, posY, blitOffset, color);
                     } else {
                         ContainerTexture.SLOT.blit(poseStack, posX, posY, blitOffset, color);
                     }
                 }
-                this.drawSlot(posX, posY, itemIndex, font, poseStack, itemRenderer, blitOffset);
+                this.drawSlot(posX, posY, itemIndex, font, itemRenderer);
                 if (itemIndex == lastFilledSlot) this.drawSlotOverlay(poseStack, posX, posY, blitOffset);
                 itemIndex++;
             }
         }
         // reset color for other mods
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        this.drawSelectedSlotTooltip(mouseX, mouseY, poseStack, lastFilledSlot);
+        this.drawSelectedSlotTooltip(mouseX, mouseY, poseStack, lastFilledSlot, font);
     }
 
-    private void drawSelectedSlotTooltip(int mouseX, int mouseY, PoseStack poseStack, int lastFilledSlot) {
-        if (lastFilledSlot != -1) {
-            int posX = mouseX + lastFilledSlot / this.getGridSizeX() * 18 + BORDER_SIZE;
-            int posY = mouseY + lastFilledSlot % this.getGridSizeY() * 18 + BORDER_SIZE;
+    private void drawSelectedSlotTooltip(int mouseX, int mouseY, PoseStack poseStack, int lastFilledSlot, Font font) {
+        if (!this.config.selectedItemTooltipActivation().isActive()) return;
+        if (lastFilledSlot >= 0 && lastFilledSlot < this.items.size()) {
             ItemStack stack = this.items.get(lastFilledSlot);
+            Screen currentScreen = Minecraft.getInstance().screen;
+            List<Component> tooltipFromItem = currentScreen.getTooltipFromItem(stack);
+            Optional<TooltipComponent> tooltipImage = stack.getTooltipImage();
+            List<ClientTooltipComponent> tooltipComponents = ClientAbstractions.INSTANCE.getTooltipComponents(currentScreen, font, mouseX, mouseY, stack);
+            int maxWidth = tooltipComponents.stream().mapToInt(tooltipComponent -> tooltipComponent.getWidth(font)).max().orElse(0);
             poseStack.pushPose();
-            poseStack.translate(0.0, 0.0, 500.0);
-            Minecraft.getInstance().screen.renderTooltip(poseStack, Minecraft.getInstance().screen.getTooltipFromItem(stack), stack.getTooltipImage(), posX + 9, posY + 18);
+            currentScreen.renderTooltip(poseStack, tooltipFromItem, tooltipImage, mouseX - maxWidth - 2 * 18, mouseY);
             poseStack.popPose();
         }
     }
@@ -157,8 +167,7 @@ public abstract class ClientContainerItemTooltip implements ClientTooltipCompone
         ContainerTexture.BORDER_BOTTOM_RIGHT.blit(poseStack, mouseX + gridSizeX * 18 + BORDER_SIZE, mouseY + gridSizeY * 18 + BORDER_SIZE, blitOffset, color);
     }
 
-    private void drawSlot(int posX, int posY, int itemIndex, Font font, PoseStack poseStack, ItemRenderer itemRenderer, int blitOffset) {
-        ContainerTexture.SLOT.blit(poseStack, posX, posY, blitOffset, this.getBackgroundColor());
+    private void drawSlot(int posX, int posY, int itemIndex, Font font, ItemRenderer itemRenderer) {
         if (itemIndex < this.items.size()) {
             ItemStack itemstack = this.items.get(itemIndex);
             itemRenderer.renderAndDecorateItem(itemstack, posX + 1, posY + 1, itemIndex);

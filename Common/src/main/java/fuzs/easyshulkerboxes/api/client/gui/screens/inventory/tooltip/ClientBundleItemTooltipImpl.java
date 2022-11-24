@@ -23,7 +23,8 @@ public class ClientBundleItemTooltipImpl extends ClientContainerItemTooltip {
     }
 
     @Override
-    protected boolean isBundleFull() {
-        return this.isBundleFull;
+    protected boolean noCapacityLeft(int itemIndex) {
+        // container is larger by one to allow for adding items, we need to subtract that additional slot again when checking if it is full
+        return itemIndex >= this.items.size() - 1 && this.isBundleFull;
     }
 }

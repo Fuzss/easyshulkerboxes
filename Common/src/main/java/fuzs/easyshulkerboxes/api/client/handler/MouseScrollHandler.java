@@ -7,7 +7,6 @@ import fuzs.easyshulkerboxes.api.network.C2SCurrentSlotMessage;
 import fuzs.easyshulkerboxes.api.world.inventory.ContainerItemProvider;
 import fuzs.easyshulkerboxes.api.world.inventory.ContainerSlotHelper;
 import fuzs.puzzleslib.client.gui.screens.CommonScreens;
-import fuzs.puzzleslib.proxy.Proxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -25,7 +24,7 @@ public class MouseScrollHandler {
 
     public static Optional<Unit> onMouseScroll(Screen screen, double mouseX, double mouseY, double horizontalAmount, double verticalAmount, ClientConfigCore clientConfig, ServerConfigCore serverConfig) {
         if (!serverConfig.allowSlotCycling()) return Optional.empty();
-        if (showInventoryContents(clientConfig) && screen instanceof AbstractContainerScreen<?> containerScreen) {
+        if (clientConfig.tooltipContentsActivation().isActive() && screen instanceof AbstractContainerScreen<?> containerScreen) {
             Slot hoveredSlot = CommonScreens.INSTANCE.getHoveredSlot(containerScreen);
             if (hoveredSlot != null) {
                 ItemStack stack = hoveredSlot.getItem();
@@ -54,17 +53,13 @@ public class MouseScrollHandler {
     }
 
     private static Optional<Slot> getHoveredSlotWithContainerItem(@Nullable Screen screen, ClientConfigCore clientConfig) {
-        if (showInventoryContents(clientConfig) && screen instanceof AbstractContainerScreen<?> containerScreen) {
+        if (clientConfig.tooltipContentsActivation().isActive() && screen instanceof AbstractContainerScreen<?> containerScreen) {
             Slot hoveredSlot = CommonScreens.INSTANCE.getHoveredSlot(containerScreen);
             if (hoveredSlot != null && ContainerItemProvider.suppliesContainerProvider(hoveredSlot.getItem())) {
                 return Optional.of(hoveredSlot);
             }
         }
         return Optional.empty();
-    }
-
-    public static boolean showInventoryContents(ClientConfigCore clientConfig) {
-        return !clientConfig.contentsRequireShift() || Proxy.INSTANCE.hasShiftDown();
     }
 
     public static void ensureHasSentCurrentSlot() {

@@ -7,12 +7,14 @@ import fuzs.puzzleslib.config.annotation.Config;
 public class ClientConfig implements ConfigCore, ClientConfigCore {
     @Config(description = "Color item inventories on tooltips according to the container item's color.")
     public boolean colorfulTooltips = true;
-    @Config(description = "Seeing item inventory contents requires shift to be held.")
-    public boolean contentsRequireShift = false;
+    @Config(description = "Select a key required to be held for seeing item inventory contents, otherwise show them always.")
+    public TooltipContentsActivation tooltipContentsActivation = TooltipContentsActivation.ALWAYS;
     @Config(name = "slot_overlay", description = "Render a white overlay or the hotbar selected item frame over the slot the next item will be taken out when right-clicking the container item.")
     public SlotOverlay slotOverlay = SlotOverlay.HOVER;
     @Config(description = "Show an indicator on container items when the stack carried by the cursor can be added in your inventory.")
     public boolean containerItemIndicator = true;
+    @Config(description = "Show a tooltip for the item currently selected in a container item's tooltip next to the main tooltip, select a key required to be held to see that tooltip.")
+    public SelectedItemTooltipActivation selectedItemTooltipActivation = SelectedItemTooltipActivation.ALWAYS;
 
     @Override
     public boolean colorfulTooltips() {
@@ -20,8 +22,8 @@ public class ClientConfig implements ConfigCore, ClientConfigCore {
     }
 
     @Override
-    public boolean contentsRequireShift() {
-        return this.contentsRequireShift;
+    public TooltipContentsActivation tooltipContentsActivation() {
+        return this.tooltipContentsActivation;
     }
 
     @Override
@@ -30,7 +32,7 @@ public class ClientConfig implements ConfigCore, ClientConfigCore {
     }
 
     @Override
-    public boolean containerItemIndicator() {
-        return this.containerItemIndicator;
+    public SelectedItemTooltipActivation selectedItemTooltipActivation() {
+        return this.selectedItemTooltipActivation;
     }
 }

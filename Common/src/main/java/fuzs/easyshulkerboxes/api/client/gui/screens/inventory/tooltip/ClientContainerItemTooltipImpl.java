@@ -22,9 +22,4 @@ public class ClientContainerItemTooltipImpl extends ClientContainerItemTooltip {
     protected int getGridSizeY() {
         return this.gridSizeY;
     }
-
-    @Override
-    protected boolean isBundleFull() {
-        return false;
-    }
 }

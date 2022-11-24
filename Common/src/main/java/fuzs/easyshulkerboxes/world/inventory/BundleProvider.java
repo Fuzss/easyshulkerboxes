@@ -22,7 +22,7 @@ public class BundleProvider implements ContainerItemProvider {
 
     @Override
     public SimpleContainer getItemContainer(Player player, ItemStack stack, boolean allowSaving) {
-        return ContainerItemHelper.loadItemContainer(stack, null, -1, allowSaving);
+        return ContainerItemHelper.loadBundleItemContainer(stack, allowSaving);
     }
 
     @Override
@@ -37,6 +37,8 @@ public class BundleProvider implements ContainerItemProvider {
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
-        return ContainerItemHelper.getTooltipContainer(stack, null, -1).map(ContainerItemHelper::getContainerItems).map(items -> new BundleItemTooltip(items, BundleItemAccessor.callGetContentWeight(stack) >= 64));
+        return ContainerItemHelper.getTooltipContainer(stack, null, -1)
+                .map(ContainerItemHelper::getContainerItems)
+                .map(items -> new BundleItemTooltip(items, BundleItemAccessor.callGetContentWeight(stack) >= 64));
     }
 }

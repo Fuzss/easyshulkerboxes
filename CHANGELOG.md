@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v4.3.5-1.19.2] - 2022-11-24
+### Added
+- The tooltip of the item currently selected in a container item's tooltip is now shown next to the main tooltip, so you can e.g. tell tools with different enchantments apart (very much inspired by the [Equipment Compare] mod)
+- Added full support for bundles, this means slot scrolling now works on those, so you can select the item you want to take out instead of always taking out the last one
+- Also, bundles have better looking tooltips
+- There still is no crafting recipe for bundles (yet) though, you'll have to deal with obtaining them yourself
+### Changed
+- Easy Shulker Boxes can now override inventory interactions and tooltip images for any item, even when it implements those features itself already (still all only accessible via the in-code api)
+- Uncolored shulker boxes have a fancy custom tooltip color
+### Fixed
+- Fixed dupe glitch with the last item in a shulker box
+
 ## [v4.3.4-1.19.2] - 2022-11-23
 ### Changed
 - For Easy Shulker Boxes to support an item it must now be manually registered, this means only vanilla items (shulker boxes, ender chests, bundles) will be supported by default, mainly to prevent larger shulker boxes from other mods from breaking
@@ -60,3 +72,4 @@ The format is based on [Keep a Changelog].
 - Split into multi-loader project
 
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
+[Equipment Compare]: https://www.curseforge.com/minecraft/mc-mods/equipment-compare

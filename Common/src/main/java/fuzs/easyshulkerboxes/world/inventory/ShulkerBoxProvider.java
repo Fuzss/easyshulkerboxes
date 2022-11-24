@@ -23,7 +23,7 @@ public class ShulkerBoxProvider implements ContainerItemProvider {
 
     @Override
     public SimpleContainer getItemContainer(Player player, ItemStack stack, boolean allowSaving) {
-        return ContainerItemHelper.loadItemContainer(stack, BlockEntityType.SHULKER_BOX, 3, allowSaving);
+        return ContainerItemHelper.loadItemContainer(stack, BlockEntityType.SHULKER_BOX, 27, allowSaving);
     }
 
     @Override
@@ -42,7 +42,8 @@ public class ShulkerBoxProvider implements ContainerItemProvider {
         if (color != null) {
             return ContainerItemHelper.getTooltipImage(stack, BlockEntityType.SHULKER_BOX, 3, color);
         } else {
-            return ContainerItemHelper.getTooltipImageWithColor(ContainerItemHelper.getTooltipContainer(stack, BlockEntityType.SHULKER_BOX, 3), 3, new float[]{0.88235295F, 0.6901961F, 0.99607843F});
+            // beautiful lavender color from Tinted mod once again
+            return ContainerItemHelper.getTooltipImageWithColor(ContainerItemHelper.getTooltipContainer(stack, BlockEntityType.SHULKER_BOX, 27), 3, new float[]{0.88235295F, 0.6901961F, 0.99607843F});
         }
     }
 }
