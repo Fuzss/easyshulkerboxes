@@ -28,7 +28,7 @@ public class MouseScrollHandler {
             Slot hoveredSlot = CommonScreens.INSTANCE.getHoveredSlot(containerScreen);
             if (hoveredSlot != null) {
                 ItemStack stack = hoveredSlot.getItem();
-                if (ContainerItemProvider.suppliesContainerProvider(stack)) {
+                if (ContainerItemProvider.canSupplyProvider(stack)) {
                     int signum = (int) Math.signum(verticalAmount);
                     if (signum != 0) {
                         Player player = CommonScreens.INSTANCE.getMinecraft(screen).player;
@@ -55,7 +55,7 @@ public class MouseScrollHandler {
     private static Optional<Slot> getHoveredSlotWithContainerItem(@Nullable Screen screen, ClientConfigCore clientConfig) {
         if (clientConfig.tooltipContentsActivation().isActive() && screen instanceof AbstractContainerScreen<?> containerScreen) {
             Slot hoveredSlot = CommonScreens.INSTANCE.getHoveredSlot(containerScreen);
-            if (hoveredSlot != null && ContainerItemProvider.suppliesContainerProvider(hoveredSlot.getItem())) {
+            if (hoveredSlot != null && ContainerItemProvider.canSupplyProvider(hoveredSlot.getItem())) {
                 return Optional.of(hoveredSlot);
             }
         }

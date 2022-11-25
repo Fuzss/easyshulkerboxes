@@ -9,8 +9,10 @@
     "ShulkerBoxBlockMixin"
   ],
   "client": [
+    "client.AbstractContainerScreenMixin",
     "client.MultiPlayerGameModeMixin",
-    "client.accessor.BundleItemAccessor"
+    "client.accessor.BundleItemAccessor",
+    "client.accessor.AbstractContainerScreenAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

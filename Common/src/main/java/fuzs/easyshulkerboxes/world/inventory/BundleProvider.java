@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
 
-public class BundleProvider implements ContainerItemProvider {
+public class BundleProvider extends ContainerItemProvider {
     public static final ContainerItemProvider INSTANCE = new BundleProvider();
 
     private BundleProvider() {
@@ -26,8 +26,18 @@ public class BundleProvider implements ContainerItemProvider {
     }
 
     @Override
-    public int acceptableItemCount(ItemStack containerStack, ItemStack stack) {
-        return !stack.getItem().canFitInsideContainerItems() ? 0 : Math.min(ContainerItemHelper.getAvailableBundleItemSpace(containerStack, stack, 64), stack.getCount());
+    protected boolean canItemFitInside(ItemStack containerStack, ItemStack stack) {
+        return stack.getItem().canFitInsideContainerItems();
+    }
+
+    @Override
+    protected boolean _canAcceptItem(ItemStack containerStack, ItemStack stack) {
+        return this.canItemFitInside(containerStack, stack) && ContainerItemHelper.getAvailableBundleItemSpace(containerStack, stack, 64) > 0;
+    }
+
+    @Override
+    protected int _getAcceptableItemCount(ItemStack containerStack, ItemStack stack) {
+        return Math.min(ContainerItemHelper.getAvailableBundleItemSpace(containerStack, stack, 64), stack.getCount());
     }
 
     @Override

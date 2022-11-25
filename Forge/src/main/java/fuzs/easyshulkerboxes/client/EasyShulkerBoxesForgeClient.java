@@ -1,12 +1,14 @@
 package fuzs.easyshulkerboxes.client;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
+import fuzs.easyshulkerboxes.api.client.handler.MouseDragHandler;
 import fuzs.easyshulkerboxes.api.client.handler.MouseScrollHandler;
 import fuzs.easyshulkerboxes.client.handler.EnderChestMenuClientHandler;
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.puzzleslib.client.core.ClientFactories;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ContainerScreenEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -29,6 +31,18 @@ public class EasyShulkerBoxesForgeClient {
         });
         MinecraftForge.EVENT_BUS.addListener((final ScreenEvent.MouseScrolled.Pre evt) -> {
             MouseScrollHandler.onMouseScroll(evt.getScreen(), evt.getMouseX(), evt.getMouseY(), evt.getScrollDelta(), evt.getScrollDelta(), EasyShulkerBoxes.CONFIG.get(ClientConfig.class), EasyShulkerBoxes.CONFIG.get(ServerConfig.class)).ifPresent(unit -> evt.setCanceled(true));
+        });
+        MinecraftForge.EVENT_BUS.addListener((final ScreenEvent.MouseButtonPressed.Pre evt) -> {
+            MouseDragHandler.INSTANCE.onMousePress(evt.getScreen(), evt.getMouseX(), evt.getMouseY(), evt.getButton()).ifPresent(unit -> evt.setCanceled(true));
+        });
+        MinecraftForge.EVENT_BUS.addListener((final ScreenEvent.MouseDragged.Pre evt) -> {
+            MouseDragHandler.INSTANCE.onMouseDrag(evt.getScreen(), evt.getMouseX(), evt.getMouseY(), evt.getMouseButton(), evt.getDragX(), evt.getDragY()).ifPresent(unit -> evt.setCanceled(true));
+        });
+        MinecraftForge.EVENT_BUS.addListener((final ScreenEvent.MouseButtonReleased.Pre evt) -> {
+            MouseDragHandler.INSTANCE.onMouseRelease(evt.getScreen(), evt.getMouseX(), evt.getMouseY(), evt.getButton()).ifPresent(unit -> evt.setCanceled(true));
+        });
+        MinecraftForge.EVENT_BUS.addListener((final ContainerScreenEvent.Render.Foreground evt) -> {
+            MouseDragHandler.INSTANCE.onDrawForeground(evt.getContainerScreen(), evt.getPoseStack(), evt.getMouseX(), evt.getMouseY());
         });
 //        MinecraftForge.EVENT_BUS.addListener((final TickEvent.ClientTickEvent evt) -> {
 //            if (evt.phase == TickEvent.Phase.END) MouseScrollHandler.onClientTick$End(Minecraft.getInstance(), EasyShulkerBoxes.CONFIG.get(ClientConfig.class));

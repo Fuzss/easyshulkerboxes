@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
 
-public class EnderChestProvider implements ContainerItemProvider {
+public class EnderChestProvider extends ContainerItemProvider {
     public static final ContainerItemProvider INSTANCE = new EnderChestProvider();
 
     private EnderChestProvider() {
@@ -28,7 +28,17 @@ public class EnderChestProvider implements ContainerItemProvider {
     }
 
     @Override
-    public int acceptableItemCount(ItemStack containerStack, ItemStack stack) {
+    protected boolean canItemFitInside(ItemStack containerStack, ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    protected boolean _canAcceptItem(ItemStack containerStack, ItemStack stack) {
+        return this.getItemContainer(Proxy.INSTANCE.getClientPlayer(), containerStack, false).canAddItem(stack);
+    }
+
+    @Override
+    protected int _getAcceptableItemCount(ItemStack containerStack, ItemStack stack) {
         return stack.getCount();
     }
 
@@ -40,7 +50,7 @@ public class EnderChestProvider implements ContainerItemProvider {
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
         // pretty ender color from tinted mod
-        return ContainerItemHelper.getTooltipImageWithColor(Optional.of(Proxy.INSTANCE.getClientPlayer().getEnderChestInventory()), 3, new float[]{0.16470589F, 0.38431373F, 0.33333334F});
+        return ContainerItemHelper.getTooltipImageWithColor(Optional.of(this.getItemContainer(Proxy.INSTANCE.getClientPlayer(), stack, false)), 3, new float[]{0.16470589F, 0.38431373F, 0.33333334F});
     }
 
     @Override

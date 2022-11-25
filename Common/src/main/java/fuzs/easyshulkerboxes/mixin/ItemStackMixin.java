@@ -24,10 +24,10 @@ abstract class ItemStackMixin {
     @Inject(method = "overrideStackedOnOther", at = @At("HEAD"), cancellable = true)
     public void simpleinventorycontainers$overrideStackedOnOther(Slot slot, ClickAction clickAction, Player player, CallbackInfoReturnable<Boolean> callback) {
         ItemStack containerStack = (ItemStack) (Object) this;
-        if (ContainerItemProvider.suppliesContainerProvider(containerStack)) {
+        if (ContainerItemProvider.canSupplyProvider(containerStack)) {
             ContainerItemProvider itemProvider = ContainerItemProvider.get(containerStack.getItem());
             if (itemProvider.isAllowed()) {
-                boolean success = ContainerItemHelper.overrideStackedOnOther(() -> itemProvider.getItemContainer(player, containerStack), slot, clickAction, player, stack -> itemProvider.acceptableItemCount(containerStack, stack), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
+                boolean success = ContainerItemHelper.overrideStackedOnOther(() -> itemProvider.getItemContainer(player, containerStack, true), slot, clickAction, player, stack -> itemProvider.getAcceptableItemCount(containerStack, stack), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
                 if (success) itemProvider.broadcastContainerChanges(player);
                 callback.setReturnValue(success);
             }
@@ -37,10 +37,10 @@ abstract class ItemStackMixin {
     @Inject(method = "overrideOtherStackedOnMe", at = @At("HEAD"), cancellable = true)
     public void simpleinventorycontainers$overrideOtherStackedOnMe(ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, CallbackInfoReturnable<Boolean> callback) {
         ItemStack containerStack = (ItemStack) (Object) this;
-        if (ContainerItemProvider.suppliesContainerProvider(containerStack)) {
+        if (ContainerItemProvider.canSupplyProvider(containerStack)) {
             ContainerItemProvider itemProvider = ContainerItemProvider.get(containerStack.getItem());
             if (itemProvider.isAllowed()) {
-                boolean success = ContainerItemHelper.overrideOtherStackedOnMe(() -> itemProvider.getItemContainer(player, containerStack), stackOnMe, slot, clickAction, player, slotAccess, stack -> itemProvider.acceptableItemCount(containerStack, stack), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
+                boolean success = ContainerItemHelper.overrideOtherStackedOnMe(() -> itemProvider.getItemContainer(player, containerStack, true), stackOnMe, slot, clickAction, player, slotAccess, stack -> itemProvider.getAcceptableItemCount(containerStack, stack), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
                 if (success) itemProvider.broadcastContainerChanges(player);
                 callback.setReturnValue(success);
             }
@@ -50,7 +50,7 @@ abstract class ItemStackMixin {
     @Inject(method = "getTooltipImage", at = @At("HEAD"), cancellable = true)
     public void simpleinventorycontainers$getTooltipImage(CallbackInfoReturnable<Optional<TooltipComponent>> callback) {
         ItemStack stack = (ItemStack) (Object) this;
-        if (ContainerItemProvider.suppliesContainerProvider(stack)) {
+        if (ContainerItemProvider.canSupplyProvider(stack)) {
             ContainerItemProvider itemProvider = ContainerItemProvider.get(stack.getItem());
             if (itemProvider.isAllowed()) {
                 callback.setReturnValue(itemProvider.getTooltipImage(stack));

@@ -15,25 +15,26 @@ import java.util.function.BooleanSupplier;
 public class ItemDecorationHelper {
 
     public static DynamicItemDecorator getDynamicItemDecorator(ItemDecoratorPredicate filter, BooleanSupplier allow) {
-        return (Font font, ItemStack stack, int itemPosX, int itemPosY, float blitOffset) -> registerContainerItemDecoration(font, stack, itemPosX, itemPosY, blitOffset, filter, allow);
+        return (Font font, ItemStack stack, int itemPosX, int itemPosY, float blitOffset) -> {
+            if (!allow.getAsBoolean()) return false;
+            return registerContainerItemDecoration(font, stack, itemPosX, itemPosY, blitOffset, filter);
+        };
     }
 
     @SuppressWarnings("ConstantConditions")
-    private static boolean registerContainerItemDecoration(Font font, ItemStack stack, int itemPosX, int itemPosY, float blitOffset, ItemDecoratorPredicate filter, BooleanSupplier allow) {
-        if (!allow.getAsBoolean()) return false;
-        if (stack.getCount() == 1) {
-            if (Minecraft.getInstance().screen instanceof AbstractContainerScreen<?> screen) {
-                ItemStack carriedStack = screen.getMenu().getCarried();
-                if (!carriedStack.isEmpty() && stack != carriedStack && carriedStack.getItem().canFitInsideContainerItems() && filter.test(screen, stack, carriedStack)) {
-                    PoseStack posestack = new PoseStack();
-                    String s = "+";
-                    posestack.translate(0.0, 0.0, blitOffset + 200.0);
-                    MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-                    font.drawInBatch(s, (float) (itemPosX + 19 - 2 - font.width(s)), (float) (itemPosY + 6 + 3), ChatFormatting.YELLOW.getColor(), true, posestack.last().pose(), multibuffersource$buffersource, false, 0, 15728880);
-                    multibuffersource$buffersource.endBatch();
-                    // font renderer modifies render states, so this tells the implementation to reset them
-                    return true;
-                }
+    private static boolean registerContainerItemDecoration(Font font, ItemStack stack, int itemPosX, int itemPosY, float blitOffset, ItemDecoratorPredicate filter) {
+        if (stack.getCount() != 1) return false;
+        if (Minecraft.getInstance().screen instanceof AbstractContainerScreen<?> screen) {
+            ItemStack carriedStack = screen.getMenu().getCarried();
+            if (!carriedStack.isEmpty() && stack != carriedStack && filter.test(screen, stack, carriedStack)) {
+                PoseStack posestack = new PoseStack();
+                posestack.translate(0.0, 0.0, blitOffset + 200.0);
+                MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+                String s = "+";
+                font.drawInBatch(s, (float) (itemPosX + 19 - 2 - font.width(s)), (float) (itemPosY + 6 + 3), ChatFormatting.YELLOW.getColor(), true, posestack.last().pose(), multibuffersource$buffersource, false, 0, 15728880);
+                multibuffersource$buffersource.endBatch();
+                // font renderer modifies render states, so this tells the implementation to reset them
+                return true;
             }
         }
         return false;

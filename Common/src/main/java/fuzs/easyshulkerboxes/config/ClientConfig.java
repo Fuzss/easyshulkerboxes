@@ -14,7 +14,7 @@ public class ClientConfig implements ConfigCore, ClientConfigCore {
     @Config(description = "Show an indicator on container items when the stack carried by the cursor can be added in your inventory.")
     public boolean containerItemIndicator = true;
     @Config(description = "Show a tooltip for the item currently selected in a container item's tooltip next to the main tooltip, select a key required to be held to see that tooltip.")
-    public SelectedItemTooltipActivation selectedItemTooltipActivation = SelectedItemTooltipActivation.ALWAYS;
+    public TooltipContentsActivation selectedItemTooltipActivation = TooltipContentsActivation.ALWAYS;
 
     @Override
     public boolean colorfulTooltips() {
@@ -32,7 +32,7 @@ public class ClientConfig implements ConfigCore, ClientConfigCore {
     }
 
     @Override
-    public SelectedItemTooltipActivation selectedItemTooltipActivation() {
+    public TooltipContentsActivation selectedItemTooltipActivation() {
         return this.selectedItemTooltipActivation;
     }
 }

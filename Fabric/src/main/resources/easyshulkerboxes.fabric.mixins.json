@@ -5,9 +5,11 @@
   "package": "fuzs.easyshulkerboxes.mixin",
   "refmap": "easyshulkerboxes.refmap.json",
   "mixins": [
-    "LivingEntityMixin",
+    "LivingEntityMixin"
   ],
   "client": [
+    "client.AbstractContainerScreenMixin$Fabric",
+    "client.MouseHandlerMixin$Fabric"
   ],
   "injectors": {
     "defaultRequire": 1

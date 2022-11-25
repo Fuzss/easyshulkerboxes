@@ -4,6 +4,7 @@ import fuzs.easyshulkerboxes.EasyShulkerBoxes;
 import fuzs.easyshulkerboxes.api.world.inventory.ContainerItemProvider;
 import fuzs.easyshulkerboxes.api.world.item.container.ContainerItemHelper;
 import fuzs.easyshulkerboxes.config.ServerConfig;
+import fuzs.puzzleslib.proxy.Proxy;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -14,7 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import java.util.Optional;
 
-public class ShulkerBoxProvider implements ContainerItemProvider {
+public class ShulkerBoxProvider extends ContainerItemProvider {
     public static final ContainerItemProvider INSTANCE = new ShulkerBoxProvider();
 
     private ShulkerBoxProvider() {
@@ -27,8 +28,18 @@ public class ShulkerBoxProvider implements ContainerItemProvider {
     }
 
     @Override
-    public int acceptableItemCount(ItemStack containerStack, ItemStack stack) {
-        return !stack.getItem().canFitInsideContainerItems() ? 0 : stack.getCount();
+    protected boolean canItemFitInside(ItemStack containerStack, ItemStack stack) {
+        return stack.getItem().canFitInsideContainerItems();
+    }
+
+    @Override
+    protected boolean _canAcceptItem(ItemStack containerStack, ItemStack stack) {
+        return this.getItemContainer(Proxy.INSTANCE.getClientPlayer(), containerStack, false).canAddItem(stack);
+    }
+
+    @Override
+    protected int _getAcceptableItemCount(ItemStack containerStack, ItemStack stack) {
+        return stack.getCount();
     }
 
     @Override

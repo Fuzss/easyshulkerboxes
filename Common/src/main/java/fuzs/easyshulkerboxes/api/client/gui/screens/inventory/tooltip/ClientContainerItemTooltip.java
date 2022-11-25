@@ -30,7 +30,6 @@ import java.util.Optional;
 public abstract class ClientContainerItemTooltip implements ClientTooltipComponent {
     public static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/widgets.png");
     public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(SimpleInventoryContainersApi.MOD_ID, "textures/gui/container/inventory_tooltip.png");
-    private static final Component HOLD_SHIFT_COMPONENT = Component.translatable("item.container.tooltip.info", Component.translatable("item.container.tooltip.shift").withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY);
     private static final int BORDER_SIZE = 7;
     private static final MutableInt ACTIVE_CONTAINER_ITEM_TOOLTIPS = new MutableInt();
 
@@ -53,24 +52,37 @@ public abstract class ClientContainerItemTooltip implements ClientTooltipCompone
     }
 
     @Override
-    public void renderText(Font p_169943_, int p_169944_, int p_169945_, Matrix4f p_169946_, MultiBufferSource.BufferSource p_169947_) {
-        if (!this.config.tooltipContentsActivation().isActive()) {
-            p_169943_.drawInBatch(HOLD_SHIFT_COMPONENT, (float) p_169944_, (float) p_169945_, -1, true, p_169946_, p_169947_, false, 0, 15728880);
+    public void renderText(Font font, int mouseX, int mouseY, Matrix4f matrix4f, MultiBufferSource.BufferSource bufferSource) {
+        ClientConfigCore.TooltipContentsActivation activation = this.config.tooltipContentsActivation();
+        if (!activation.isActive() && activation != ClientConfigCore.TooltipContentsActivation.NEVER) {
+            Component component = Component.translatable("item.container.tooltip.info", Component.literal(activation.text).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY);
+            font.drawInBatch(component, (float) mouseX, (float) mouseY, -1, true, matrix4f, bufferSource, false, 0, 15728880);
         }
     }
 
     @Override
     public int getHeight() {
-        if (!this.config.tooltipContentsActivation().isActive()) {
-            return 10;
+        ClientConfigCore.TooltipContentsActivation activation = this.config.tooltipContentsActivation();
+        if (!activation.isActive()) {
+            if (activation != ClientConfigCore.TooltipContentsActivation.NEVER) {
+                return 10;
+            } else {
+                return 0;
+            }
         }
         return this.getGridSizeY() * 18 + 2 * BORDER_SIZE;
     }
 
     @Override
     public int getWidth(Font font) {
-        if (!this.config.tooltipContentsActivation().isActive()) {
-            return font.width(HOLD_SHIFT_COMPONENT);
+        ClientConfigCore.TooltipContentsActivation activation = this.config.tooltipContentsActivation();
+        if (!activation.isActive()) {
+            if (activation != ClientConfigCore.TooltipContentsActivation.NEVER) {
+                Component component = Component.translatable("item.container.tooltip.info", Component.literal(activation.text).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY);
+                return font.width(component);
+            } else {
+                return 0;
+            }
         }
         return this.getGridSizeX() * 18 + 2 * BORDER_SIZE;
     }

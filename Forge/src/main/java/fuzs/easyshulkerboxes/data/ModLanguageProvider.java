@@ -11,7 +11,6 @@ public class ModLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         this.add("item.container.tooltip.info", "Hold %s to reveal contents");
-        this.add("item.container.tooltip.shift", "Shift");
-        this.add("tutorial.container.itemInsert.title", "Use a %s");
+        this.add("item.container.tooltip.info", "Hold %s to reveal selected item tooltip");
     }
 }

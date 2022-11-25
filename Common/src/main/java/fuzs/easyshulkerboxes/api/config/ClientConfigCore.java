@@ -1,6 +1,7 @@
 package fuzs.easyshulkerboxes.api.config;
 
 import fuzs.puzzleslib.proxy.Proxy;
+import net.minecraft.client.Minecraft;
 
 public interface ClientConfigCore {
 
@@ -10,27 +11,20 @@ public interface ClientConfigCore {
 
     SlotOverlay slotOverlay();
 
-    SelectedItemTooltipActivation selectedItemTooltipActivation();
+    TooltipContentsActivation selectedItemTooltipActivation();
 
     enum SlotOverlay {
         NONE, HOTBAR, HOVER
     }
 
     enum TooltipContentsActivation {
-        ALWAYS, SHIFT, CONTROL, ALT;
+        NEVER(""), ALWAYS(""), SHIFT("SHIFT"), CONTROL(Minecraft.ON_OSX ? "CMD" : "CTRL"), ALT("ALT");
 
-        public boolean isActive() {
-            return switch (this) {
-                case ALWAYS -> true;
-                case SHIFT -> Proxy.INSTANCE.hasShiftDown();
-                case ALT -> Proxy.INSTANCE.hasAltDown();
-                case CONTROL -> Proxy.INSTANCE.hasControlDown();
-            };
+        public final String text;
+
+        TooltipContentsActivation(String text) {
+            this.text = text;
         }
-    }
-
-    enum SelectedItemTooltipActivation {
-        NEVER, ALWAYS, SHIFT, CONTROL, ALT;
 
         public boolean isActive() {
             return switch (this) {
