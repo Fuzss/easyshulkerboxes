@@ -40,22 +40,22 @@ public abstract class ContainerItemProvider {
         return this.getItemContainer(player, stack, false).isEmpty();
     }
 
-    protected abstract boolean canItemFitInside(ItemStack containerStack, ItemStack stack);
+    protected boolean canItemFitInside(ItemStack containerStack, ItemStack stack) {
+        return true;
+    }
 
     public final boolean canAcceptItem(ItemStack containerStack, ItemStack stack) {
-        return !stack.isEmpty() && this.canItemFitInside(containerStack, stack) && this._canAcceptItem(containerStack, stack);
+        return !stack.isEmpty() && this.canItemFitInside(containerStack, stack) && this.internal$canAcceptItem(containerStack, stack);
     }
 
-    protected abstract boolean _canAcceptItem(ItemStack containerStack, ItemStack stack);
+    protected abstract boolean internal$canAcceptItem(ItemStack containerStack, ItemStack stack);
 
     public final int getAcceptableItemCount(ItemStack containerStack, ItemStack stack) {
-        return !stack.isEmpty() && this.canItemFitInside(containerStack, stack) ? this._getAcceptableItemCount(containerStack, stack) : 0;
+        return !stack.isEmpty() && this.canItemFitInside(containerStack, stack) ? this.internal$getAcceptableItemCount(containerStack, stack) : 0;
     }
 
-    protected abstract int _getAcceptableItemCount(ItemStack containerStack, ItemStack stack);
-
-    public boolean allowItemDecorator() {
-        return true;
+    protected int internal$getAcceptableItemCount(ItemStack containerStack, ItemStack stack) {
+        return stack.getCount();
     }
 
     public abstract boolean isAllowed();

@@ -7,7 +7,7 @@ import net.minecraft.util.Unit;
 
 import java.util.Optional;
 
-public class MouseDragEvents {
+public final class MouseDragEvents {
     public static final Event<Before> BEFORE = EventFactory.createArrayBacked(Before.class, listeners -> (Screen screen, double mouseX, double mouseY, int button, double dragX, double dragY) -> {
         for (Before event : listeners) {
             if (event.beforeMouseDrag(screen, mouseX, mouseY, button, dragX, dragY).isPresent()) {
@@ -21,6 +21,10 @@ public class MouseDragEvents {
             event.afterMouseDrag(screen, mouseX, mouseY, button, dragX, dragY);
         }
     });
+
+    private MouseDragEvents() {
+
+    }
 
     @FunctionalInterface
     public interface Before {

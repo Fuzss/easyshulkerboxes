@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v4.3.6-1.19.2] - 2022-11-25
+### Added
+- You can now drag your mouse over slots in an inventory to add all items in those slots to a shulker box/ender chest/bundle
+- The same works when dragging across empty slots to put the contents from the item you are carrying there
+### Changed
+- More background preparations to eventually allow for supporting modded items (like backpacks) with all the new item interactions
+### Fixed
+- Fixed the `+` indicator on ender chests not correctly showing when holding a shulker box
+- Tooltips for the currently selected item in another item's tooltip will no longer show even more tooltips if that selected item also has an inventory (basically prevents nesting)
+
 ## [v4.3.5-1.19.2] - 2022-11-24
 ### Added
 - The tooltip of the item currently selected in a container item's tooltip is now shown next to the main tooltip, so you can e.g. tell tools with different enchantments apart (very much inspired by the [Equipment Compare] mod)
@@ -13,7 +23,7 @@ The format is based on [Keep a Changelog].
 - Easy Shulker Boxes can now override inventory interactions and tooltip images for any item, even when it implements those features itself already (still all only accessible via the in-code api)
 - Uncolored shulker boxes have a fancy custom tooltip color
 ### Fixed
-- Fixed dupe glitch with the last item in a shulker box
+- Fixed a dupe glitch where the last item in a shulker box could be taken out indefinitely when interacting with the item
 
 ## [v4.3.4-1.19.2] - 2022-11-23
 ### Changed

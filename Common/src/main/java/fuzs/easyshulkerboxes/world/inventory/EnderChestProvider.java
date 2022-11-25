@@ -28,18 +28,8 @@ public class EnderChestProvider extends ContainerItemProvider {
     }
 
     @Override
-    protected boolean canItemFitInside(ItemStack containerStack, ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    protected boolean _canAcceptItem(ItemStack containerStack, ItemStack stack) {
+    protected boolean internal$canAcceptItem(ItemStack containerStack, ItemStack stack) {
         return this.getItemContainer(Proxy.INSTANCE.getClientPlayer(), containerStack, false).canAddItem(stack);
-    }
-
-    @Override
-    protected int _getAcceptableItemCount(ItemStack containerStack, ItemStack stack) {
-        return stack.getCount();
     }
 
     @Override
@@ -50,7 +40,7 @@ public class EnderChestProvider extends ContainerItemProvider {
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
         // pretty ender color from tinted mod
-        return ContainerItemHelper.getTooltipImageWithColor(Optional.of(this.getItemContainer(Proxy.INSTANCE.getClientPlayer(), stack, false)), 3, new float[]{0.16470589F, 0.38431373F, 0.33333334F});
+        return ContainerItemHelper.getTooltipImageRaw(Optional.of(this.getItemContainer(Proxy.INSTANCE.getClientPlayer(), stack, false)), 9, 3, new float[]{0.16470589F, 0.38431373F, 0.33333334F});
     }
 
     @Override

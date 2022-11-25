@@ -161,16 +161,16 @@ public class ContainerItemHelper {
         return OptionalInt.empty();
     }
 
-    public static Optional<TooltipComponent> getTooltipImage(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerRows, @Nullable DyeColor backgroundColor) {
-        return getTooltipImage(getTooltipContainer(stack, blockEntityType, containerRows * 9), containerRows, backgroundColor);
+    public static Optional<TooltipComponent> getTooltipImage(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, @Nullable DyeColor backgroundColor) {
+        return getTooltipImage(getTooltipContainer(stack, blockEntityType, inventoryWidth * inventoryHeight), inventoryWidth, inventoryHeight, backgroundColor);
     }
 
-    public static Optional<TooltipComponent> getTooltipImage(Optional<SimpleContainer> container, int containerRows, @Nullable DyeColor backgroundColor) {
-        return getTooltipImageWithColor(container, containerRows, getBackgroundColor(backgroundColor));
+    public static Optional<TooltipComponent> getTooltipImage(Optional<SimpleContainer> container, int inventoryWidth, int inventoryHeight, @Nullable DyeColor backgroundColor) {
+        return getTooltipImageRaw(container, inventoryWidth, inventoryHeight, getBackgroundColor(backgroundColor));
     }
 
-    public static Optional<TooltipComponent> getTooltipImageWithColor(Optional<SimpleContainer> container, int containerRows, float[] backgroundColor) {
-        return container.map(ContainerItemHelper::getContainerItems).map(items -> new ContainerItemTooltip(items, 9, containerRows, backgroundColor));
+    public static Optional<TooltipComponent> getTooltipImageRaw(Optional<SimpleContainer> container, int inventoryWidth, int inventoryHeight, float[] backgroundColor) {
+        return container.map(ContainerItemHelper::getContainerItems).map(items -> new ContainerItemTooltip(items, inventoryWidth, inventoryHeight, backgroundColor));
     }
 
     public static Optional<SimpleContainer> getTooltipContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerSize) {

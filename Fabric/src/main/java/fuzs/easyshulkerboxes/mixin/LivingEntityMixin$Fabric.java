@@ -11,9 +11,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-abstract class LivingEntityMixin extends Entity {
+abstract class LivingEntityMixin$Fabric extends Entity {
 
-    public LivingEntityMixin(EntityType<?> entityType, Level level) {
+    public LivingEntityMixin$Fabric(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
 

@@ -5,10 +5,12 @@
   "package": "fuzs.easyshulkerboxes.mixin",
   "refmap": "easyshulkerboxes.refmap.json",
   "mixins": [
-    "LivingEntityMixin"
+    "LivingEntityMixin$Fabric",
+    "ServerLevelMixin$Fabric"
   ],
   "client": [
-    "client.AbstractContainerScreenMixin$Fabric",
+    "client.ClientLevelMixin$Fabric",
+    "client.LocalPlayerMixin$Fabric",
     "client.MouseHandlerMixin$Fabric"
   ],
   "injectors": {

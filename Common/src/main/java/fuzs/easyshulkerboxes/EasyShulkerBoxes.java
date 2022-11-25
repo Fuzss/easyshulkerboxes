@@ -10,6 +10,7 @@ import fuzs.easyshulkerboxes.network.client.C2SEnderChestMenuMessage;
 import fuzs.easyshulkerboxes.network.client.C2SEnderChestSetSlotMessage;
 import fuzs.easyshulkerboxes.world.inventory.BundleProvider;
 import fuzs.easyshulkerboxes.world.inventory.EnderChestProvider;
+import fuzs.easyshulkerboxes.world.inventory.ItemWithBlockEntityProvider;
 import fuzs.easyshulkerboxes.world.inventory.ShulkerBoxProvider;
 import fuzs.puzzleslib.config.ConfigHolder;
 import fuzs.puzzleslib.core.CommonFactories;
@@ -21,6 +22,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,5 +63,8 @@ public class EasyShulkerBoxes implements ModConstructor {
         }
         ContainerItemProvider.register(Items.ENDER_CHEST, EnderChestProvider.INSTANCE);
         ContainerItemProvider.register(Items.BUNDLE, BundleProvider.INSTANCE);
+//        ContainerItemProvider.register(Items.DROPPER, new ItemWithBlockEntityProvider(BlockEntityType.DROPPER, 3, 3));
+//        ContainerItemProvider.register(Items.DISPENSER, new ItemWithBlockEntityProvider(BlockEntityType.DISPENSER, 3, 3));
+//        ContainerItemProvider.register(Items.CHEST, new ItemWithBlockEntityProvider(BlockEntityType.CHEST, 9, 3));
     }
 }

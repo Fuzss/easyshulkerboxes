@@ -1,5 +1,4 @@
 {
-  "item.container.tooltip.info": "Hold %s to reveal contents",
-  "item.container.tooltip.shift": "Shift",
-  "tutorial.container.itemInsert.title": "Use a %s"
+  "item.container.tooltip.revealContents": "Hold %s to reveal contents",
+  "item.container.tooltip.selectedItemTooltip": "Hold %s to reveal selected item tooltip"
 }

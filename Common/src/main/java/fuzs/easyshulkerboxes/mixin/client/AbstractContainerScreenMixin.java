@@ -20,9 +20,10 @@ abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> ext
         super(component);
     }
 
-    @Inject(method = "renderSlot", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;enableDepthTest()V", shift = At.Shift.BEFORE))
+    @Inject(method = "renderSlot", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;enableDepthTest()V", shift = At.Shift.BEFORE, remap = false))
     private void simpleinventorycontainers$renderSlot(PoseStack poseStack, Slot slot, CallbackInfo callback) {
-        // this was supposed to render on the Forge container foreground event, but the blitOffset wouldn't behave so here goes the mixin
+        // this was supposed to render on the Forge container foreground event, but the blitOffset wouldn't behave (it was rendering in front of items and behaved differently on the creative screen and there were also difference between Forge and Fabric for some reason)
+        // so here goes the mixin ¯\_(ツ)_/¯
         if (MouseDragHandler.INSTANCE.containerDragSlots.contains(slot)) {
             GuiComponent.fill(poseStack, slot.x, slot.y, slot.x + 16, slot.y + 16, -2130706433);
         }

@@ -1,10 +1,10 @@
 package fuzs.easyshulkerboxes.client;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.api.client.event.ContainerScreenEvents;
 import fuzs.easyshulkerboxes.api.client.event.MouseDragEvents;
 import fuzs.easyshulkerboxes.api.client.handler.MouseDragHandler;
 import fuzs.easyshulkerboxes.api.client.handler.MouseScrollHandler;
+import fuzs.easyshulkerboxes.api.event.PlayLevelSoundEvents;
 import fuzs.easyshulkerboxes.client.handler.EnderChestMenuClientHandler;
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
@@ -32,7 +32,7 @@ public class EasyShulkerBoxesFabricClient implements ClientModInitializer {
                     return MouseScrollHandler.onMouseScroll(screen, mouseX, mouseY, horizontalAmount, verticalAmount, EasyShulkerBoxes.CONFIG.get(ClientConfig.class), EasyShulkerBoxes.CONFIG.get(ServerConfig.class)).isEmpty();
                 });
                 ScreenMouseEvents.allowMouseClick(_screen).register((Screen screen, double mouseX, double mouseY, int button) -> {
-                    return MouseDragHandler.INSTANCE.onMousePress(screen, mouseX, mouseY, button).isEmpty();
+                    return MouseDragHandler.INSTANCE.onMousePress(screen, mouseX, mouseY, button, EasyShulkerBoxes.CONFIG.get(ServerConfig.class)).isEmpty();
                 });
                 ScreenMouseEvents.allowMouseRelease(_screen).register((Screen screen, double mouseX, double mouseY, int button) -> {
                     return MouseDragHandler.INSTANCE.onMouseRelease(screen, mouseX, mouseY, button).isEmpty();
@@ -40,7 +40,6 @@ public class EasyShulkerBoxesFabricClient implements ClientModInitializer {
             }
         });
         MouseDragEvents.BEFORE.register(MouseDragHandler.INSTANCE::onMouseDrag);
-        ContainerScreenEvents.FOREGROUND.register(MouseDragHandler.INSTANCE::onDrawForeground);
-//        ClientTickEvents.END_CLIENT_TICK.register(minecraft -> MouseScrollHandler.onClientTick$End(minecraft, EasyShulkerBoxes.CONFIG.get(ClientConfig.class)));
+        PlayLevelSoundEvents.ENTITY.register(MouseDragHandler.INSTANCE::onPlaySoundAtPosition);
     }
 }

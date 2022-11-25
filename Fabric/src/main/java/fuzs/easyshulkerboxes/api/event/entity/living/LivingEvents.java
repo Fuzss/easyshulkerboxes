@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.world.entity.LivingEntity;
 
-public class LivingEvents {
+public final class LivingEvents {
     public static final Event<LivingTick> TICK = EventFactory.createArrayBacked(LivingTick.class, listeners -> (LivingEntity entity) -> {
         for (LivingTick event : listeners) {
             if (!event.onLivingTick(entity)) {
@@ -13,6 +13,10 @@ public class LivingEvents {
         }
         return true;
     });
+
+    private LivingEvents() {
+
+    }
 
     @FunctionalInterface
     public interface LivingTick {

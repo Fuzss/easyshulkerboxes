@@ -31,12 +31,12 @@ public class BundleProvider extends ContainerItemProvider {
     }
 
     @Override
-    protected boolean _canAcceptItem(ItemStack containerStack, ItemStack stack) {
+    protected boolean internal$canAcceptItem(ItemStack containerStack, ItemStack stack) {
         return this.canItemFitInside(containerStack, stack) && ContainerItemHelper.getAvailableBundleItemSpace(containerStack, stack, 64) > 0;
     }
 
     @Override
-    protected int _getAcceptableItemCount(ItemStack containerStack, ItemStack stack) {
+    protected int internal$getAcceptableItemCount(ItemStack containerStack, ItemStack stack) {
         return Math.min(ContainerItemHelper.getAvailableBundleItemSpace(containerStack, stack, 64), stack.getCount());
     }
 

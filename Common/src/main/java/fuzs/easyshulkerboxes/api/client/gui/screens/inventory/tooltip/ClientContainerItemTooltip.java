@@ -55,7 +55,7 @@ public abstract class ClientContainerItemTooltip implements ClientTooltipCompone
     public void renderText(Font font, int mouseX, int mouseY, Matrix4f matrix4f, MultiBufferSource.BufferSource bufferSource) {
         ClientConfigCore.TooltipContentsActivation activation = this.config.tooltipContentsActivation();
         if (!activation.isActive() && activation != ClientConfigCore.TooltipContentsActivation.NEVER) {
-            Component component = Component.translatable("item.container.tooltip.info", Component.literal(activation.text).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY);
+            Component component = Component.translatable("item.container.tooltip.revealContents", Component.literal(activation.text).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY);
             font.drawInBatch(component, (float) mouseX, (float) mouseY, -1, true, matrix4f, bufferSource, false, 0, 15728880);
         }
     }
@@ -78,7 +78,7 @@ public abstract class ClientContainerItemTooltip implements ClientTooltipCompone
         ClientConfigCore.TooltipContentsActivation activation = this.config.tooltipContentsActivation();
         if (!activation.isActive()) {
             if (activation != ClientConfigCore.TooltipContentsActivation.NEVER) {
-                Component component = Component.translatable("item.container.tooltip.info", Component.literal(activation.text).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY);
+                Component component = Component.translatable("item.container.tooltip.revealContents", Component.literal(activation.text).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY);
                 return font.width(component);
             } else {
                 return 0;
