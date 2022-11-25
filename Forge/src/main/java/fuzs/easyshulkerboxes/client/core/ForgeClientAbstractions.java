@@ -10,6 +10,7 @@ import java.util.List;
 
 public class ForgeClientAbstractions implements ClientAbstractions {
 
+    @SuppressWarnings("UnstableApiUsage")
     @Override
     public List<ClientTooltipComponent> getTooltipComponents(Screen screen, Font font, int mouseX, int mouseY, ItemStack stack) {
         return ForgeHooksClient.gatherTooltipComponents(stack, screen.getTooltipFromItem(stack), stack.getTooltipImage(), mouseX, screen.width, screen.height, font, font);

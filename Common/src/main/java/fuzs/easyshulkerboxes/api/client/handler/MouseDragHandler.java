@@ -35,7 +35,7 @@ public class MouseDragHandler {
         if (!(screen instanceof AbstractContainerScreen<?> containerScreen)) return Optional.empty();
         ItemStack carriedStack = containerScreen.getMenu().getCarried();
         if (button == 1 && ContainerItemProvider.canSupplyProvider(carriedStack)) {
-            Slot slot = ((AbstractContainerScreenAccessor) containerScreen).callFindSlot(mouseX, mouseY);
+            Slot slot = ((AbstractContainerScreenAccessor) containerScreen).simpleinventorycontainers$findSlot(mouseX, mouseY);
             if (slot != null && slot.hasItem()) {
                 this.containerDragType = ContainerDragType.INSERT;
             } else {
@@ -57,7 +57,7 @@ public class MouseDragHandler {
                 this.containerDragSlots.clear();
                 return Optional.empty();
             }
-            Slot slot = ((AbstractContainerScreenAccessor) containerScreen).callFindSlot(mouseX, mouseY);
+            Slot slot = ((AbstractContainerScreenAccessor) containerScreen).simpleinventorycontainers$findSlot(mouseX, mouseY);
             if (slot != null && containerScreen.getMenu().canDragTo(slot) && !this.containerDragSlots.contains(slot)) {
                 ItemStack carriedStack = containerScreen.getMenu().getCarried();
                 ContainerItemProvider provider = ContainerItemProvider.get(carriedStack.getItem());
@@ -71,7 +71,7 @@ public class MouseDragHandler {
                     }
                 }
                 if (interact) {
-                    ((AbstractContainerScreenAccessor) containerScreen).callSlotClicked(slot, slot.index, 1, ClickType.PICKUP);
+                    ((AbstractContainerScreenAccessor) containerScreen).simpleinventorycontainers$slotClicked(slot, slot.index, 1, ClickType.PICKUP);
                     this.containerDragSlots.add(slot);
                     return Optional.of(Unit.INSTANCE);
                 }

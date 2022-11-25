@@ -49,6 +49,6 @@ public class BundleProvider extends ContainerItemProvider {
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
         return ContainerItemHelper.getTooltipContainer(stack, null, -1)
                 .map(ContainerItemHelper::getContainerItems)
-                .map(items -> new BundleItemTooltip(items, BundleItemAccessor.callGetContentWeight(stack) >= 64));
+                .map(items -> new BundleItemTooltip(items, BundleItemAccessor.simpleinventorycontainers$getContentWeight(stack) >= 64));
     }
 }

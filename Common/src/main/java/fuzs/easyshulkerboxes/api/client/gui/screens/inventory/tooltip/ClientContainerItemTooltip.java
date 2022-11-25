@@ -231,6 +231,7 @@ public abstract class ClientContainerItemTooltip implements ClientTooltipCompone
         }
 
         private void blit(PoseStack poseStack, int posX, int posY, int blitOffset, float[] color) {
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(color[0], color[1], color[2], 1.0F);
             RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
             GuiComponent.blit(poseStack, posX, posY, blitOffset, this.textureX, this.textureY, this.width, this.height, 256, 256);

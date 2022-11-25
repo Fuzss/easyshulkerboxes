@@ -8,13 +8,13 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(BundleItem.class)
 public interface BundleItemAccessor {
 
-    @Invoker
-    static int callGetWeight(ItemStack stack) {
+    @Invoker("getWeight")
+    static int simpleinventorycontainers$getWeight(ItemStack stack) {
         throw new IllegalStateException();
     }
 
-    @Invoker
-    static int callGetContentWeight(ItemStack stack) {
+    @Invoker("getContentWeight")
+    static int simpleinventorycontainers$getContentWeight(ItemStack stack) {
         throw new IllegalStateException();
     }
 }

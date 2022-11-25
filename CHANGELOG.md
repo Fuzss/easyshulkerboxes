@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v4.3.7-1.19.2] - 2022-11-25
+### Added
+- Added item tooltips for maps (still wip)
+### Fixed
+- Fixed start-up crash on Forge due to an error in a mixin class
+
 ## [v4.3.6-1.19.2] - 2022-11-25
 ### Added
 - You can now drag your mouse over slots in an inventory to add all items in those slots to a shulker box/ender chest/bundle

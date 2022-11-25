@@ -205,8 +205,8 @@ public class ContainerItemHelper {
     }
 
     public static int getAvailableBundleItemSpace(ItemStack containerStack, ItemStack stackToAdd, int maxWeight) {
-        int weight = BundleItemAccessor.callGetWeight(stackToAdd);
+        int weight = BundleItemAccessor.simpleinventorycontainers$getWeight(stackToAdd);
         // fix java.lang.ArithmeticException: / by zero from Numismatic Overhaul as their coins stack to 99 instead of 64
-        return weight > 0 ? (maxWeight - BundleItemAccessor.callGetContentWeight(containerStack)) / weight : 0;
+        return weight > 0 ? (maxWeight - BundleItemAccessor.simpleinventorycontainers$getContentWeight(containerStack)) / weight : 0;
     }
 }
