@@ -1,38 +1,36 @@
 package fuzs.easyshulkerboxes.config;
 
-import fuzs.easyshulkerboxes.api.config.ClientConfigCore;
 import fuzs.puzzleslib.config.ConfigCore;
 import fuzs.puzzleslib.config.annotation.Config;
 
-public class ClientConfig implements ConfigCore, ClientConfigCore {
+import java.util.Objects;
+
+public class ClientConfig implements ConfigCore {
     @Config(description = "Color item inventories on tooltips according to the container item's color.")
     public boolean colorfulTooltips = true;
     @Config(description = "Select a key required to be held for seeing item inventory contents, otherwise show them always.")
-    public TooltipContentsActivation tooltipContentsActivation = TooltipContentsActivation.ALWAYS;
+    @Config.AllowedValues(values = {"KEY", "ALWAYS", "SHIFT", "CONTROL", "ALT"})
+    private String revealContentsRaw = TooltipContentsActivation.ALWAYS.getName();
     @Config(name = "slot_overlay", description = "Render a white overlay or the hotbar selected item frame over the slot the next item will be taken out when right-clicking the container item.")
     public SlotOverlay slotOverlay = SlotOverlay.HOVER;
     @Config(description = "Show an indicator on container items when the stack carried by the cursor can be added in your inventory.")
     public boolean containerItemIndicator = true;
     @Config(description = "Show a tooltip for the item currently selected in a container item's tooltip next to the main tooltip, select a key required to be held to see that tooltip.")
-    public TooltipContentsActivation selectedItemTooltipActivation = TooltipContentsActivation.ALWAYS;
+    @Config.AllowedValues(values = {"KEY", "ALWAYS", "SHIFT", "CONTROL", "ALT"})
+    private String selectedItemTooltipRaw = TooltipContentsActivation.TOGGLE_SELECTED_TOOLTIPS_KEY.getName();
+
+    public TooltipContentsActivation revealContents;
+    public TooltipContentsActivation selectedItemTooltip;
 
     @Override
-    public boolean colorfulTooltips() {
-        return this.colorfulTooltips;
+    public void afterConfigReload() {
+        this.revealContents = TooltipContentsActivation.REVEAL_CONTENTS_BY_NAME.get(this.revealContentsRaw);
+        Objects.requireNonNull(this.revealContents, "reveal contents config entry was null");
+        this.selectedItemTooltip = TooltipContentsActivation.SELECTED_ITEM_TOOLTIP_BY_NAME.get(this.selectedItemTooltipRaw);
+        Objects.requireNonNull(this.selectedItemTooltip, "selected item tooltip config entry was null");
     }
 
-    @Override
-    public TooltipContentsActivation tooltipContentsActivation() {
-        return this.tooltipContentsActivation;
-    }
-
-    @Override
-    public SlotOverlay slotOverlay() {
-        return this.slotOverlay;
-    }
-
-    @Override
-    public TooltipContentsActivation selectedItemTooltipActivation() {
-        return this.selectedItemTooltipActivation;
+    public enum SlotOverlay {
+        NONE, HOTBAR, HOVER
     }
 }

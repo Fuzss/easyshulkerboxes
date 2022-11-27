@@ -1,15 +1,16 @@
 package fuzs.easyshulkerboxes.client;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.api.client.gui.screens.inventory.tooltip.ClientBundleItemTooltipImpl;
-import fuzs.easyshulkerboxes.api.client.gui.screens.inventory.tooltip.ClientContainerItemTooltipImpl;
-import fuzs.easyshulkerboxes.api.client.gui.screens.inventory.tooltip.ClientMapTooltip;
-import fuzs.easyshulkerboxes.api.client.helper.ItemDecorationHelper;
-import fuzs.easyshulkerboxes.api.world.inventory.ContainerItemProvider;
-import fuzs.easyshulkerboxes.api.world.inventory.tooltip.BundleItemTooltip;
-import fuzs.easyshulkerboxes.api.world.inventory.tooltip.ContainerItemTooltip;
-import fuzs.easyshulkerboxes.api.world.inventory.tooltip.MapTooltip;
+import fuzs.easyshulkerboxes.client.gui.screens.inventory.tooltip.ModClientBundleTooltip;
+import fuzs.easyshulkerboxes.client.gui.screens.inventory.tooltip.ClientContainerItemTooltip;
+import fuzs.easyshulkerboxes.client.gui.screens.inventory.tooltip.ClientMapTooltip;
+import fuzs.easyshulkerboxes.client.helper.ItemDecorationHelper;
+import fuzs.easyshulkerboxes.client.init.ClientModRegistry;
 import fuzs.easyshulkerboxes.config.ClientConfig;
+import fuzs.easyshulkerboxes.world.inventory.provider.ContainerItemProvider;
+import fuzs.easyshulkerboxes.world.inventory.tooltip.ContainerItemTooltip;
+import fuzs.easyshulkerboxes.world.inventory.tooltip.MapTooltip;
+import fuzs.easyshulkerboxes.world.inventory.tooltip.ModBundleTooltip;
 import fuzs.puzzleslib.client.core.ClientModConstructor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.item.Item;
@@ -20,9 +21,15 @@ import java.util.Map;
 public class EasyShulkerBoxesClient implements ClientModConstructor {
 
     @Override
+    public void onRegisterKeyMappings(KeyMappingsContext context) {
+        context.registerKeyMappings(ClientModRegistry.TOGGLE_VISUAL_CONTENTS_KEY_MAPPING);
+        context.registerKeyMappings(ClientModRegistry.TOGGLE_SELECTED_TOOLTIPS_KEY_MAPPING);
+    }
+
+    @Override
     public void onRegisterClientTooltipComponents(ClientTooltipComponentsContext context) {
-        context.registerClientTooltipComponent(ContainerItemTooltip.class, tooltip -> new ClientContainerItemTooltipImpl(tooltip, EasyShulkerBoxes.CONFIG.get(ClientConfig.class)));
-        context.registerClientTooltipComponent(BundleItemTooltip.class, tooltip -> new ClientBundleItemTooltipImpl(tooltip, EasyShulkerBoxes.CONFIG.get(ClientConfig.class)));
+        context.registerClientTooltipComponent(ContainerItemTooltip.class, ClientContainerItemTooltip::new);
+        context.registerClientTooltipComponent(ModBundleTooltip.class, ModClientBundleTooltip::new);
         context.registerClientTooltipComponent(MapTooltip.class, ClientMapTooltip::new);
     }
 

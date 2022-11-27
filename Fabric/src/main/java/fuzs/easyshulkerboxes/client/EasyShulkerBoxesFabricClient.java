@@ -2,15 +2,15 @@ package fuzs.easyshulkerboxes.client;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
 import fuzs.easyshulkerboxes.api.client.event.MouseDragEvents;
-import fuzs.easyshulkerboxes.api.client.handler.MouseDragHandler;
-import fuzs.easyshulkerboxes.api.client.handler.MouseScrollHandler;
 import fuzs.easyshulkerboxes.api.event.PlayLevelSoundEvents;
 import fuzs.easyshulkerboxes.client.handler.EnderChestMenuClientHandler;
-import fuzs.easyshulkerboxes.config.ClientConfig;
-import fuzs.easyshulkerboxes.config.ServerConfig;
+import fuzs.easyshulkerboxes.client.handler.KeyBindingHandler;
+import fuzs.easyshulkerboxes.client.handler.MouseDragHandler;
+import fuzs.easyshulkerboxes.client.handler.MouseScrollHandler;
 import fuzs.puzzleslib.client.core.ClientFactories;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.client.gui.screens.Screen;
@@ -29,10 +29,10 @@ public class EasyShulkerBoxesFabricClient implements ClientModInitializer {
         ScreenEvents.BEFORE_INIT.register((client, _screen, scaledWidth, scaledHeight) -> {
             if (_screen instanceof AbstractContainerScreen<?>) {
                 ScreenMouseEvents.allowMouseScroll(_screen).register((screen, mouseX, mouseY, horizontalAmount, verticalAmount) -> {
-                    return MouseScrollHandler.onMouseScroll(screen, mouseX, mouseY, horizontalAmount, verticalAmount, EasyShulkerBoxes.CONFIG.get(ClientConfig.class), EasyShulkerBoxes.CONFIG.get(ServerConfig.class)).isEmpty();
+                    return MouseScrollHandler.onMouseScroll(screen, mouseX, mouseY, horizontalAmount, verticalAmount).isEmpty();
                 });
                 ScreenMouseEvents.allowMouseClick(_screen).register((Screen screen, double mouseX, double mouseY, int button) -> {
-                    return MouseDragHandler.INSTANCE.onMousePress(screen, mouseX, mouseY, button, EasyShulkerBoxes.CONFIG.get(ServerConfig.class)).isEmpty();
+                    return MouseDragHandler.INSTANCE.onMousePress(screen, mouseX, mouseY, button).isEmpty();
                 });
                 ScreenMouseEvents.allowMouseRelease(_screen).register((Screen screen, double mouseX, double mouseY, int button) -> {
                     return MouseDragHandler.INSTANCE.onMouseRelease(screen, mouseX, mouseY, button).isEmpty();
@@ -41,5 +41,6 @@ public class EasyShulkerBoxesFabricClient implements ClientModInitializer {
         });
         MouseDragEvents.BEFORE.register(MouseDragHandler.INSTANCE::onMouseDrag);
         PlayLevelSoundEvents.ENTITY.register(MouseDragHandler.INSTANCE::onPlaySoundAtPosition);
+        ClientTickEvents.START_CLIENT_TICK.register(KeyBindingHandler::onClientTick$Start);
     }
 }

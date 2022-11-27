@@ -1,6 +1,6 @@
 package fuzs.easyshulkerboxes.mixin.client;
 
-import fuzs.easyshulkerboxes.api.client.handler.MouseScrollHandler;
+import fuzs.easyshulkerboxes.client.handler.MouseScrollHandler;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;

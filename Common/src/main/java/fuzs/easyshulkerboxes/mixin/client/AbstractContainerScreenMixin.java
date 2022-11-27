@@ -1,7 +1,7 @@
 package fuzs.easyshulkerboxes.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import fuzs.easyshulkerboxes.api.client.handler.MouseDragHandler;
+import fuzs.easyshulkerboxes.client.handler.MouseDragHandler;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;

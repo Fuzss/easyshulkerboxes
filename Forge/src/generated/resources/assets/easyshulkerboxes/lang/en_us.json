@@ -1,4 +1,8 @@
 {
-  "item.container.tooltip.revealContents": "Hold %s to reveal contents",
-  "item.container.tooltip.selectedItemTooltip": "Hold %s to reveal selected item tooltip"
+  "item.container.tooltip.hold": "Hold",
+  "item.container.tooltip.press": "Press",
+  "item.container.tooltip.revealContents": "%s %s to reveal contents",
+  "item.container.tooltip.selectedItemTooltip": "%s %s to reveal selected item tooltip",
+  "key.toggleSelectedItemTooltips": "Toggle Selected Item Tooltips",
+  "key.toggleVisualTooltipContents": "Toggle Visual Tooltip Contents"
 }

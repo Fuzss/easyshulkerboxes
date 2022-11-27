@@ -1,10 +1,9 @@
 package fuzs.easyshulkerboxes.config;
 
-import fuzs.easyshulkerboxes.api.config.ServerConfigCore;
 import fuzs.puzzleslib.config.ConfigCore;
 import fuzs.puzzleslib.config.annotation.Config;
 
-public class ServerConfig implements ConfigCore, ServerConfigCore {
+public class ServerConfig implements ConfigCore {
     @Config(description = "Allow using the mouse wheel to scroll between slots in an item tooltip to choose the next item to extract.")
     public boolean allowSlotCycling = true;
     @Config(description = "Allow dragging the mouse while holding a container item to insert hovered items, or to extract container contents to empty hovered slots.")
@@ -15,14 +14,4 @@ public class ServerConfig implements ConfigCore, ServerConfigCore {
     public boolean allowEnderChest = true;
     @Config(description = {"Allow inventory interactions and contents tooltip from this mod to work on bundles, vanilla behavior is replaced."})
     public boolean allowBundle = true;
-
-    @Override
-    public boolean allowSlotCycling() {
-        return this.allowSlotCycling;
-    }
-
-    @Override
-    public boolean allowMouseDragging() {
-        return this.allowMouseDragging;
-    }
 }

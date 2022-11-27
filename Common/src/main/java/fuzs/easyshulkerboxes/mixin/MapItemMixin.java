@@ -1,6 +1,6 @@
 package fuzs.easyshulkerboxes.mixin;
 
-import fuzs.easyshulkerboxes.api.world.inventory.tooltip.MapTooltip;
+import fuzs.easyshulkerboxes.world.inventory.tooltip.MapTooltip;
 import fuzs.puzzleslib.proxy.Proxy;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ComplexItem;

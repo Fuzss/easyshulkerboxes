@@ -1,6 +1,7 @@
 package fuzs.easyshulkerboxes;
 
-import fuzs.easyshulkerboxes.api.world.inventory.ContainerItemProvider;
+import fuzs.easyshulkerboxes.network.client.C2SCurrentSlotMessage;
+import fuzs.easyshulkerboxes.world.inventory.provider.ContainerItemProvider;
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.init.ModRegistry;
@@ -8,9 +9,9 @@ import fuzs.easyshulkerboxes.network.S2CEnderChestSetContentMessage;
 import fuzs.easyshulkerboxes.network.S2CEnderChestSetSlotMessage;
 import fuzs.easyshulkerboxes.network.client.C2SEnderChestMenuMessage;
 import fuzs.easyshulkerboxes.network.client.C2SEnderChestSetSlotMessage;
-import fuzs.easyshulkerboxes.world.inventory.BundleProvider;
-import fuzs.easyshulkerboxes.world.inventory.EnderChestProvider;
-import fuzs.easyshulkerboxes.world.inventory.ShulkerBoxProvider;
+import fuzs.easyshulkerboxes.world.inventory.provider.BundleProvider;
+import fuzs.easyshulkerboxes.world.inventory.provider.EnderChestProvider;
+import fuzs.easyshulkerboxes.world.inventory.provider.ShulkerBoxProvider;
 import fuzs.puzzleslib.config.ConfigHolder;
 import fuzs.puzzleslib.core.CommonFactories;
 import fuzs.puzzleslib.core.ModConstructor;
@@ -45,6 +46,7 @@ public class EasyShulkerBoxes implements ModConstructor {
     }
 
     private static void registerMessages() {
+        NETWORK.register(C2SCurrentSlotMessage.class, C2SCurrentSlotMessage::new, MessageDirection.TO_SERVER);
         NETWORK.register(S2CEnderChestSetContentMessage.class, S2CEnderChestSetContentMessage::new, MessageDirection.TO_CLIENT);
         NETWORK.register(S2CEnderChestSetSlotMessage.class, S2CEnderChestSetSlotMessage::new, MessageDirection.TO_CLIENT);
         NETWORK.register(C2SEnderChestSetSlotMessage.class, C2SEnderChestSetSlotMessage::new, MessageDirection.TO_SERVER);
