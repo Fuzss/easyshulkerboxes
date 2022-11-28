@@ -5,7 +5,7 @@ import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.network.client.C2SCurrentSlotMessage;
 import fuzs.easyshulkerboxes.world.inventory.provider.ContainerItemProvider;
-import fuzs.easyshulkerboxes.world.inventory.ContainerSlotHelper;
+import fuzs.easyshulkerboxes.world.inventory.helper.ContainerSlotHelper;
 import fuzs.puzzleslib.client.gui.screens.CommonScreens;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;

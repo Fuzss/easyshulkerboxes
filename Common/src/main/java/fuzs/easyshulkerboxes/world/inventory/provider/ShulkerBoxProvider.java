@@ -1,7 +1,7 @@
 package fuzs.easyshulkerboxes.world.inventory.provider;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.world.inventory.ContainerItemHelper;
+import fuzs.easyshulkerboxes.world.inventory.helper.ContainerItemHelper;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.DyeColor;

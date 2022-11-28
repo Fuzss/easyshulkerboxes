@@ -1,4 +1,4 @@
-package fuzs.easyshulkerboxes.world.inventory;
+package fuzs.easyshulkerboxes.world.inventory.helper;
 
 import fuzs.easyshulkerboxes.capability.ContainerSlotCapability;
 import fuzs.easyshulkerboxes.init.ModRegistry;

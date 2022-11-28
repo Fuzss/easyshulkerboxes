@@ -2,7 +2,7 @@ package fuzs.easyshulkerboxes.world.inventory.provider;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
 import fuzs.easyshulkerboxes.world.inventory.tooltip.ModBundleTooltip;
-import fuzs.easyshulkerboxes.world.inventory.ContainerItemHelper;
+import fuzs.easyshulkerboxes.world.inventory.helper.ContainerItemHelper;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.mixin.client.accessor.BundleItemAccessor;
 import net.minecraft.world.SimpleContainer;
@@ -31,7 +31,7 @@ public class BundleProvider extends ContainerItemProvider {
 
     @Override
     protected boolean internal$canAcceptItem(ItemStack containerStack, ItemStack stack) {
-        return this.canItemFitInside(containerStack, stack) && ContainerItemHelper.getAvailableBundleItemSpace(containerStack, stack, 64) > 0;
+        return ContainerItemHelper.getAvailableBundleItemSpace(containerStack, stack, 64) > 0;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class BundleProvider extends ContainerItemProvider {
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
         return ContainerItemHelper.getTooltipContainer(stack, null, -1)
-                .map(ContainerItemHelper::getContainerItems)
+                .map(ContainerItemHelper::containerToList)
                 .map(items -> new ModBundleTooltip(items, BundleItemAccessor.simpleinventorycontainers$getContentWeight(stack) >= 64));
     }
 }

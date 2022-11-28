@@ -1,5 +1,6 @@
-package fuzs.easyshulkerboxes.world.inventory;
+package fuzs.easyshulkerboxes.world.inventory.helper;
 
+import fuzs.easyshulkerboxes.world.inventory.SimpleContainerWithSlots;
 import fuzs.easyshulkerboxes.world.inventory.tooltip.ContainerItemTooltip;
 import fuzs.easyshulkerboxes.mixin.client.accessor.BundleItemAccessor;
 import net.minecraft.core.NonNullList;
@@ -168,7 +169,7 @@ public class ContainerItemHelper {
     }
 
     public static Optional<TooltipComponent> getTooltipImageRaw(Optional<SimpleContainer> container, int inventoryWidth, int inventoryHeight, float[] backgroundColor) {
-        return container.map(ContainerItemHelper::getContainerItems).map(items -> new ContainerItemTooltip(items, inventoryWidth, inventoryHeight, backgroundColor));
+        return container.map(ContainerItemHelper::containerToList).map(items -> new ContainerItemTooltip(items, inventoryWidth, inventoryHeight, backgroundColor));
     }
 
     public static Optional<SimpleContainer> getTooltipContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerSize) {
@@ -179,7 +180,7 @@ public class ContainerItemHelper {
         return Optional.of(loadItemContainer(stack, blockEntityType, containerSize, false));
     }
 
-    public static NonNullList<ItemStack> getContainerItems(SimpleContainer container) {
+    public static NonNullList<ItemStack> containerToList(SimpleContainer container) {
         NonNullList<ItemStack> items = NonNullList.create();
         for (int i = 0; i < container.getContainerSize(); i++) {
             items.add(container.getItem(i));

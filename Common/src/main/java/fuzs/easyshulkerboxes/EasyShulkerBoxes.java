@@ -1,7 +1,7 @@
 package fuzs.easyshulkerboxes;
 
 import fuzs.easyshulkerboxes.network.client.C2SCurrentSlotMessage;
-import fuzs.easyshulkerboxes.world.inventory.provider.ContainerItemProvider;
+import fuzs.easyshulkerboxes.world.inventory.provider.*;
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.init.ModRegistry;
@@ -9,9 +9,6 @@ import fuzs.easyshulkerboxes.network.S2CEnderChestSetContentMessage;
 import fuzs.easyshulkerboxes.network.S2CEnderChestSetSlotMessage;
 import fuzs.easyshulkerboxes.network.client.C2SEnderChestMenuMessage;
 import fuzs.easyshulkerboxes.network.client.C2SEnderChestSetSlotMessage;
-import fuzs.easyshulkerboxes.world.inventory.provider.BundleProvider;
-import fuzs.easyshulkerboxes.world.inventory.provider.EnderChestProvider;
-import fuzs.easyshulkerboxes.world.inventory.provider.ShulkerBoxProvider;
 import fuzs.puzzleslib.config.ConfigHolder;
 import fuzs.puzzleslib.core.CommonFactories;
 import fuzs.puzzleslib.core.ModConstructor;
@@ -22,6 +19,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,8 +61,8 @@ public class EasyShulkerBoxes implements ModConstructor {
         }
         ContainerItemProvider.register(Items.ENDER_CHEST, EnderChestProvider.INSTANCE);
         ContainerItemProvider.register(Items.BUNDLE, BundleProvider.INSTANCE);
-//        ContainerItemProvider.register(Items.DROPPER, new ItemWithBlockEntityProvider(BlockEntityType.DROPPER, 3, 3));
-//        ContainerItemProvider.register(Items.DISPENSER, new ItemWithBlockEntityProvider(BlockEntityType.DISPENSER, 3, 3));
-//        ContainerItemProvider.register(Items.CHEST, new ItemWithBlockEntityProvider(BlockEntityType.CHEST, 9, 3));
+        ContainerItemProvider.register(Items.DROPPER, new ItemWithBlockEntityProvider(BlockEntityType.DROPPER, 3, 3));
+        ContainerItemProvider.register(Items.DISPENSER, new ItemWithBlockEntityProvider(BlockEntityType.DISPENSER, 3, 3));
+        ContainerItemProvider.register(Items.CHEST, new ItemWithBlockEntityProvider(BlockEntityType.CHEST, 9, 3));
     }
 }

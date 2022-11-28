@@ -1,6 +1,7 @@
 package fuzs.easyshulkerboxes.client.core;
 
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -29,5 +30,10 @@ public class FabricClientAbstractions implements ClientAbstractions {
             list.add(1, ClientTooltipComponent.create(tooltipComponent));
         });
         return list;
+    }
+
+    @Override
+    public boolean isKeyActiveAndMatches(KeyMapping keyMapping, int keyCode, int scanCode) {
+        return keyMapping.matches(keyCode, scanCode);
     }
 }

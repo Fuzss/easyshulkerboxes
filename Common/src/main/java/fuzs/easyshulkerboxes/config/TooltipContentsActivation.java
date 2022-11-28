@@ -54,7 +54,7 @@ public abstract class TooltipContentsActivation {
             return Proxy.INSTANCE.hasShiftDown();
         }
     };
-    public static final TooltipContentsActivation CONTROL = new TooltipContentsActivation(Minecraft.ON_OSX ? "CMD" : "CTRL") {
+    public static final TooltipContentsActivation CONTROL = new TooltipContentsActivation("CONTROL", Minecraft.ON_OSX ? "CMD" : "CTRL") {
 
         @Override
         public boolean isActive() {
@@ -71,17 +71,24 @@ public abstract class TooltipContentsActivation {
 
     public static final String REVEAL_CONTENTS_TRANSLATION_ID = "item.container.tooltip.revealContents";
     public static final String SELECTED_ITEM_TOOLTIP_TRANSLATION_ID = "item.container.tooltip.selectedItemTooltip";
-    public static final Map<String, TooltipContentsActivation> REVEAL_CONTENTS_BY_NAME = Stream.of(revealContents()).collect(ImmutableMap.toImmutableMap(TooltipContentsActivation::getName, Function.identity()));
-    public static final Map<String, TooltipContentsActivation> SELECTED_ITEM_TOOLTIP_BY_NAME = Stream.of(selectedItemTooltip()).collect(ImmutableMap.toImmutableMap(TooltipContentsActivation::getName, Function.identity()));
+    public static final Map<String, TooltipContentsActivation> REVEAL_CONTENTS_BY_NAME = Stream.of(revealContents()).collect(ImmutableMap.toImmutableMap(Object::toString, Function.identity()));
+    public static final Map<String, TooltipContentsActivation> SELECTED_ITEM_TOOLTIP_BY_NAME = Stream.of(selectedItemTooltip()).collect(ImmutableMap.toImmutableMap(Object::toString, Function.identity()));
 
+    private final String string;
     private final String name;
 
-    private TooltipContentsActivation(String name) {
+    public TooltipContentsActivation(String name) {
+        this(name, name);
+    }
+
+    private TooltipContentsActivation(String string, String name) {
+        this.string = string;
         this.name = name;
     }
 
-    public String getName() {
-        return this.name;
+    @Override
+    public String toString() {
+        return this.string;
     }
 
     public Component getComponent(String translationId) {

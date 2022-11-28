@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
 import fuzs.easyshulkerboxes.client.core.ClientAbstractions;
 import fuzs.easyshulkerboxes.config.ClientConfig;
-import fuzs.easyshulkerboxes.world.inventory.ContainerSlotHelper;
+import fuzs.easyshulkerboxes.world.inventory.helper.ContainerSlotHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;

@@ -1,6 +1,6 @@
 package fuzs.easyshulkerboxes.world.inventory.provider;
 
-import fuzs.easyshulkerboxes.world.inventory.ContainerItemHelper;
+import fuzs.easyshulkerboxes.world.inventory.helper.ContainerItemHelper;
 import fuzs.puzzleslib.proxy.Proxy;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;

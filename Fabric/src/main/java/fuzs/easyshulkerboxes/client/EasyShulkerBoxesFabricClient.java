@@ -10,8 +10,8 @@ import fuzs.easyshulkerboxes.client.handler.MouseScrollHandler;
 import fuzs.puzzleslib.client.core.ClientFactories;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -37,10 +37,12 @@ public class EasyShulkerBoxesFabricClient implements ClientModInitializer {
                 ScreenMouseEvents.allowMouseRelease(_screen).register((Screen screen, double mouseX, double mouseY, int button) -> {
                     return MouseDragHandler.INSTANCE.onMouseRelease(screen, mouseX, mouseY, button).isEmpty();
                 });
+                ScreenKeyboardEvents.allowKeyPress(_screen).register((Screen screen, int key, int scancode, int modifiers) -> {
+                    return KeyBindingHandler.onKeyPressed$Pre(screen, key, scancode, modifiers).isEmpty();
+                });
             }
         });
         MouseDragEvents.BEFORE.register(MouseDragHandler.INSTANCE::onMouseDrag);
         PlayLevelSoundEvents.ENTITY.register(MouseDragHandler.INSTANCE::onPlaySoundAtPosition);
-        ClientTickEvents.START_CLIENT_TICK.register(KeyBindingHandler::onClientTick$Start);
     }
 }

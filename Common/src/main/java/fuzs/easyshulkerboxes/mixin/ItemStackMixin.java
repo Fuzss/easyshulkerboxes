@@ -1,7 +1,7 @@
 package fuzs.easyshulkerboxes.mixin;
 
 import fuzs.easyshulkerboxes.world.inventory.provider.ContainerItemProvider;
-import fuzs.easyshulkerboxes.world.inventory.ContainerItemHelper;
+import fuzs.easyshulkerboxes.world.inventory.helper.ContainerItemHelper;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;

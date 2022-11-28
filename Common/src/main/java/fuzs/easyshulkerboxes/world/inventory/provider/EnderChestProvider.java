@@ -1,7 +1,7 @@
 package fuzs.easyshulkerboxes.world.inventory.provider;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.world.inventory.ContainerItemHelper;
+import fuzs.easyshulkerboxes.world.inventory.helper.ContainerItemHelper;
 import fuzs.easyshulkerboxes.capability.EnderChestMenuCapability;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.init.ModRegistry;
