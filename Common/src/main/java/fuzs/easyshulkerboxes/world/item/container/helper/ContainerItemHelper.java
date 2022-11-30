@@ -25,7 +25,8 @@ import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
 public class ContainerItemHelper {
-    private static final String TAG_ITEMS = "Items";
+    public static final String TAG_ITEMS = "Items";
+    public static final float[] DEFAULT_BACKGROUND_COLOR = {1.0F, 1.0F, 1.0F};
 
     public static SimpleContainer loadBundleItemContainer(ItemStack stack, boolean allowSaving) {
         // add one additional slot, so we can add items in the inventory
@@ -171,7 +172,7 @@ public class ContainerItemHelper {
 
     public static float[] getBackgroundColor(@Nullable DyeColor backgroundColor) {
         if (backgroundColor == null) {
-            return new float[]{1.0F, 1.0F, 1.0F};
+            return DEFAULT_BACKGROUND_COLOR;
         } else if (backgroundColor == DyeColor.WHITE) {
             return new float[]{0.9019608F, 0.9019608F, 0.9019608F};
         } else {

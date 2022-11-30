@@ -1,0 +1,7 @@
+{
+  "type": "easyshulkerboxes:block_entity",
+  "item": "minecraft:hopper",
+  "inventory_width": 5,
+  "inventory_height": 1,
+  "block_entity_type": "minecraft:hopper"
+}

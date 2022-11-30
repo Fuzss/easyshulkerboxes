@@ -1,6 +1,6 @@
 package fuzs.easyshulkerboxes;
 
-import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
+import fuzs.easyshulkerboxes.api.world.item.container.SerializableItemContainerProvider;
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.init.ModRegistry;
@@ -10,21 +10,16 @@ import fuzs.easyshulkerboxes.network.client.C2SCurrentSlotMessage;
 import fuzs.easyshulkerboxes.network.client.C2SEnderChestMenuMessage;
 import fuzs.easyshulkerboxes.network.client.C2SEnderChestSetSlotMessage;
 import fuzs.easyshulkerboxes.world.item.container.*;
+import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
 import fuzs.puzzleslib.config.ConfigHolder;
 import fuzs.puzzleslib.core.CommonFactories;
 import fuzs.puzzleslib.core.ModConstructor;
+import fuzs.puzzleslib.core.ModLoaderEnvironment;
 import fuzs.puzzleslib.network.MessageDirection;
 import fuzs.puzzleslib.network.NetworkHandler;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ShulkerBoxBlock;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 public class EasyShulkerBoxes implements ModConstructor {
     public static final String MOD_ID = "easyshulkerboxes";
@@ -54,19 +49,17 @@ public class EasyShulkerBoxes implements ModConstructor {
 
     @Override
     public void onCommonSetup() {
-        ItemContainerProvider.register(Items.FILLED_MAP, new MapProvider());
-        for (Map.Entry<ResourceKey<Block>, Block> entry : Registry.BLOCK.entrySet()) {
-            // only affect vanilla shulker boxes, other mods might add shulker boxes with a different inventory size
-            if (entry.getValue() instanceof ShulkerBoxBlock && entry.getKey().location().getNamespace().equals("minecraft")) {
-                ItemContainerProvider.register(entry.getValue(), new ShulkerBoxProvider(entry.getValue()));
-            }
-        }
-        ItemContainerProvider.register(Items.ENDER_CHEST, new EnderChestProvider());
-        ItemContainerProvider.register(Items.BUNDLE, new BundleProvider());
-        ItemContainerProvider.register(Items.DROPPER, new BlockEntityProvider(BlockEntityType.DROPPER, 3, 3));
-        ItemContainerProvider.register(Items.DISPENSER, new BlockEntityProvider(BlockEntityType.DISPENSER, 3, 3));
-        ItemContainerProvider.register(Items.CHEST, new BlockEntityProvider(BlockEntityType.CHEST, 9, 3));
-        ItemContainerProvider.register(Items.TRAPPED_CHEST, new BlockEntityProvider(BlockEntityType.TRAPPED_CHEST, 9, 3));
-        ItemContainerProvider.register(Items.HOPPER, new BlockEntityProvider(BlockEntityType.HOPPER, 5, 1));
+        registerItemContainerProviderSerializers();
+        ItemContainerProviders.serializeBuiltInProviders();
+    }
+
+    private static void registerItemContainerProviderSerializers() {
+        SerializableItemContainerProvider.register(BlockEntityProvider.class, new ResourceLocation(MOD_ID, "block_entity"), BlockEntityProvider::fromJson);
+        SerializableItemContainerProvider.register(BlockEntityViewProvider.class, new ResourceLocation(MOD_ID, "block_entity_view"), BlockEntityViewProvider::fromJson);
+        SerializableItemContainerProvider.register(BundleProvider.class, new ResourceLocation(MOD_ID, "bundle"), BundleProvider::fromJson);
+        SerializableItemContainerProvider.register(EnderChestProvider.class, new ResourceLocation(MOD_ID, "ender_chest"), EnderChestProvider::fromJson);
+        SerializableItemContainerProvider.register(GenericItemContainerProvider.class, new ResourceLocation(MOD_ID, "item"), GenericItemContainerProvider::fromJson);
+        SerializableItemContainerProvider.register(MapProvider.class, new ResourceLocation(MOD_ID, "map"), MapProvider::fromJson);
+        SerializableItemContainerProvider.register(ShulkerBoxProvider.class, new ResourceLocation(MOD_ID, "shulker_box"), ShulkerBoxProvider::fromJson);
     }
 }

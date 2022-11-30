@@ -1,6 +1,7 @@
 package fuzs.easyshulkerboxes.api.world.item.container;
 
 import com.google.common.collect.Maps;
+import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -29,34 +30,13 @@ public interface ItemContainerProvider {
     Map<Item, ItemContainerProvider> REGISTRY = Collections.synchronizedMap(Maps.newIdentityHashMap());
 
     /**
-     * registers a provider for a block
-     *
-     * @param item     the block
-     * @param provider the provider
-     */
-    static void register(ItemLike item, ItemContainerProvider provider) {
-        register(item.asItem(), provider);
-    }
-
-    /**
      * registers a provider for an item
      *
      * @param item     the item
      * @param provider the provider
      */
-    static void register(Item item, ItemContainerProvider provider) {
-        REGISTRY.put(item, provider);
-    }
-
-    /**
-     * get a provider for a block
-     *
-     * @param item block to get provider for
-     * @return provider if present or null
-     */
-    @Nullable
-    static ItemContainerProvider get(ItemLike item) {
-        return get(item.asItem());
+    static void register(ItemLike item, ItemContainerProvider provider) {
+        REGISTRY.put(item.asItem(), provider);
     }
 
     /**
@@ -66,8 +46,8 @@ public interface ItemContainerProvider {
      * @return provider if present or null
      */
     @Nullable
-    static ItemContainerProvider get(Item item) {
-        return REGISTRY.get(item);
+    static ItemContainerProvider get(ItemLike item) {
+        return ItemContainerProviders.INSTANCE.get(item);
     }
 
     /**

@@ -1,0 +1,7 @@
+{
+  "type": "easyshulkerboxes:block_entity_view",
+  "item": "minecraft:brewing_stand",
+  "inventory_width": 5,
+  "inventory_height": 1,
+  "block_entity_type": "minecraft:brewing_stand"
+}

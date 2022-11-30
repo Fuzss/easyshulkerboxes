@@ -1,0 +1,7 @@
+{
+  "type": "easyshulkerboxes:block_entity_view",
+  "item": "minecraft:smoker",
+  "inventory_width": 3,
+  "inventory_height": 1,
+  "block_entity_type": "minecraft:smoker"
+}
