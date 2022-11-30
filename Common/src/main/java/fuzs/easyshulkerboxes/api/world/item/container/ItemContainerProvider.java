@@ -7,6 +7,7 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -14,6 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface ItemContainerProvider {
+    @ApiStatus.Internal
     Map<Item, ItemContainerProvider> REGISTRY = Collections.synchronizedMap(Maps.newIdentityHashMap());
 
     static void register(ItemLike item, ItemContainerProvider provider) {
@@ -35,13 +37,21 @@ public interface ItemContainerProvider {
 
     Optional<SimpleContainer> getItemContainer(Player player, ItemStack stack, boolean allowSaving);
 
-    boolean canItemFitInside(ItemStack containerStack, ItemStack stack);
+    boolean isItemAllowedInContainer(ItemStack containerStack, ItemStack stack);
 
-    boolean canAddItem(ItemStack containerStack, ItemStack stack);
+    /**
+     * is there enough space in the container provided by <code>containerStack</code> to add <code>stack</code> (not necessarily the full stack)
+     *
+     * @param player            the player interacting with both items
+     * @param containerStack    the item stack providing the container to add <code>stack</code> to
+     * @param stack             the stack to be added to the container
+     * @return                  is adding any portion of <code>stack</code> to the container possible
+     */
+    boolean canAddItem(Player player, ItemStack containerStack, ItemStack stack);
 
-    int getAcceptableItemCount(ItemStack containerStack, ItemStack stack);
+    int getAcceptableItemCount(Player player, ItemStack containerStack, ItemStack stack);
 
-    Optional<TooltipComponent> getTooltipImage(ItemStack stack);
+    Optional<TooltipComponent> getTooltipImage(Player player, ItemStack stack);
 
     void broadcastContainerChanges(Player player);
 }

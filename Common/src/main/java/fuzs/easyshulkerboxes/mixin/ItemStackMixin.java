@@ -1,7 +1,8 @@
 package fuzs.easyshulkerboxes.mixin;
 
-import fuzs.easyshulkerboxes.world.item.container.helper.ContainerItemHelper;
 import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
+import fuzs.easyshulkerboxes.world.item.container.helper.ContainerItemHelper;
+import fuzs.puzzleslib.proxy.Proxy;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
@@ -26,7 +27,7 @@ abstract class ItemStackMixin {
         ItemStack containerStack = (ItemStack) (Object) this;
         ItemContainerProvider itemProvider = ItemContainerProvider.get(containerStack.getItem());
         if (itemProvider != null) {
-            boolean success = ContainerItemHelper.overrideStackedOnOther(() -> itemProvider.getItemContainer(player, containerStack, true), slot, clickAction, player, stack -> itemProvider.getAcceptableItemCount(containerStack, stack), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
+            boolean success = ContainerItemHelper.overrideStackedOnOther(() -> itemProvider.getItemContainer(player, containerStack, true), slot, clickAction, player, stack -> itemProvider.getAcceptableItemCount(player, containerStack, stack), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
             if (success) itemProvider.broadcastContainerChanges(player);
             callback.setReturnValue(success);
         }
@@ -37,7 +38,7 @@ abstract class ItemStackMixin {
         ItemStack containerStack = (ItemStack) (Object) this;
         ItemContainerProvider itemProvider = ItemContainerProvider.get(containerStack.getItem());
         if (itemProvider != null) {
-            boolean success = ContainerItemHelper.overrideOtherStackedOnMe(() -> itemProvider.getItemContainer(player, containerStack, true), stackOnMe, slot, clickAction, player, slotAccess, stack -> itemProvider.getAcceptableItemCount(containerStack, stack), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
+            boolean success = ContainerItemHelper.overrideOtherStackedOnMe(() -> itemProvider.getItemContainer(player, containerStack, true), stackOnMe, slot, clickAction, player, slotAccess, stack -> itemProvider.getAcceptableItemCount(player, containerStack, stack), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
             if (success) itemProvider.broadcastContainerChanges(player);
             callback.setReturnValue(success);
         }
@@ -48,7 +49,7 @@ abstract class ItemStackMixin {
         ItemStack containerStack = (ItemStack) (Object) this;
         ItemContainerProvider itemProvider = ItemContainerProvider.get(containerStack.getItem());
         if (itemProvider != null) {
-            callback.setReturnValue(itemProvider.getTooltipImage(containerStack));
+            callback.setReturnValue(itemProvider.getTooltipImage(Proxy.INSTANCE.getClientPlayer(), containerStack));
         }
     }
 }

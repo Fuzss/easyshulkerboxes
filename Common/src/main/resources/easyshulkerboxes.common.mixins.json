@@ -6,7 +6,6 @@
   "refmap": "easyshulkerboxes.refmap.json",
   "mixins": [
     "ItemStackMixin",
-    "MapItemMixin",
     "ShulkerBoxBlockMixin"
   ],
   "client": [

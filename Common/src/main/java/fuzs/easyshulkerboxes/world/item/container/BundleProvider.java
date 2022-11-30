@@ -17,18 +17,18 @@ public class BundleProvider extends ItemContainerProviderImpl {
     }
 
     @Override
-    public boolean canItemFitInside(ItemStack containerStack, ItemStack stack) {
+    public boolean isItemAllowedInContainer(ItemStack containerStack, ItemStack stack) {
         return stack.getItem().canFitInsideContainerItems();
     }
 
     @Override
-    protected boolean internal$canAddItem(ItemStack containerStack, ItemStack stack) {
+    protected boolean internal$canAddItem(SimpleContainer container, ItemStack containerStack, ItemStack stack) {
         return ContainerItemHelper.getAvailableBundleItemSpace(containerStack, stack, 64) > 0;
     }
 
     @Override
-    protected int internal$getAcceptableItemCount(ItemStack containerStack, ItemStack stack) {
-        return Math.min(ContainerItemHelper.getAvailableBundleItemSpace(containerStack, stack, 64), super.internal$getAcceptableItemCount(containerStack, stack));
+    protected int internal$getAcceptableItemCount(SimpleContainer container, ItemStack containerStack, ItemStack stack) {
+        return Math.min(ContainerItemHelper.getAvailableBundleItemSpace(containerStack, stack, 64), super.internal$getAcceptableItemCount(container, containerStack, stack));
     }
 
     @Override

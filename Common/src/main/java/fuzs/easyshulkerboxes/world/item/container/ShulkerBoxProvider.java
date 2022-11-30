@@ -19,7 +19,7 @@ public class ShulkerBoxProvider extends BlockEntityProvider {
     }
 
     @Override
-    public boolean canItemFitInside(ItemStack containerStack, ItemStack stack) {
+    public boolean isItemAllowedInContainer(ItemStack containerStack, ItemStack stack) {
         return stack.getItem().canFitInsideContainerItems();
     }
 

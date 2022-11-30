@@ -2,11 +2,12 @@ package fuzs.easyshulkerboxes.client.handler;
 
 import com.google.common.collect.Sets;
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
+import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.mixin.client.accessor.AbstractContainerScreenAccessor;
-import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.puzzleslib.client.gui.screens.CommonScreens;
+import fuzs.puzzleslib.proxy.Proxy;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -68,7 +69,7 @@ public class MouseDragHandler {
                 ItemContainerProvider provider = ItemContainerProvider.get(carriedStack.getItem());
                 Objects.requireNonNull(provider, "attempting to drag item with invalid provider");
                 boolean interact = false;
-                if (this.containerDragType == ContainerDragType.INSERT && slot.hasItem() && provider.canAddItem(carriedStack, slot.getItem())) {
+                if (this.containerDragType == ContainerDragType.INSERT && slot.hasItem() && provider.canAddItem(Proxy.INSTANCE.getClientPlayer(), carriedStack, slot.getItem())) {
                     interact = true;
                 } else if (this.containerDragType == ContainerDragType.REMOVE && !slot.hasItem()) {
                     Player player = CommonScreens.INSTANCE.getMinecraft(screen).player;

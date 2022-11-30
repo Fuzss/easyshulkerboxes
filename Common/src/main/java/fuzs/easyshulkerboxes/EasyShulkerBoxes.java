@@ -54,6 +54,7 @@ public class EasyShulkerBoxes implements ModConstructor {
 
     @Override
     public void onCommonSetup() {
+        ItemContainerProvider.register(Items.FILLED_MAP, new MapProvider());
         for (Map.Entry<ResourceKey<Block>, Block> entry : Registry.BLOCK.entrySet()) {
             // only affect vanilla shulker boxes, other mods might add shulker boxes with a different inventory size
             if (entry.getValue() instanceof ShulkerBoxBlock && entry.getKey().location().getNamespace().equals("minecraft")) {
@@ -65,5 +66,7 @@ public class EasyShulkerBoxes implements ModConstructor {
         ItemContainerProvider.register(Items.DROPPER, new BlockEntityProvider(BlockEntityType.DROPPER, 3, 3));
         ItemContainerProvider.register(Items.DISPENSER, new BlockEntityProvider(BlockEntityType.DISPENSER, 3, 3));
         ItemContainerProvider.register(Items.CHEST, new BlockEntityProvider(BlockEntityType.CHEST, 9, 3));
+        ItemContainerProvider.register(Items.TRAPPED_CHEST, new BlockEntityProvider(BlockEntityType.TRAPPED_CHEST, 9, 3));
+        ItemContainerProvider.register(Items.HOPPER, new BlockEntityProvider(BlockEntityType.HOPPER, 5, 1));
     }
 }

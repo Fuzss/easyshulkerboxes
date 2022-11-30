@@ -2,7 +2,6 @@ package fuzs.easyshulkerboxes.world.item.container;
 
 import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.easyshulkerboxes.world.item.container.helper.ContainerItemHelper;
-import fuzs.puzzleslib.proxy.Proxy;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
@@ -26,36 +25,42 @@ public abstract class ItemContainerProviderImpl implements ItemContainerProvider
     protected abstract SimpleContainer internal$getItemContainer(Player player, ItemStack stack, boolean allowSaving);
 
     @Override
-    public boolean canItemFitInside(ItemStack containerStack, ItemStack stack) {
+    public boolean isItemAllowedInContainer(ItemStack containerStack, ItemStack stack) {
         return true;
     }
 
     @Override
-    public final boolean canAddItem(ItemStack containerStack, ItemStack stack) {
-        return this.canAcceptItem(containerStack, stack) && this.internal$canAddItem(containerStack, stack);
+    public final boolean canAddItem(Player player, ItemStack containerStack, ItemStack stack) {
+        if (this.canAcceptItem(containerStack, stack)) {
+            return this.getItemContainer(player, containerStack, false).map(container -> this.internal$canAddItem(container, containerStack, stack)).orElse(false);
+        }
+        return false;
     }
 
-    protected boolean internal$canAddItem(ItemStack containerStack, ItemStack stack) {
-        return this.getItemContainer(Proxy.INSTANCE.getClientPlayer(), containerStack, false).map(container -> container.canAddItem(stack)).orElse(false);
+    protected boolean internal$canAddItem(SimpleContainer container, ItemStack containerStack, ItemStack stack) {
+        return container.canAddItem(stack);
     }
 
     @Override
-    public final int getAcceptableItemCount(ItemStack containerStack, ItemStack stack) {
-        return this.canAcceptItem(containerStack, stack) ? this.internal$getAcceptableItemCount(containerStack, stack) : 0;
+    public final int getAcceptableItemCount(Player player, ItemStack containerStack, ItemStack stack) {
+        if (this.canAcceptItem(containerStack, stack)) {
+            return this.getItemContainer(player, containerStack, false).map(container -> this.internal$getAcceptableItemCount(container, containerStack, stack)).orElse(0);
+        }
+        return 0;
     }
 
-    protected int internal$getAcceptableItemCount(ItemStack containerStack, ItemStack stack) {
+    protected int internal$getAcceptableItemCount(SimpleContainer container, ItemStack containerStack, ItemStack stack) {
         return stack.getCount();
     }
 
     private boolean canAcceptItem(ItemStack containerStack, ItemStack stack) {
-        return !stack.isEmpty() && this.canItemFitInside(containerStack, stack);
+        return !stack.isEmpty() && this.isItemAllowedInContainer(containerStack, stack);
     }
 
     @Override
-    public final Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
+    public final Optional<TooltipComponent> getTooltipImage(Player player, ItemStack stack) {
         if (!this.canProvideTooltipImage(stack)) return Optional.empty();
-        SimpleContainer itemContainer = this.internal$getItemContainer(Proxy.INSTANCE.getClientPlayer(), stack, false);
+        SimpleContainer itemContainer = this.internal$getItemContainer(player, stack, false);
         return Optional.of(this.internal$getTooltipImage(stack, ContainerItemHelper.containerToList(itemContainer)));
     }
 

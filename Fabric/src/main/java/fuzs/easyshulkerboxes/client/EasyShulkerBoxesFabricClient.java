@@ -10,6 +10,7 @@ import fuzs.easyshulkerboxes.client.handler.MouseScrollHandler;
 import fuzs.puzzleslib.client.core.ClientFactories;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
@@ -44,5 +45,6 @@ public class EasyShulkerBoxesFabricClient implements ClientModInitializer {
         });
         MouseDragEvents.BEFORE.register(MouseDragHandler.INSTANCE::onMouseDrag);
         PlayLevelSoundEvents.ENTITY.register(MouseDragHandler.INSTANCE::onPlaySoundAtPosition);
+        ClientTickEvents.END_CLIENT_TICK.register(MouseScrollHandler::onClientTick$End);
     }
 }
