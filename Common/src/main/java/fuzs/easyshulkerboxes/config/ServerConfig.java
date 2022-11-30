@@ -8,10 +8,4 @@ public class ServerConfig implements ConfigCore {
     public boolean allowSlotCycling = true;
     @Config(description = "Allow dragging the mouse while holding a container item to insert hovered items, or to extract container contents to empty hovered slots.")
     public boolean allowMouseDragging = true;
-    @Config(description = "Allow inventory interactions and contents tooltip to work on shulker boxes.")
-    public boolean allowShulkerBox = true;
-    @Config(description = {"Allow inventory interactions and contents tooltip to work on ender chests.", "The item stack must have just a single ender chest item."})
-    public boolean allowEnderChest = true;
-    @Config(description = {"Allow inventory interactions and contents tooltip from this mod to work on bundles, vanilla behavior is replaced."})
-    public boolean allowBundle = true;
 }

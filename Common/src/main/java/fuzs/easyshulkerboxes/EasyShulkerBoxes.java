@@ -1,14 +1,15 @@
 package fuzs.easyshulkerboxes;
 
-import fuzs.easyshulkerboxes.network.client.C2SCurrentSlotMessage;
-import fuzs.easyshulkerboxes.world.inventory.provider.*;
+import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.init.ModRegistry;
 import fuzs.easyshulkerboxes.network.S2CEnderChestSetContentMessage;
 import fuzs.easyshulkerboxes.network.S2CEnderChestSetSlotMessage;
+import fuzs.easyshulkerboxes.network.client.C2SCurrentSlotMessage;
 import fuzs.easyshulkerboxes.network.client.C2SEnderChestMenuMessage;
 import fuzs.easyshulkerboxes.network.client.C2SEnderChestSetSlotMessage;
+import fuzs.easyshulkerboxes.world.item.container.*;
 import fuzs.puzzleslib.config.ConfigHolder;
 import fuzs.puzzleslib.core.CommonFactories;
 import fuzs.puzzleslib.core.ModConstructor;
@@ -56,13 +57,13 @@ public class EasyShulkerBoxes implements ModConstructor {
         for (Map.Entry<ResourceKey<Block>, Block> entry : Registry.BLOCK.entrySet()) {
             // only affect vanilla shulker boxes, other mods might add shulker boxes with a different inventory size
             if (entry.getValue() instanceof ShulkerBoxBlock && entry.getKey().location().getNamespace().equals("minecraft")) {
-                ContainerItemProvider.register(entry.getValue(), ShulkerBoxProvider.INSTANCE);
+                ItemContainerProvider.register(entry.getValue(), new ShulkerBoxProvider(entry.getValue()));
             }
         }
-        ContainerItemProvider.register(Items.ENDER_CHEST, EnderChestProvider.INSTANCE);
-        ContainerItemProvider.register(Items.BUNDLE, BundleProvider.INSTANCE);
-        ContainerItemProvider.register(Items.DROPPER, new ItemWithBlockEntityProvider(BlockEntityType.DROPPER, 3, 3));
-        ContainerItemProvider.register(Items.DISPENSER, new ItemWithBlockEntityProvider(BlockEntityType.DISPENSER, 3, 3));
-        ContainerItemProvider.register(Items.CHEST, new ItemWithBlockEntityProvider(BlockEntityType.CHEST, 9, 3));
+        ItemContainerProvider.register(Items.ENDER_CHEST, new EnderChestProvider());
+        ItemContainerProvider.register(Items.BUNDLE, new BundleProvider());
+        ItemContainerProvider.register(Items.DROPPER, new BlockEntityProvider(BlockEntityType.DROPPER, 3, 3));
+        ItemContainerProvider.register(Items.DISPENSER, new BlockEntityProvider(BlockEntityType.DISPENSER, 3, 3));
+        ItemContainerProvider.register(Items.CHEST, new BlockEntityProvider(BlockEntityType.CHEST, 9, 3));
     }
 }

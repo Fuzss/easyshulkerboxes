@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface AbstractContainerScreenAccessor {
 
     @Invoker("findSlot")
-    Slot simpleinventorycontainers$findSlot(double mouseX, double mouseY);
+    Slot easyshulkerboxes$findSlot(double mouseX, double mouseY);
 
     @Invoker("slotClicked")
-    void simpleinventorycontainers$slotClicked(Slot slot, int slotId, int mouseButton, ClickType type);
+    void easyshulkerboxes$slotClicked(Slot slot, int slotId, int mouseButton, ClickType type);
 }

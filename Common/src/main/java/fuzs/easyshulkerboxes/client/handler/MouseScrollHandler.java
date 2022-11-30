@@ -4,13 +4,14 @@ import fuzs.easyshulkerboxes.EasyShulkerBoxes;
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.network.client.C2SCurrentSlotMessage;
-import fuzs.easyshulkerboxes.world.inventory.provider.ContainerItemProvider;
+import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.easyshulkerboxes.world.inventory.helper.ContainerSlotHelper;
 import fuzs.puzzleslib.client.gui.screens.CommonScreens;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.util.Unit;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -27,12 +28,15 @@ public class MouseScrollHandler {
         Slot hoveredSlot = CommonScreens.INSTANCE.getHoveredSlot((AbstractContainerScreen<?>) screen);
         if (hoveredSlot != null) {
             ItemStack stack = hoveredSlot.getItem();
-            if (ContainerItemProvider.canSupplyProvider(stack)) {
+            ItemContainerProvider provider = ItemContainerProvider.get(stack.getItem());
+            if (provider != null) {
                 int signum = (int) Math.signum(verticalAmount);
                 if (signum != 0) {
                     Player player = CommonScreens.INSTANCE.getMinecraft(screen).player;
                     int currentContainerSlot = ContainerSlotHelper.getCurrentContainerSlot(player);
-                    currentContainerSlot = ContainerSlotHelper.findClosestSlotWithContent(ContainerItemProvider.get(stack.getItem()).getItemContainer(player, stack, false), currentContainerSlot, signum < 0);
+                    Optional<SimpleContainer> optional = provider.getItemContainer(player, stack, false);
+                    if (optional.isEmpty()) return Optional.empty();
+                    currentContainerSlot = ContainerSlotHelper.findClosestSlotWithContent(optional.get(), currentContainerSlot, signum < 0);
                     ContainerSlotHelper.setCurrentContainerSlot(player, currentContainerSlot);
                 }
                 return Optional.of(Unit.INSTANCE);
@@ -59,7 +63,7 @@ public class MouseScrollHandler {
     private static Optional<Slot> getHoveredSlotWithContainerItem(@Nullable Screen screen) {
         if (!shouldHandleMouseScroll(screen)) return Optional.empty();
         Slot hoveredSlot = CommonScreens.INSTANCE.getHoveredSlot((AbstractContainerScreen<?>) screen);
-        if (hoveredSlot != null && ContainerItemProvider.canSupplyProvider(hoveredSlot.getItem())) {
+        if (hoveredSlot != null && ItemContainerProvider.canSupplyProvider(hoveredSlot.getItem())) {
             return Optional.of(hoveredSlot);
         }
         return Optional.empty();

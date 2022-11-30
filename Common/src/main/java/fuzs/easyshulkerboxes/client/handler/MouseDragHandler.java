@@ -5,7 +5,7 @@ import fuzs.easyshulkerboxes.EasyShulkerBoxes;
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.mixin.client.accessor.AbstractContainerScreenAccessor;
-import fuzs.easyshulkerboxes.world.inventory.provider.ContainerItemProvider;
+import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.puzzleslib.client.gui.screens.CommonScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -15,6 +15,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Unit;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -23,6 +24,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -36,8 +38,8 @@ public class MouseDragHandler {
     public Optional<Unit> onMousePress(Screen screen, double mouseX, double mouseY, int button) {
         if (!shouldHandleMouseDrag(screen)) return Optional.empty();
         ItemStack carriedStack = ((AbstractContainerScreen<?>) screen).getMenu().getCarried();
-        if (button == 1 && ContainerItemProvider.canSupplyProvider(carriedStack)) {
-            Slot slot = ((AbstractContainerScreenAccessor) screen).simpleinventorycontainers$findSlot(mouseX, mouseY);
+        if (button == 1 && ItemContainerProvider.canSupplyProvider(carriedStack)) {
+            Slot slot = ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$findSlot(mouseX, mouseY);
             if (slot != null && slot.hasItem()) {
                 this.containerDragType = ContainerDragType.INSERT;
             } else {
@@ -59,22 +61,23 @@ public class MouseDragHandler {
                 this.containerDragSlots.clear();
                 return Optional.empty();
             }
-            Slot slot = ((AbstractContainerScreenAccessor) screen).simpleinventorycontainers$findSlot(mouseX, mouseY);
+            Slot slot = ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$findSlot(mouseX, mouseY);
             AbstractContainerMenu menu = ((AbstractContainerScreen<?>) screen).getMenu();
             if (slot != null && menu.canDragTo(slot) && !this.containerDragSlots.contains(slot)) {
                 ItemStack carriedStack = menu.getCarried();
-                ContainerItemProvider provider = ContainerItemProvider.get(carriedStack.getItem());
+                ItemContainerProvider provider = ItemContainerProvider.get(carriedStack.getItem());
+                Objects.requireNonNull(provider, "attempting to drag item with invalid provider");
                 boolean interact = false;
-                if (this.containerDragType == ContainerDragType.INSERT && slot.hasItem() && provider.canAcceptItem(carriedStack, slot.getItem())) {
+                if (this.containerDragType == ContainerDragType.INSERT && slot.hasItem() && provider.canAddItem(carriedStack, slot.getItem())) {
                     interact = true;
                 } else if (this.containerDragType == ContainerDragType.REMOVE && !slot.hasItem()) {
                     Player player = CommonScreens.INSTANCE.getMinecraft(screen).player;
-                    if (!provider.isItemContainerEmpty(player, carriedStack)) {
+                    if (!provider.getItemContainer(player, carriedStack, false).map(SimpleContainer::isEmpty).orElse(false)) {
                         interact = true;
                     }
                 }
                 if (interact) {
-                    ((AbstractContainerScreenAccessor) screen).simpleinventorycontainers$slotClicked(slot, slot.index, 1, ClickType.PICKUP);
+                    ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$slotClicked(slot, slot.index, 1, ClickType.PICKUP);
                     this.containerDragSlots.add(slot);
                     return Optional.of(Unit.INSTANCE);
                 }

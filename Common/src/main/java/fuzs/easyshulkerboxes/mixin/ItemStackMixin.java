@@ -1,7 +1,7 @@
 package fuzs.easyshulkerboxes.mixin;
 
-import fuzs.easyshulkerboxes.world.inventory.provider.ContainerItemProvider;
-import fuzs.easyshulkerboxes.world.inventory.helper.ContainerItemHelper;
+import fuzs.easyshulkerboxes.world.item.container.helper.ContainerItemHelper;
+import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
@@ -24,37 +24,31 @@ abstract class ItemStackMixin {
     @Inject(method = "overrideStackedOnOther", at = @At("HEAD"), cancellable = true)
     public void simpleinventorycontainers$overrideStackedOnOther(Slot slot, ClickAction clickAction, Player player, CallbackInfoReturnable<Boolean> callback) {
         ItemStack containerStack = (ItemStack) (Object) this;
-        if (ContainerItemProvider.canSupplyProvider(containerStack)) {
-            ContainerItemProvider itemProvider = ContainerItemProvider.get(containerStack.getItem());
-            if (itemProvider.isAllowed()) {
-                boolean success = ContainerItemHelper.overrideStackedOnOther(() -> itemProvider.getItemContainer(player, containerStack, true), slot, clickAction, player, stack -> itemProvider.getAcceptableItemCount(containerStack, stack), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
-                if (success) itemProvider.broadcastContainerChanges(player);
-                callback.setReturnValue(success);
-            }
+        ItemContainerProvider itemProvider = ItemContainerProvider.get(containerStack.getItem());
+        if (itemProvider != null) {
+            boolean success = ContainerItemHelper.overrideStackedOnOther(() -> itemProvider.getItemContainer(player, containerStack, true), slot, clickAction, player, stack -> itemProvider.getAcceptableItemCount(containerStack, stack), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
+            if (success) itemProvider.broadcastContainerChanges(player);
+            callback.setReturnValue(success);
         }
     }
 
     @Inject(method = "overrideOtherStackedOnMe", at = @At("HEAD"), cancellable = true)
     public void simpleinventorycontainers$overrideOtherStackedOnMe(ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, CallbackInfoReturnable<Boolean> callback) {
         ItemStack containerStack = (ItemStack) (Object) this;
-        if (ContainerItemProvider.canSupplyProvider(containerStack)) {
-            ContainerItemProvider itemProvider = ContainerItemProvider.get(containerStack.getItem());
-            if (itemProvider.isAllowed()) {
-                boolean success = ContainerItemHelper.overrideOtherStackedOnMe(() -> itemProvider.getItemContainer(player, containerStack, true), stackOnMe, slot, clickAction, player, slotAccess, stack -> itemProvider.getAcceptableItemCount(containerStack, stack), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
-                if (success) itemProvider.broadcastContainerChanges(player);
-                callback.setReturnValue(success);
-            }
+        ItemContainerProvider itemProvider = ItemContainerProvider.get(containerStack.getItem());
+        if (itemProvider != null) {
+            boolean success = ContainerItemHelper.overrideOtherStackedOnMe(() -> itemProvider.getItemContainer(player, containerStack, true), stackOnMe, slot, clickAction, player, slotAccess, stack -> itemProvider.getAcceptableItemCount(containerStack, stack), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
+            if (success) itemProvider.broadcastContainerChanges(player);
+            callback.setReturnValue(success);
         }
     }
 
     @Inject(method = "getTooltipImage", at = @At("HEAD"), cancellable = true)
     public void simpleinventorycontainers$getTooltipImage(CallbackInfoReturnable<Optional<TooltipComponent>> callback) {
-        ItemStack stack = (ItemStack) (Object) this;
-        if (ContainerItemProvider.canSupplyProvider(stack)) {
-            ContainerItemProvider itemProvider = ContainerItemProvider.get(stack.getItem());
-            if (itemProvider.isAllowed()) {
-                callback.setReturnValue(itemProvider.getTooltipImage(stack));
-            }
+        ItemStack containerStack = (ItemStack) (Object) this;
+        ItemContainerProvider itemProvider = ItemContainerProvider.get(containerStack.getItem());
+        if (itemProvider != null) {
+            callback.setReturnValue(itemProvider.getTooltipImage(containerStack));
         }
     }
 }
