@@ -13,26 +13,19 @@ import java.util.Optional;
 public abstract class ItemContainerProviderImpl implements ItemContainerProvider {
 
     @Override
-    public final Optional<SimpleContainer> getItemContainer(Player player, ItemStack stack, boolean allowSaving) {
-        if (!this.canProvideContainer(stack, player)) return Optional.empty();
-        return Optional.of(this.internal$getItemContainer(player, stack, allowSaving));
-    }
-
-    protected boolean canProvideContainer(ItemStack stack, Player player) {
+    public boolean canProvideContainer(ItemStack stack, Player player) {
         return stack.getCount() == 1;
     }
 
-    protected abstract SimpleContainer internal$getItemContainer(Player player, ItemStack stack, boolean allowSaving);
-
     @Override
-    public boolean isItemAllowedInContainer(ItemStack containerStack, ItemStack stack) {
+    public boolean isItemAllowedInContainer(ItemStack containerStack, ItemStack stackToAdd) {
         return true;
     }
 
     @Override
-    public final boolean canAddItem(Player player, ItemStack containerStack, ItemStack stack) {
-        if (this.canAcceptItem(containerStack, stack)) {
-            return this.getItemContainer(player, containerStack, false).map(container -> this.internal$canAddItem(container, containerStack, stack)).orElse(false);
+    public final boolean canAddItem(ItemStack containerStack, ItemStack stackToAdd, Player player) {
+        if (this.canAcceptItem(player, containerStack, stackToAdd)) {
+            return this.internal$canAddItem(this.getItemContainer(containerStack, player, false), containerStack, stackToAdd);
         }
         return false;
     }
@@ -42,9 +35,9 @@ public abstract class ItemContainerProviderImpl implements ItemContainerProvider
     }
 
     @Override
-    public final int getAcceptableItemCount(Player player, ItemStack containerStack, ItemStack stack) {
-        if (this.canAcceptItem(containerStack, stack)) {
-            return this.getItemContainer(player, containerStack, false).map(container -> this.internal$getAcceptableItemCount(container, containerStack, stack)).orElse(0);
+    public final int getAcceptableItemCount(ItemStack containerStack, ItemStack stackToAdd, Player player) {
+        if (this.canAcceptItem(player, containerStack, stackToAdd)) {
+            return this.internal$getAcceptableItemCount(this.getItemContainer(containerStack, player, false), containerStack, stackToAdd);
         }
         return 0;
     }
@@ -53,19 +46,19 @@ public abstract class ItemContainerProviderImpl implements ItemContainerProvider
         return stack.getCount();
     }
 
-    private boolean canAcceptItem(ItemStack containerStack, ItemStack stack) {
-        return !stack.isEmpty() && this.isItemAllowedInContainer(containerStack, stack);
+    private boolean canAcceptItem(Player player, ItemStack containerStack, ItemStack stack) {
+        return this.canProvideContainer(containerStack, player) && !stack.isEmpty() && this.isItemAllowedInContainer(containerStack, stack);
     }
 
     @Override
-    public final Optional<TooltipComponent> getTooltipImage(Player player, ItemStack stack) {
-        if (!this.canProvideTooltipImage(stack)) return Optional.empty();
-        SimpleContainer itemContainer = this.internal$getItemContainer(player, stack, false);
-        return Optional.of(this.internal$getTooltipImage(stack, ContainerItemHelper.containerToList(itemContainer)));
+    public final Optional<TooltipComponent> getTooltipImage(ItemStack containerStack, Player player) {
+        SimpleContainer itemContainer = this.getItemContainer(containerStack, player, false);
+        return Optional.of(this.internal$getTooltipImage(containerStack, ContainerItemHelper.containerToList(itemContainer)));
     }
 
-    public boolean canProvideTooltipImage(ItemStack stack) {
-        return ContainerItemHelper.hasItemContainerTag(stack, null);
+    @Override
+    public boolean canProvideTooltipImage(ItemStack containerStack, Player player) {
+        return ContainerItemHelper.hasItemContainerTag(containerStack, null);
     }
 
     protected abstract TooltipComponent internal$getTooltipImage(ItemStack stack, NonNullList<ItemStack> items);

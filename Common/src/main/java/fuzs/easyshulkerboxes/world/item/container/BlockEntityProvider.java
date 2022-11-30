@@ -37,18 +37,18 @@ public class BlockEntityProvider extends ItemContainerProviderImpl {
     }
 
     @Override
-    protected boolean canProvideContainer(ItemStack stack, Player player) {
+    public boolean canProvideContainer(ItemStack stack, Player player) {
         return super.canProvideContainer(stack, player) && player.getAbilities().instabuild;
     }
 
     @Override
-    protected SimpleContainer internal$getItemContainer(Player player, ItemStack stack, boolean allowSaving) {
+    public SimpleContainer getItemContainer(ItemStack stack, Player player, boolean allowSaving) {
         return ContainerItemHelper.loadGenericItemContainer(stack, this.blockEntityType, this.getInventorySize(), allowSaving);
     }
 
     @Override
-    public boolean canProvideTooltipImage(ItemStack stack) {
-        return ContainerItemHelper.hasItemContainerTag(stack, this.blockEntityType);
+    public boolean canProvideTooltipImage(ItemStack containerStack, Player player) {
+        return ContainerItemHelper.hasItemContainerTag(containerStack, this.blockEntityType);
     }
 
     @Override

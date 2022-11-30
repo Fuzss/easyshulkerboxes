@@ -13,12 +13,12 @@ import net.minecraft.world.item.ItemStack;
 public class EnderChestProvider extends ItemContainerProviderImpl {
 
     @Override
-    protected SimpleContainer internal$getItemContainer(Player player, ItemStack stack, boolean allowSaving) {
+    public SimpleContainer getItemContainer(ItemStack stack, Player player, boolean allowSaving) {
         return player.getEnderChestInventory();
     }
 
     @Override
-    public boolean canProvideTooltipImage(ItemStack stack) {
+    public boolean canProvideTooltipImage(ItemStack containerStack, Player player) {
         return true;
     }
 

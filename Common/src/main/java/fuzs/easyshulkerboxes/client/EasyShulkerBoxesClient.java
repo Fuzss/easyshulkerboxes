@@ -38,7 +38,7 @@ public class EasyShulkerBoxesClient implements ClientModConstructor {
     public void onRegisterItemDecorations(ItemDecorationContext context) {
         for (Map.Entry<Item, ItemContainerProvider> entry : ItemContainerProvider.REGISTRY.entrySet()) {
             context.register(entry.getKey(), ItemDecorationHelper.getDynamicItemDecorator((AbstractContainerScreen<?> screen, ItemStack containerStack, ItemStack carriedStack) -> {
-                return entry.getValue().canAddItem(Proxy.INSTANCE.getClientPlayer(), containerStack, carriedStack);
+                return entry.getValue().canAddItem(containerStack, carriedStack, Proxy.INSTANCE.getClientPlayer());
             }, () -> EasyShulkerBoxes.CONFIG.get(ClientConfig.class).containerItemIndicator));
         }
     }

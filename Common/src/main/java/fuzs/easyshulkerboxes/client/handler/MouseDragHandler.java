@@ -39,7 +39,8 @@ public class MouseDragHandler {
     public Optional<Unit> onMousePress(Screen screen, double mouseX, double mouseY, int button) {
         if (!shouldHandleMouseDrag(screen)) return Optional.empty();
         ItemStack carriedStack = ((AbstractContainerScreen<?>) screen).getMenu().getCarried();
-        if (button == 1 && ItemContainerProvider.canSupplyProvider(carriedStack)) {
+        ItemContainerProvider provider = ItemContainerProvider.get(carriedStack.getItem());
+        if (button == 1 && provider != null && provider.canProvideContainer(carriedStack, Proxy.INSTANCE.getClientPlayer())) {
             Slot slot = ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$findSlot(mouseX, mouseY);
             if (slot != null && slot.hasItem()) {
                 this.containerDragType = ContainerDragType.INSERT;
@@ -69,11 +70,11 @@ public class MouseDragHandler {
                 ItemContainerProvider provider = ItemContainerProvider.get(carriedStack.getItem());
                 Objects.requireNonNull(provider, "attempting to drag item with invalid provider");
                 boolean interact = false;
-                if (this.containerDragType == ContainerDragType.INSERT && slot.hasItem() && provider.canAddItem(Proxy.INSTANCE.getClientPlayer(), carriedStack, slot.getItem())) {
+                if (this.containerDragType == ContainerDragType.INSERT && slot.hasItem() && provider.canAddItem(carriedStack, slot.getItem(), Proxy.INSTANCE.getClientPlayer())) {
                     interact = true;
                 } else if (this.containerDragType == ContainerDragType.REMOVE && !slot.hasItem()) {
                     Player player = CommonScreens.INSTANCE.getMinecraft(screen).player;
-                    if (!provider.getItemContainer(player, carriedStack, false).map(SimpleContainer::isEmpty).orElse(false)) {
+                    if (!provider.getItemContainer(carriedStack, player, false).isEmpty()) {
                         interact = true;
                     }
                 }

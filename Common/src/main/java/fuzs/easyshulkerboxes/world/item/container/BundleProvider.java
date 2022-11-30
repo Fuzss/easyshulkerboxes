@@ -12,13 +12,13 @@ import net.minecraft.world.item.ItemStack;
 public class BundleProvider extends ItemContainerProviderImpl {
 
     @Override
-    protected SimpleContainer internal$getItemContainer(Player player, ItemStack stack, boolean allowSaving) {
+    public SimpleContainer getItemContainer(ItemStack stack, Player player, boolean allowSaving) {
         return ContainerItemHelper.loadBundleItemContainer(stack, allowSaving);
     }
 
     @Override
-    public boolean isItemAllowedInContainer(ItemStack containerStack, ItemStack stack) {
-        return stack.getItem().canFitInsideContainerItems();
+    public boolean isItemAllowedInContainer(ItemStack containerStack, ItemStack stackToAdd) {
+        return stackToAdd.getItem().canFitInsideContainerItems();
     }
 
     @Override

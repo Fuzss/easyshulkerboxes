@@ -80,7 +80,7 @@ public class ContainerItemHelper {
         }
     }
 
-    public static boolean overrideStackedOnOther(Supplier<Optional<SimpleContainer>> supplier, Slot slot, ClickAction clickAction, Player player, ToIntFunction<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
+    public static boolean overrideStackedOnOther(Supplier<SimpleContainer> supplier, Slot slot, ClickAction clickAction, Player player, ToIntFunction<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
         if (clickAction != ClickAction.SECONDARY) return false;
         ItemStack hoveredStack = slot.getItem();
         if (hoveredStack.isEmpty()) {
@@ -102,7 +102,7 @@ public class ContainerItemHelper {
         return true;
     }
 
-    public static boolean overrideOtherStackedOnMe(Supplier<Optional<SimpleContainer>> supplier, ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, ToIntFunction<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
+    public static boolean overrideOtherStackedOnMe(Supplier<SimpleContainer> supplier, ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, ToIntFunction<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
         if (clickAction != ClickAction.SECONDARY || !slot.allowModification(player)) return false;
         if (stackOnMe.isEmpty()) {
             removeLastStack(supplier, player).ifPresent((p_186347_) -> {
@@ -119,11 +119,9 @@ public class ContainerItemHelper {
         return true;
     }
 
-    private static int addStack(Supplier<Optional<SimpleContainer>> supplier, Player player, ItemStack newStack, ToIntFunction<ItemStack> itemFilter) {
+    private static int addStack(Supplier<SimpleContainer> supplier, Player player, ItemStack newStack, ToIntFunction<ItemStack> itemFilter) {
         if (newStack.isEmpty()) return 0;
-        Optional<SimpleContainer> optional = supplier.get();
-        if (optional.isEmpty()) return 0;
-        SimpleContainer container = optional.get();
+        SimpleContainer container = supplier.get();
         ItemStack stackToAdd = newStack.copy();
         stackToAdd.setCount(Math.min(itemFilter.applyAsInt(newStack), newStack.getCount()));
         if (stackToAdd.isEmpty()) return 0;
@@ -132,10 +130,8 @@ public class ContainerItemHelper {
         return stackToAdd.getCount() - remainingStack.getCount();
     }
 
-    private static Optional<ItemStack> removeLastStack(Supplier<Optional<SimpleContainer>> supplier, Player player) {
-        Optional<SimpleContainer> optional = supplier.get();
-        if (optional.isEmpty()) return Optional.empty();
-        SimpleContainer container = optional.get();
+    private static Optional<ItemStack> removeLastStack(Supplier<SimpleContainer> supplier, Player player) {
+        SimpleContainer container = supplier.get();
         return findSlotWithContent(container, player).stream().mapToObj(index -> container.removeItem(index, container.getItem(index).getCount())).findAny();
     }
 

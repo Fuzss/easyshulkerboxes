@@ -16,30 +16,40 @@ import java.util.Optional;
 public class MapProvider implements ItemContainerProvider {
 
     @Override
-    public Optional<SimpleContainer> getItemContainer(Player player, ItemStack stack, boolean allowSaving) {
-        return Optional.empty();
-    }
-
-    @Override
-    public boolean isItemAllowedInContainer(ItemStack containerStack, ItemStack stack) {
+    public boolean canProvideContainer(ItemStack stack, Player player) {
         return false;
     }
 
     @Override
-    public boolean canAddItem(Player player, ItemStack containerStack, ItemStack stack) {
+    public SimpleContainer getItemContainer(ItemStack stack, Player player, boolean allowSaving) {
+        return null;
+    }
+
+    @Override
+    public boolean isItemAllowedInContainer(ItemStack containerStack, ItemStack stackToAdd) {
         return false;
     }
 
     @Override
-    public int getAcceptableItemCount(Player player, ItemStack containerStack, ItemStack stack) {
+    public boolean canAddItem(ItemStack containerStack, ItemStack stackToAdd, Player player) {
+        return false;
+    }
+
+    @Override
+    public int getAcceptableItemCount(ItemStack containerStack, ItemStack stackToAdd, Player player) {
         return 0;
     }
 
     @Override
-    public Optional<TooltipComponent> getTooltipImage(Player player, ItemStack stack) {
+    public boolean canProvideTooltipImage(ItemStack containerStack, Player player) {
+        return true;
+    }
+
+    @Override
+    public Optional<TooltipComponent> getTooltipImage(ItemStack containerStack, Player player) {
         Level level = Proxy.INSTANCE.getClientLevel();
         if (level == null) return Optional.empty();
-        Integer mapId = MapItem.getMapId(stack);
+        Integer mapId = MapItem.getMapId(containerStack);
         MapItemSavedData savedData = MapItem.getSavedData(mapId, level);
         if (mapId == null || savedData == null) return Optional.empty();
         return Optional.of(new MapTooltip(mapId, savedData));
