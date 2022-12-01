@@ -13,6 +13,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Optional;
+
 public class BundleProvider extends ItemContainerProviderImpl {
     private final int capacity;
 
@@ -25,8 +27,8 @@ public class BundleProvider extends ItemContainerProviderImpl {
     }
 
     @Override
-    public SimpleContainer getItemContainer(ItemStack stack, Player player, boolean allowSaving) {
-        return ContainerItemHelper.loadBundleItemContainer(stack, allowSaving);
+    public SimpleContainer getItemContainer(ItemStack containerStack, Player player, boolean allowSaving) {
+        return ContainerItemHelper.loadBundleItemContainer(containerStack, this, allowSaving);
     }
 
     @Override
@@ -42,6 +44,20 @@ public class BundleProvider extends ItemContainerProviderImpl {
     @Override
     protected int internal$getAcceptableItemCount(SimpleContainer container, ItemStack containerStack, ItemStack stack) {
         return Math.min(ContainerItemHelper.getAvailableBundleItemSpace(containerStack, stack, this.capacity), super.internal$getAcceptableItemCount(container, containerStack, stack));
+    }
+
+    @Override
+    public boolean canProvideTooltipImage(ItemStack containerStack, Player player) {
+        return true;
+    }
+
+    @Override
+    public Optional<TooltipComponent> getTooltipImage(ItemStack containerStack, Player player) {
+        if (ContainerItemHelper.hasItemContainerTag(containerStack, this)) {
+            return super.getTooltipImage(containerStack, player);
+        }
+        // make sure to always override bundle tooltip, as otherwise vanilla tooltip would show for empty bundles
+        return Optional.empty();
     }
 
     @Override

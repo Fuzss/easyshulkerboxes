@@ -2,10 +2,12 @@ package fuzs.easyshulkerboxes;
 
 import fuzs.easyshulkerboxes.api.world.item.container.SerializableItemContainerProvider;
 import fuzs.easyshulkerboxes.config.ClientConfig;
+import fuzs.easyshulkerboxes.config.CommonConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.init.ModRegistry;
 import fuzs.easyshulkerboxes.network.S2CEnderChestSetContentMessage;
 import fuzs.easyshulkerboxes.network.S2CEnderChestSetSlotMessage;
+import fuzs.easyshulkerboxes.network.S2CSyncItemContainerProvider;
 import fuzs.easyshulkerboxes.network.client.C2SCurrentSlotMessage;
 import fuzs.easyshulkerboxes.network.client.C2SEnderChestMenuMessage;
 import fuzs.easyshulkerboxes.network.client.C2SEnderChestSetSlotMessage;
@@ -30,6 +32,7 @@ public class EasyShulkerBoxes implements ModConstructor {
     @SuppressWarnings("Convert2MethodRef")
     public static final ConfigHolder CONFIG = CommonFactories.INSTANCE
             .clientConfig(ClientConfig.class, () -> new ClientConfig())
+            .commonConfig(CommonConfig.class, () -> new CommonConfig())
             .serverConfig(ServerConfig.class, () -> new ServerConfig());
 
     @Override
@@ -45,12 +48,15 @@ public class EasyShulkerBoxes implements ModConstructor {
         NETWORK.register(S2CEnderChestSetSlotMessage.class, S2CEnderChestSetSlotMessage::new, MessageDirection.TO_CLIENT);
         NETWORK.register(C2SEnderChestSetSlotMessage.class, C2SEnderChestSetSlotMessage::new, MessageDirection.TO_SERVER);
         NETWORK.register(C2SEnderChestMenuMessage.class, C2SEnderChestMenuMessage::new, MessageDirection.TO_SERVER);
+        NETWORK.register(S2CSyncItemContainerProvider.class, S2CSyncItemContainerProvider::new, MessageDirection.TO_CLIENT);
     }
 
     @Override
     public void onCommonSetup() {
         registerItemContainerProviderSerializers();
-        ItemContainerProviders.serializeBuiltInProviders();
+        if (ModLoaderEnvironment.INSTANCE.isDevelopmentEnvironment()) {
+            ItemContainerProviders.serializeBuiltInProviders();
+        }
     }
 
     private static void registerItemContainerProviderSerializers() {

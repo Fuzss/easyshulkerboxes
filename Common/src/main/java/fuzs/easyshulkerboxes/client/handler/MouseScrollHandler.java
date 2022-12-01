@@ -6,6 +6,7 @@ import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.network.client.C2SCurrentSlotMessage;
 import fuzs.easyshulkerboxes.world.inventory.helper.ContainerSlotHelper;
+import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
 import fuzs.puzzleslib.client.gui.screens.CommonScreens;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -27,7 +28,7 @@ public class MouseScrollHandler {
         Slot hoveredSlot = CommonScreens.INSTANCE.getHoveredSlot((AbstractContainerScreen<?>) screen);
         if (hoveredSlot != null) {
             ItemStack stack = hoveredSlot.getItem();
-            ItemContainerProvider provider = ItemContainerProvider.get(stack.getItem());
+            ItemContainerProvider provider = ItemContainerProviders.INSTANCE.get(stack.getItem());
             if (provider != null) {
                 int signum = (int) Math.signum(verticalAmount);
                 if (signum != 0) {
@@ -60,7 +61,7 @@ public class MouseScrollHandler {
     private static Optional<Slot> getHoveredSlotWithContainerItem(@Nullable Screen screen) {
         if (!shouldHandleMouseScroll(screen)) return Optional.empty();
         Slot hoveredSlot = CommonScreens.INSTANCE.getHoveredSlot((AbstractContainerScreen<?>) screen);
-        if (hoveredSlot != null && ItemContainerProvider.get(hoveredSlot.getItem().getItem()) != null) {
+        if (hoveredSlot != null && ItemContainerProviders.INSTANCE.get(hoveredSlot.getItem().getItem()) != null) {
             return Optional.of(hoveredSlot);
         }
         return Optional.empty();

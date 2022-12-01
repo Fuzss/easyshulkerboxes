@@ -1,5 +1,6 @@
 package fuzs.easyshulkerboxes.world.item.container.helper;
 
+import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.easyshulkerboxes.mixin.client.accessor.BundleItemAccessor;
 import fuzs.easyshulkerboxes.world.inventory.SimpleContainerWithSlots;
 import fuzs.easyshulkerboxes.world.inventory.helper.ContainerSlotHelper;
@@ -28,21 +29,21 @@ public class ContainerItemHelper {
     public static final String TAG_ITEMS = "Items";
     public static final float[] DEFAULT_BACKGROUND_COLOR = {1.0F, 1.0F, 1.0F};
 
-    public static SimpleContainer loadBundleItemContainer(ItemStack stack, boolean allowSaving) {
+    public static SimpleContainer loadBundleItemContainer(ItemStack stack, ItemContainerProvider provider, boolean allowSaving) {
         // add one additional slot, so we can add items in the inventory
-        return loadItemContainer(stack, null, items -> new SimpleContainer(items + 1), allowSaving, TAG_ITEMS);
+        return loadItemContainer(stack, null, provider, items -> new SimpleContainer(items + 1), allowSaving, TAG_ITEMS);
     }
 
-    public static SimpleContainer loadGenericItemContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerSize, boolean allowSaving) {
-        return loadGenericItemContainer(stack, blockEntityType, containerSize, allowSaving, TAG_ITEMS);
+    public static SimpleContainer loadGenericItemContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, ItemContainerProvider provider, int containerSize, boolean allowSaving) {
+        return loadGenericItemContainer(stack, blockEntityType, provider, containerSize, allowSaving, TAG_ITEMS);
     }
 
-    public static SimpleContainer loadGenericItemContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, int containerSize, boolean allowSaving, String nbtKey) {
-        return loadItemContainer(stack, blockEntityType, items -> new SimpleContainerWithSlots(containerSize), allowSaving, nbtKey);
+    public static SimpleContainer loadGenericItemContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, ItemContainerProvider provider, int containerSize, boolean allowSaving, String nbtKey) {
+        return loadItemContainer(stack, blockEntityType, provider, items -> new SimpleContainerWithSlots(containerSize), allowSaving, nbtKey);
     }
 
-    private static SimpleContainer loadItemContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, IntFunction<SimpleContainer> containerFactory, boolean allowSaving, String nbtKey) {
-        CompoundTag tag = getItemTag(stack, blockEntityType);
+    private static SimpleContainer loadItemContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, ItemContainerProvider provider, IntFunction<SimpleContainer> containerFactory, boolean allowSaving, String nbtKey) {
+        CompoundTag tag = provider.getItemTag(stack);
         ListTag items = null;
         if (tag != null && tag.contains(nbtKey)) {
             items = tag.getList(nbtKey, 10);
@@ -153,12 +154,12 @@ public class ContainerItemHelper {
         return OptionalInt.empty();
     }
 
-    public static boolean hasItemContainerTag(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType) {
-        return hasItemContainerTag(stack, blockEntityType, TAG_ITEMS);
+    public static boolean hasItemContainerTag(ItemStack stack, ItemContainerProvider provider) {
+        return hasItemContainerTag(stack, provider, TAG_ITEMS);
     }
 
-    public static boolean hasItemContainerTag(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, String nbtKey) {
-        CompoundTag tag = getItemTag(stack, blockEntityType);
+    public static boolean hasItemContainerTag(ItemStack stack, ItemContainerProvider provider, String nbtKey) {
+        CompoundTag tag = provider.getItemTag(stack);
         return tag != null && tag.contains(nbtKey);
     }
 
@@ -178,11 +179,6 @@ public class ContainerItemHelper {
         } else {
             return backgroundColor.getTextureDiffuseColors();
         }
-    }
-
-    @Nullable
-    private static CompoundTag getItemTag(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType) {
-        return blockEntityType != null ? BlockItem.getBlockEntityData(stack) : stack.getTag();
     }
 
     public static int getAvailableBundleItemSpace(ItemStack containerStack, ItemStack stackToAdd, int maxWeight) {

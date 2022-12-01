@@ -1,0 +1,6 @@
+{
+  "type": "easyshulkerboxes:block_entity",
+  "inventory_width": 9,
+  "inventory_height": 3,
+  "block_entity_type": "minecraft:chest"
+}

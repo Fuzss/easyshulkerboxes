@@ -1,18 +1,13 @@
 package fuzs.easyshulkerboxes.api.world.item.container;
 
-import com.google.common.collect.Maps;
-import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -20,54 +15,38 @@ import java.util.Optional;
  * <p>a container does not necessarily need to provide both item interactions and tooltips, what is provided is defined
  * by implementing {@link ItemContainerProvider#canProvideContainer} and {@link ItemContainerProvider#canProvideTooltipImage}
  * <p>this overrides any already implemented behavior (the default providers in Easy Shulker Boxes actually do this for vanilla bundles)
- * <p>new providers are registered in {@link ItemContainerProvider#REGISTRY}
  */
 public interface ItemContainerProvider {
-    /**
-     * the internal registry for providers
-     */
-    @ApiStatus.Internal
-    Map<Item, ItemContainerProvider> REGISTRY = Collections.synchronizedMap(Maps.newIdentityHashMap());
-
-    /**
-     * registers a provider for an item
-     *
-     * @param item     the item
-     * @param provider the provider
-     */
-    static void register(ItemLike item, ItemContainerProvider provider) {
-        REGISTRY.put(item.asItem(), provider);
-    }
-
-    /**
-     * get a provider for an item
-     *
-     * @param item item to get provider for
-     * @return provider if present or null
-     */
-    @Nullable
-    static ItemContainerProvider get(ItemLike item) {
-        return ItemContainerProviders.INSTANCE.get(item);
-    }
 
     /**
      * does this provider support item inventory interactions (extracting and adding items)
      *
-     * @param stack  the container stack
+     * @param containerStack  the container stack
      * @param player the player performing the interaction
      * @return are inventory interactions allowed (is a container present on this item)
      */
-    boolean canProvideContainer(ItemStack stack, Player player);
+    boolean canProvideContainer(ItemStack containerStack, Player player);
 
     /**
      * get the container provided by <code>stack</code> as a {@link SimpleContainer}
      *
-     * @param stack       item stack providing the container
+     * @param containerStack       item stack providing the container
      * @param player      player involved in the interaction
      * @param allowSaving attach a saving listener to the container (this is set to <code>false</code> when creating a container e.g. for rendering a tooltip)
      * @return the container
      */
-    SimpleContainer getItemContainer(ItemStack stack, Player player, boolean allowSaving);
+    SimpleContainer getItemContainer(ItemStack containerStack, Player player, boolean allowSaving);
+
+    /**
+     * read the item tag containing the stored inventory (usually as an <code>Items</code> sub-tag)
+     * <p>mainly required for items with block entity data, as the inventory is stored as part of the block entity data,
+     * not directly in the item tag
+     *
+     * @param containerStack    stack to read item tag from
+     * @return the tag
+     */
+    @Nullable
+    CompoundTag getItemTag(ItemStack containerStack);
 
     /**
      * called on the client-side to sync changes made during inventory item interactions back to the server

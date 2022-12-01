@@ -62,8 +62,13 @@ public class GenericItemContainerProvider extends ItemContainerProviderImpl {
     }
 
     @Override
-    public SimpleContainer getItemContainer(ItemStack stack, Player player, boolean allowSaving) {
-        return ContainerItemHelper.loadGenericItemContainer(stack, null, this.getInventorySize(), allowSaving, this.nbtKey);
+    public SimpleContainer getItemContainer(ItemStack containerStack, Player player, boolean allowSaving) {
+        return ContainerItemHelper.loadGenericItemContainer(containerStack, null, this, this.getInventorySize(), allowSaving, this.nbtKey);
+    }
+
+    @Override
+    public boolean canProvideTooltipImage(ItemStack containerStack, Player player) {
+        return ContainerItemHelper.hasItemContainerTag(containerStack, this, this.nbtKey);
     }
 
     @Override
@@ -73,7 +78,6 @@ public class GenericItemContainerProvider extends ItemContainerProviderImpl {
 
     @Override
     public void toJson(JsonObject jsonObject) {
-        super.toJson(jsonObject);
         jsonObject.addProperty("inventory_width", this.getInventoryWidth());
         jsonObject.addProperty("inventory_height", this.getInventoryHeight());
         if (this.dyeColor != null) {

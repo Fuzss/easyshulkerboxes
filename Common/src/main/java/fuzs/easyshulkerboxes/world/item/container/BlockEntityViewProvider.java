@@ -33,7 +33,7 @@ public class BlockEntityViewProvider extends BlockEntityProvider {
     }
 
     @Override
-    public boolean canProvideContainer(ItemStack stack, Player player) {
+    public boolean canProvideContainer(ItemStack containerStack, Player player) {
         return false;
     }
 

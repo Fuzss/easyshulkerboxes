@@ -1,7 +1,0 @@
-{
-  "type": "easyshulkerboxes:block_entity_view",
-  "item": "minecraft:blast_furnace",
-  "inventory_width": 3,
-  "inventory_height": 1,
-  "block_entity_type": "minecraft:blast_furnace"
-}

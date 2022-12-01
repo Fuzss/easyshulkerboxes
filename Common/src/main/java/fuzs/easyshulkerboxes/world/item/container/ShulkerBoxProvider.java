@@ -31,9 +31,9 @@ public class ShulkerBoxProvider extends BlockEntityProvider {
     }
 
     @Override
-    public boolean canProvideContainer(ItemStack stack, Player player) {
+    public boolean canProvideContainer(ItemStack containerStack, Player player) {
         // some mods make empty shulker boxes stackable, disable this mod then as it would allow for item duplication otherwise
-        return stack.getCount() == 1;
+        return containerStack.getCount() == 1;
     }
 
     @Override

@@ -4,18 +4,25 @@ import com.google.gson.JsonObject;
 import fuzs.easyshulkerboxes.api.world.item.container.SerializableItemContainerProvider;
 import fuzs.easyshulkerboxes.world.item.container.helper.ContainerItemHelper;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
 public abstract class ItemContainerProviderImpl implements SerializableItemContainerProvider {
 
     @Override
-    public boolean canProvideContainer(ItemStack stack, Player player) {
-        return stack.getCount() == 1;
+    public boolean canProvideContainer(ItemStack containerStack, Player player) {
+        return containerStack.getCount() == 1;
+    }
+
+    @Override
+    public @Nullable CompoundTag getItemTag(ItemStack containerStack) {
+        return containerStack.getTag();
     }
 
     @Override
@@ -52,14 +59,9 @@ public abstract class ItemContainerProviderImpl implements SerializableItemConta
     }
 
     @Override
-    public final Optional<TooltipComponent> getTooltipImage(ItemStack containerStack, Player player) {
+    public Optional<TooltipComponent> getTooltipImage(ItemStack containerStack, Player player) {
         SimpleContainer itemContainer = this.getItemContainer(containerStack, player, false);
         return Optional.of(this.internal$getTooltipImage(containerStack, ContainerItemHelper.containerToList(itemContainer)));
-    }
-
-    @Override
-    public boolean canProvideTooltipImage(ItemStack containerStack, Player player) {
-        return ContainerItemHelper.hasItemContainerTag(containerStack, null);
     }
 
     protected abstract TooltipComponent internal$getTooltipImage(ItemStack stack, NonNullList<ItemStack> items);

@@ -1,23 +1,24 @@
 package fuzs.easyshulkerboxes;
 
-import com.mrcrayfish.backpacked.core.ModItems;
-import fuzs.easyshulkerboxes.api.world.item.container.SerializableItemContainerProvider;
 import fuzs.easyshulkerboxes.capability.ContainerSlotCapability;
 import fuzs.easyshulkerboxes.capability.EnderChestMenuCapability;
+import fuzs.easyshulkerboxes.config.CommonConfig;
 import fuzs.easyshulkerboxes.data.ModLanguageProvider;
 import fuzs.easyshulkerboxes.handler.EnderChestMenuHandler;
 import fuzs.easyshulkerboxes.init.ModRegistry;
-import fuzs.easyshulkerboxes.integration.BackpackedProvider;
+import fuzs.easyshulkerboxes.integration.BackpackedIntegration;
 import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
 import fuzs.puzzleslib.capability.ForgeCapabilityController;
 import fuzs.puzzleslib.core.CommonFactories;
+import fuzs.puzzleslib.core.ModLoaderEnvironment;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -47,12 +48,27 @@ public class EasyShulkerBoxesForge {
         MinecraftForge.EVENT_BUS.addListener((final AddReloadListenerEvent evt) -> {
             evt.addListener(ItemContainerProviders.INSTANCE);
         });
+        MinecraftForge.EVENT_BUS.addListener((final OnDatapackSyncEvent evt) -> {
+            ServerPlayer player = evt.getPlayer();
+            if (player != null) {
+                ItemContainerProviders.INSTANCE.sendProvidersToPlayer(player);
+            } else {
+                for (ServerPlayer serverPlayer : evt.getPlayerList().getPlayers()) {
+                    ItemContainerProviders.INSTANCE.sendProvidersToPlayer(serverPlayer);
+                }
+            }
+        });
     }
 
     @SubscribeEvent
     public static void onCommonSetup(final FMLCommonSetupEvent evt) {
-        SerializableItemContainerProvider.register(BackpackedProvider.class, new ResourceLocation(EasyShulkerBoxes.MOD_ID, "backpacked"), BackpackedProvider::fromJson);
-        ItemContainerProviders.registerBuiltIn(ModItems.BACKPACK.get(), new BackpackedProvider());
+        registerIntegration();
+    }
+
+    private static void registerIntegration() {
+        if (ModLoaderEnvironment.INSTANCE.isModLoaded("backpacked") && EasyShulkerBoxes.CONFIG.get(CommonConfig.class).backpacked) {
+            BackpackedIntegration.registerContents();
+        }
     }
 
     @SubscribeEvent

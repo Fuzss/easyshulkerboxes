@@ -3,10 +3,8 @@ package fuzs.easyshulkerboxes.api.world.item.container;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.Item;
 
 import java.util.Collections;
 import java.util.Map;
@@ -23,17 +21,12 @@ public interface SerializableItemContainerProvider extends ItemContainerProvider
         REGISTRY_BY_TYPE.put(clazz, serializer);
     }
 
-    static JsonElement serialize(Item item, ItemContainerProvider provider) {
-        return serialize(Registry.ITEM.getKey(item), provider);
-    }
-
-    static JsonElement serialize(ResourceLocation item, ItemContainerProvider provider) {
+    static JsonElement serialize(ItemContainerProvider provider) {
         if (provider instanceof SerializableItemContainerProvider serializable) {
             Serializer serializer = REGISTRY_BY_TYPE.get(serializable.getClass());
             Objects.requireNonNull(serializer, "no serializer registered for class %s".formatted(serializable.getClass()));
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("type", serializer.id().toString());
-            jsonObject.addProperty("item", item.toString());
             serializable.toJson(jsonObject);
             return jsonObject;
         }

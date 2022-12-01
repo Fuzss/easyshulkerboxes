@@ -1,23 +1,13 @@
 package fuzs.easyshulkerboxes.client;
 
-import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.easyshulkerboxes.client.gui.screens.inventory.tooltip.ClientContainerItemTooltip;
 import fuzs.easyshulkerboxes.client.gui.screens.inventory.tooltip.ClientMapTooltip;
 import fuzs.easyshulkerboxes.client.gui.screens.inventory.tooltip.ModClientBundleTooltip;
-import fuzs.easyshulkerboxes.client.helper.ItemDecorationHelper;
 import fuzs.easyshulkerboxes.client.init.ClientModRegistry;
-import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.world.inventory.tooltip.ContainerItemTooltip;
 import fuzs.easyshulkerboxes.world.inventory.tooltip.MapTooltip;
 import fuzs.easyshulkerboxes.world.inventory.tooltip.ModBundleTooltip;
 import fuzs.puzzleslib.client.core.ClientModConstructor;
-import fuzs.puzzleslib.proxy.Proxy;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-
-import java.util.Map;
 
 public class EasyShulkerBoxesClient implements ClientModConstructor {
 
@@ -32,14 +22,5 @@ public class EasyShulkerBoxesClient implements ClientModConstructor {
         context.registerClientTooltipComponent(ContainerItemTooltip.class, ClientContainerItemTooltip::new);
         context.registerClientTooltipComponent(ModBundleTooltip.class, ModClientBundleTooltip::new);
         context.registerClientTooltipComponent(MapTooltip.class, ClientMapTooltip::new);
-    }
-
-    @Override
-    public void onRegisterItemDecorations(ItemDecorationContext context) {
-        for (Map.Entry<Item, ItemContainerProvider> entry : ItemContainerProvider.REGISTRY.entrySet()) {
-            context.register(entry.getKey(), ItemDecorationHelper.getDynamicItemDecorator((AbstractContainerScreen<?> screen, ItemStack containerStack, ItemStack carriedStack) -> {
-                return entry.getValue().canAddItem(containerStack, carriedStack, Proxy.INSTANCE.getClientPlayer());
-            }, () -> EasyShulkerBoxes.CONFIG.get(ClientConfig.class).containerItemIndicator));
-        }
     }
 }

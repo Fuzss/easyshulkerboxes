@@ -1,0 +1,6 @@
+{
+  "type": "easyshulkerboxes:block_entity_view",
+  "inventory_width": 4,
+  "inventory_height": 1,
+  "block_entity_type": "minecraft:campfire"
+}

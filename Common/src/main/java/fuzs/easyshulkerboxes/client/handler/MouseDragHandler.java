@@ -6,6 +6,7 @@ import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.mixin.client.accessor.AbstractContainerScreenAccessor;
+import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
 import fuzs.puzzleslib.client.gui.screens.CommonScreens;
 import fuzs.puzzleslib.proxy.Proxy;
 import net.minecraft.client.gui.screens.Screen;
@@ -16,7 +17,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Unit;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -39,7 +39,7 @@ public class MouseDragHandler {
     public Optional<Unit> onMousePress(Screen screen, double mouseX, double mouseY, int button) {
         if (!shouldHandleMouseDrag(screen)) return Optional.empty();
         ItemStack carriedStack = ((AbstractContainerScreen<?>) screen).getMenu().getCarried();
-        ItemContainerProvider provider = ItemContainerProvider.get(carriedStack.getItem());
+        ItemContainerProvider provider = ItemContainerProviders.INSTANCE.get(carriedStack.getItem());
         if (button == 1 && provider != null && provider.canProvideContainer(carriedStack, Proxy.INSTANCE.getClientPlayer())) {
             Slot slot = ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$findSlot(mouseX, mouseY);
             if (slot != null && slot.hasItem()) {
@@ -67,7 +67,7 @@ public class MouseDragHandler {
             AbstractContainerMenu menu = ((AbstractContainerScreen<?>) screen).getMenu();
             if (slot != null && menu.canDragTo(slot) && !this.containerDragSlots.contains(slot)) {
                 ItemStack carriedStack = menu.getCarried();
-                ItemContainerProvider provider = ItemContainerProvider.get(carriedStack.getItem());
+                ItemContainerProvider provider = ItemContainerProviders.INSTANCE.get(carriedStack.getItem());
                 Objects.requireNonNull(provider, "attempting to drag item with invalid provider");
                 boolean interact = false;
                 if (this.containerDragType == ContainerDragType.INSERT && slot.hasItem() && provider.canAddItem(carriedStack, slot.getItem(), Proxy.INSTANCE.getClientPlayer())) {

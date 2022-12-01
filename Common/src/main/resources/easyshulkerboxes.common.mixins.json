@@ -10,6 +10,7 @@
   ],
   "client": [
     "client.AbstractContainerScreenMixin",
+    "client.ItemRendererMixin",
     "client.MultiPlayerGameModeMixin",
     "client.accessor.BundleItemAccessor",
     "client.accessor.AbstractContainerScreenAccessor"

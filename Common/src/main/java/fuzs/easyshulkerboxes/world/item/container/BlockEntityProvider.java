@@ -5,10 +5,12 @@ import com.google.gson.JsonObject;
 import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.easyshulkerboxes.world.item.container.helper.ContainerItemHelper;
 import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -39,18 +41,23 @@ public class BlockEntityProvider extends GenericItemContainerProvider {
     }
 
     @Override
-    public boolean canProvideContainer(ItemStack stack, Player player) {
-        return super.canProvideContainer(stack, player) && player.getAbilities().instabuild;
+    public boolean canProvideContainer(ItemStack containerStack, Player player) {
+        return super.canProvideContainer(containerStack, player) && player.getAbilities().instabuild;
     }
 
     @Override
-    public SimpleContainer getItemContainer(ItemStack stack, Player player, boolean allowSaving) {
-        return ContainerItemHelper.loadGenericItemContainer(stack, this.blockEntityType, this.getInventorySize(), allowSaving, this.nbtKey);
+    public SimpleContainer getItemContainer(ItemStack containerStack, Player player, boolean allowSaving) {
+        return ContainerItemHelper.loadGenericItemContainer(containerStack, this.blockEntityType, this, this.getInventorySize(), allowSaving, this.nbtKey);
+    }
+
+    @Override
+    public @Nullable CompoundTag getItemTag(ItemStack containerStack) {
+        return BlockItem.getBlockEntityData(containerStack);
     }
 
     @Override
     public boolean canProvideTooltipImage(ItemStack containerStack, Player player) {
-        return ContainerItemHelper.hasItemContainerTag(containerStack, this.blockEntityType);
+        return ContainerItemHelper.hasItemContainerTag(containerStack, this, this.nbtKey);
     }
 
     @Override
