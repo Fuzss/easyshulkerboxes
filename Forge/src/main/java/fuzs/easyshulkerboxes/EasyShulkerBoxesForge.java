@@ -2,15 +2,12 @@ package fuzs.easyshulkerboxes;
 
 import fuzs.easyshulkerboxes.capability.ContainerSlotCapability;
 import fuzs.easyshulkerboxes.capability.EnderChestMenuCapability;
-import fuzs.easyshulkerboxes.config.CommonConfig;
 import fuzs.easyshulkerboxes.data.ModLanguageProvider;
 import fuzs.easyshulkerboxes.handler.EnderChestMenuHandler;
 import fuzs.easyshulkerboxes.init.ModRegistry;
-import fuzs.easyshulkerboxes.integration.BackpackedIntegration;
 import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
 import fuzs.puzzleslib.capability.ForgeCapabilityController;
 import fuzs.puzzleslib.core.CommonFactories;
-import fuzs.puzzleslib.core.ModLoaderEnvironment;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.MinecraftForge;
@@ -22,7 +19,6 @@ import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
 
 @Mod(EasyShulkerBoxes.MOD_ID)
@@ -58,17 +54,6 @@ public class EasyShulkerBoxesForge {
                 }
             }
         });
-    }
-
-    @SubscribeEvent
-    public static void onCommonSetup(final FMLCommonSetupEvent evt) {
-        registerIntegration();
-    }
-
-    private static void registerIntegration() {
-        if (ModLoaderEnvironment.INSTANCE.isModLoaded("backpacked") && EasyShulkerBoxes.CONFIG.get(CommonConfig.class).backpacked) {
-            BackpackedIntegration.registerContents();
-        }
     }
 
     @SubscribeEvent

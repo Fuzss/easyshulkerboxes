@@ -42,11 +42,12 @@ public interface ItemContainerProvider {
      * <p>mainly required for items with block entity data, as the inventory is stored as part of the block entity data,
      * not directly in the item tag
      *
-     * @param containerStack    stack to read item tag from
+     * @param containerStack stack to read item tag from
+     * @param force create a new tag if none is present
      * @return the tag
      */
     @Nullable
-    CompoundTag getItemTag(ItemStack containerStack);
+    CompoundTag getItemTag(ItemStack containerStack, boolean force);
 
     /**
      * called on the client-side to sync changes made during inventory item interactions back to the server

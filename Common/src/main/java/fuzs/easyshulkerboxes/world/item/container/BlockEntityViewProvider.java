@@ -20,15 +20,15 @@ public class BlockEntityViewProvider extends BlockEntityProvider {
         super(blockEntityType, inventoryWidth, inventoryHeight);
     }
 
-    public BlockEntityViewProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, @Nullable DyeColor backgroundColor, String nbtKey) {
+    public BlockEntityViewProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, @Nullable DyeColor backgroundColor, String... nbtKey) {
         super(blockEntityType, inventoryWidth, inventoryHeight, backgroundColor, nbtKey);
     }
 
-    public BlockEntityViewProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, @NotNull float[] backgroundColor, String nbtKey) {
+    public BlockEntityViewProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, @NotNull float[] backgroundColor, String... nbtKey) {
         super(blockEntityType, inventoryWidth, inventoryHeight, backgroundColor, nbtKey);
     }
 
-    public BlockEntityViewProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, String nbtKey) {
+    public BlockEntityViewProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, String... nbtKey) {
         super(blockEntityType, inventoryWidth, inventoryHeight, nbtKey);
     }
 
@@ -45,7 +45,7 @@ public class BlockEntityViewProvider extends BlockEntityProvider {
         if (jsonObject.has("background_color")) {
             dyeColor = DyeColor.byName(GsonHelper.getAsString(jsonObject, "background_color"), null);
         }
-        String nbtKey = GsonHelper.getAsString(jsonObject, "nbt_key", ContainerItemHelper.TAG_ITEMS);
+        String[] nbtKey = GsonHelper.getAsString(jsonObject, "nbt_key", ContainerItemHelper.TAG_ITEMS).split("/");
         ResourceLocation blockEntityTypeKey = new ResourceLocation(GsonHelper.getAsString(jsonObject, "block_entity_type"));
         BlockEntityType<?> blockEntityType = Registry.BLOCK_ENTITY_TYPE.get(blockEntityTypeKey);
         return new BlockEntityViewProvider(blockEntityType, inventoryWidth, inventoryHeight, dyeColor, nbtKey);

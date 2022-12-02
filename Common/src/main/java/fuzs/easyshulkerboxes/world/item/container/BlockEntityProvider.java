@@ -18,6 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class BlockEntityProvider extends GenericItemContainerProvider {
+    private static final String BLOCK_ENTITY_TAG = "BlockEntityTag";
+
     protected final BlockEntityType<?> blockEntityType;
 
     public BlockEntityProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight) {
@@ -25,17 +27,22 @@ public class BlockEntityProvider extends GenericItemContainerProvider {
         this.blockEntityType = blockEntityType;
     }
 
-    public BlockEntityProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, @Nullable DyeColor backgroundColor, String nbtKey) {
+    public BlockEntityProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, @Nullable DyeColor backgroundColor) {
+        super(inventoryWidth, inventoryHeight, backgroundColor);
+        this.blockEntityType = blockEntityType;
+    }
+
+    public BlockEntityProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, @Nullable DyeColor backgroundColor, String... nbtKey) {
         super(inventoryWidth, inventoryHeight, backgroundColor, nbtKey);
         this.blockEntityType = blockEntityType;
     }
 
-    public BlockEntityProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, @NotNull float[] backgroundColor, String nbtKey) {
+    public BlockEntityProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, @NotNull float[] backgroundColor, String... nbtKey) {
         super(inventoryWidth, inventoryHeight, backgroundColor, nbtKey);
         this.blockEntityType = blockEntityType;
     }
 
-    public BlockEntityProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, String nbtKey) {
+    public BlockEntityProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, String... nbtKey) {
         super(inventoryWidth, inventoryHeight, nbtKey);
         this.blockEntityType = blockEntityType;
     }
@@ -47,17 +54,17 @@ public class BlockEntityProvider extends GenericItemContainerProvider {
 
     @Override
     public SimpleContainer getItemContainer(ItemStack containerStack, Player player, boolean allowSaving) {
-        return ContainerItemHelper.loadGenericItemContainer(containerStack, this.blockEntityType, this, this.getInventorySize(), allowSaving, this.nbtKey);
+        return ContainerItemHelper.loadGenericItemContainer(containerStack, this.blockEntityType, this, this.getInventorySize(), allowSaving, this.getNbtKey());
     }
 
     @Override
-    public @Nullable CompoundTag getItemTag(ItemStack containerStack) {
-        return BlockItem.getBlockEntityData(containerStack);
+    public @Nullable CompoundTag getItemSourceTag(ItemStack containerStack, boolean force) {
+        return force ? containerStack.getOrCreateTagElement(BLOCK_ENTITY_TAG) : containerStack.getTagElement(BLOCK_ENTITY_TAG);
     }
 
     @Override
     public boolean canProvideTooltipImage(ItemStack containerStack, Player player) {
-        return ContainerItemHelper.hasItemContainerTag(containerStack, this, this.nbtKey);
+        return ContainerItemHelper.hasItemContainerTag(containerStack, this, this.getNbtKey());
     }
 
     @Override
@@ -74,7 +81,7 @@ public class BlockEntityProvider extends GenericItemContainerProvider {
         if (jsonObject.has("background_color")) {
             dyeColor = DyeColor.byName(GsonHelper.getAsString(jsonObject, "background_color"), null);
         }
-        String nbtKey = GsonHelper.getAsString(jsonObject, "nbt_key", ContainerItemHelper.TAG_ITEMS);
+        String[] nbtKey = GsonHelper.getAsString(jsonObject, "nbt_key", ContainerItemHelper.TAG_ITEMS).split("/");
         ResourceLocation blockEntityTypeKey = new ResourceLocation(GsonHelper.getAsString(jsonObject, "block_entity_type"));
         BlockEntityType<?> blockEntityType = Registry.BLOCK_ENTITY_TYPE.get(blockEntityTypeKey);
         return new BlockEntityProvider(blockEntityType, inventoryWidth, inventoryHeight, dyeColor, nbtKey);

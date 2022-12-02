@@ -21,8 +21,8 @@ public abstract class ItemContainerProviderImpl implements SerializableItemConta
     }
 
     @Override
-    public @Nullable CompoundTag getItemTag(ItemStack containerStack) {
-        return containerStack.getTag();
+    public @Nullable CompoundTag getItemTag(ItemStack containerStack, boolean force) {
+        return force ? containerStack.getOrCreateTag() : containerStack.getTag();
     }
 
     @Override

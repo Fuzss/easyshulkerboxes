@@ -8,6 +8,7 @@ import fuzs.easyshulkerboxes.EasyShulkerBoxes;
 import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.easyshulkerboxes.api.world.item.container.SerializableItemContainerProvider;
 import fuzs.easyshulkerboxes.core.CommonAbstractions;
+import fuzs.easyshulkerboxes.integration.InmisProvider;
 import fuzs.easyshulkerboxes.network.S2CSyncItemContainerProvider;
 import fuzs.easyshulkerboxes.world.item.container.*;
 import fuzs.puzzleslib.core.ModLoaderEnvironment;
@@ -19,6 +20,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
@@ -94,6 +96,7 @@ public class ItemContainerProviders extends SimpleJsonResourceReloadListener {
     }
     
     static {
+        // Vanilla
         registerBuiltIn(Items.FILLED_MAP, new MapProvider());
         for (Map.Entry<ResourceKey<Block>, Block> entry : Registry.BLOCK.entrySet()) {
             // only affect vanilla shulker boxes, other mods might add shulker boxes with a different inventory size
@@ -114,5 +117,21 @@ public class ItemContainerProviders extends SimpleJsonResourceReloadListener {
         registerBuiltIn(Items.BREWING_STAND, new BlockEntityViewProvider(BlockEntityType.BREWING_STAND, 5, 1));
         registerBuiltIn(Items.CAMPFIRE, new BlockEntityViewProvider(BlockEntityType.CAMPFIRE, 4, 1));
         registerBuiltIn(Items.SOUL_CAMPFIRE, new BlockEntityViewProvider(BlockEntityType.CAMPFIRE, 4, 1));
+        // Backpacked (Forge)
+        registerBuiltIn(new ResourceLocation("backpacked:backpack"), new GenericItemContainerProvider(9, 1, DyeColor.BROWN));
+        // Simple Backpack (Fabric)
+        ItemContainerProviders.registerBuiltIn(new ResourceLocation("simple_backpack:ender_pack"), new EnderChestProvider());
+        ItemContainerProviders.registerBuiltIn(new ResourceLocation("simple_backpack:backpack"), new GenericItemContainerProvider(9, 6, DyeColor.BROWN, "backpack/Items"));
+        ItemContainerProviders.registerBuiltIn(new ResourceLocation("simple_backpack:simple_bundle"), new BundleProvider(3456));
+        // Inmis (Fabric)
+        ItemContainerProviders.registerBuiltIn(new ResourceLocation("inmis:ender_pouch"), new EnderChestProvider());
+        ItemContainerProviders.registerBuiltIn(new ResourceLocation("inmis:baby_backpack"), new InmisProvider(3, 1, DyeColor.ORANGE, "Inventory"));
+        ItemContainerProviders.registerBuiltIn(new ResourceLocation("inmis:frayed_backpack"), new InmisProvider(9, 1, DyeColor.BROWN, "Inventory"));
+        ItemContainerProviders.registerBuiltIn(new ResourceLocation("inmis:plated_backpack"), new InmisProvider(9, 2, DyeColor.WHITE, "Inventory"));
+        ItemContainerProviders.registerBuiltIn(new ResourceLocation("inmis:gilded_backpack"), new InmisProvider(9, 3, DyeColor.YELLOW, "Inventory"));
+        ItemContainerProviders.registerBuiltIn(new ResourceLocation("inmis:bejeweled_backpack"), new InmisProvider(9, 5, DyeColor.LIGHT_BLUE, "Inventory"));
+        ItemContainerProviders.registerBuiltIn(new ResourceLocation("inmis:blazing_backpack"), new InmisProvider(9, 6, DyeColor.YELLOW, "Inventory"));
+        ItemContainerProviders.registerBuiltIn(new ResourceLocation("inmis:withered_backpack"), new InmisProvider(11, 6, DyeColor.BLACK, "Inventory"));
+        ItemContainerProviders.registerBuiltIn(new ResourceLocation("inmis:endless_backpack"), new InmisProvider(15, 6, DyeColor.CYAN, "Inventory"));
     }
 }

@@ -27,15 +27,10 @@ import java.util.function.ToIntFunction;
 
 public class ContainerItemHelper {
     public static final String TAG_ITEMS = "Items";
-    public static final float[] DEFAULT_BACKGROUND_COLOR = {1.0F, 1.0F, 1.0F};
 
     public static SimpleContainer loadBundleItemContainer(ItemStack stack, ItemContainerProvider provider, boolean allowSaving) {
         // add one additional slot, so we can add items in the inventory
         return loadItemContainer(stack, null, provider, items -> new SimpleContainer(items + 1), allowSaving, TAG_ITEMS);
-    }
-
-    public static SimpleContainer loadGenericItemContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, ItemContainerProvider provider, int containerSize, boolean allowSaving) {
-        return loadGenericItemContainer(stack, blockEntityType, provider, containerSize, allowSaving, TAG_ITEMS);
     }
 
     public static SimpleContainer loadGenericItemContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, ItemContainerProvider provider, int containerSize, boolean allowSaving, String nbtKey) {
@@ -43,7 +38,7 @@ public class ContainerItemHelper {
     }
 
     private static SimpleContainer loadItemContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, ItemContainerProvider provider, IntFunction<SimpleContainer> containerFactory, boolean allowSaving, String nbtKey) {
-        CompoundTag tag = provider.getItemTag(stack);
+        CompoundTag tag = provider.getItemTag(stack, false);
         ListTag items = null;
         if (tag != null && tag.contains(nbtKey)) {
             items = tag.getList(nbtKey, 10);
@@ -54,14 +49,24 @@ public class ContainerItemHelper {
         }
         if (allowSaving) {
             simpleContainer.addListener(container -> {
-                saveItemContainer(stack, blockEntityType, (SimpleContainer) container, nbtKey);
+                ListTag listTag = ((SimpleContainer) container).createTag();
+                saveItemContainer(stack, blockEntityType, provider, listTag, nbtKey);
             });
         }
         return simpleContainer;
     }
 
-    private static void saveItemContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, SimpleContainer container, String nbtKey) {
-        ListTag listTag = container.createTag();
+    private static void saveItemContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, ItemContainerProvider provider, ListTag listTag, String nbtKey) {
+        if (!listTag.isEmpty()) {
+            CompoundTag itemTag = provider.getItemTag(stack, true);
+            if (itemTag != null) {
+                itemTag.put(nbtKey, listTag);
+            }
+        } else {
+
+        }
+
+
         if (blockEntityType == null) {
             if (listTag.isEmpty()) {
                 stack.removeTagKey(nbtKey);
@@ -159,7 +164,7 @@ public class ContainerItemHelper {
     }
 
     public static boolean hasItemContainerTag(ItemStack stack, ItemContainerProvider provider, String nbtKey) {
-        CompoundTag tag = provider.getItemTag(stack);
+        CompoundTag tag = provider.getItemTag(stack, false);
         return tag != null && tag.contains(nbtKey);
     }
 
@@ -173,7 +178,7 @@ public class ContainerItemHelper {
 
     public static float[] getBackgroundColor(@Nullable DyeColor backgroundColor) {
         if (backgroundColor == null) {
-            return DEFAULT_BACKGROUND_COLOR;
+            return new float[]{1.0F, 1.0F, 1.0F};
         } else if (backgroundColor == DyeColor.WHITE) {
             return new float[]{0.9019608F, 0.9019608F, 0.9019608F};
         } else {

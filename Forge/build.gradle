@@ -121,9 +121,6 @@ dependencies {
 
     // Puzzles Lib
     implementation fg.deobf("fuzs.puzzleslib:puzzleslib-forge:${puzzlesVersion}")
-
-    // Backpack Mods
-    implementation fg.deobf("curse.maven:backpacked-352835:3923045")
 }
 
 mixin {

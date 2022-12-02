@@ -2,9 +2,9 @@ package fuzs.easyshulkerboxes;
 
 import fuzs.easyshulkerboxes.api.world.item.container.SerializableItemContainerProvider;
 import fuzs.easyshulkerboxes.config.ClientConfig;
-import fuzs.easyshulkerboxes.config.CommonConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.init.ModRegistry;
+import fuzs.easyshulkerboxes.integration.InmisProvider;
 import fuzs.easyshulkerboxes.network.S2CEnderChestSetContentMessage;
 import fuzs.easyshulkerboxes.network.S2CEnderChestSetSlotMessage;
 import fuzs.easyshulkerboxes.network.S2CSyncItemContainerProvider;
@@ -32,7 +32,6 @@ public class EasyShulkerBoxes implements ModConstructor {
     @SuppressWarnings("Convert2MethodRef")
     public static final ConfigHolder CONFIG = CommonFactories.INSTANCE
             .clientConfig(ClientConfig.class, () -> new ClientConfig())
-            .commonConfig(CommonConfig.class, () -> new CommonConfig())
             .serverConfig(ServerConfig.class, () -> new ServerConfig());
 
     @Override
@@ -67,5 +66,6 @@ public class EasyShulkerBoxes implements ModConstructor {
         SerializableItemContainerProvider.register(GenericItemContainerProvider.class, new ResourceLocation(MOD_ID, "item"), GenericItemContainerProvider::fromJson);
         SerializableItemContainerProvider.register(MapProvider.class, new ResourceLocation(MOD_ID, "map"), MapProvider::fromJson);
         SerializableItemContainerProvider.register(ShulkerBoxProvider.class, new ResourceLocation(MOD_ID, "shulker_box"), ShulkerBoxProvider::fromJson);
+        SerializableItemContainerProvider.register(InmisProvider.class, new ResourceLocation(MOD_ID, "inmis"), InmisProvider::fromJson);
     }
 }

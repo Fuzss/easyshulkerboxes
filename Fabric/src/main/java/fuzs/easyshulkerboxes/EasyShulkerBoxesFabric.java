@@ -1,12 +1,9 @@
 package fuzs.easyshulkerboxes;
 
 import fuzs.easyshulkerboxes.api.event.entity.living.LivingEvents;
-import fuzs.easyshulkerboxes.config.CommonConfig;
 import fuzs.easyshulkerboxes.handler.EnderChestMenuHandler;
-import fuzs.easyshulkerboxes.integration.SimpleBackpackIntegration;
 import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
 import fuzs.puzzleslib.core.CommonFactories;
-import fuzs.puzzleslib.core.ModLoaderEnvironment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
@@ -18,17 +15,8 @@ public class EasyShulkerBoxesFabric implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        // do this first as on Fabric common setup runs immediately, and there we do custom data gen
-        registerIntegration();
         CommonFactories.INSTANCE.modConstructor(EasyShulkerBoxes.MOD_ID).accept(new EasyShulkerBoxes());
         registerHandlers();
-    }
-
-    private static void registerIntegration() {
-        // needs no config, no classes are referenced
-        if (ModLoaderEnvironment.INSTANCE.isModLoaded("simple_backpack")) {
-            SimpleBackpackIntegration.registerContents();
-        }
     }
 
     private static void registerHandlers() {
