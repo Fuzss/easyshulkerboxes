@@ -22,7 +22,7 @@ abstract class ShulkerBoxBlockMixin extends BaseEntityBlock {
     }
 
     @Inject(method = "appendHoverText", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;contains(Ljava/lang/String;I)Z"), slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/network/chat/Component;literal(Ljava/lang/String;)Lnet/minecraft/network/chat/MutableComponent;")), cancellable = true)
-    public void appendHoverText(ItemStack p_56193_, @Nullable BlockGetter p_56194_, List<Component> p_56195_, TooltipFlag p_56196_, CallbackInfo callbackInfo) {
+    public void easyshulkerboxes$appendHoverText(ItemStack p_56193_, @Nullable BlockGetter p_56194_, List<Component> p_56195_, TooltipFlag p_56196_, CallbackInfo callbackInfo) {
         callbackInfo.cancel();
     }
 }

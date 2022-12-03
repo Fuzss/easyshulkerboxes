@@ -21,7 +21,7 @@ abstract class LocalPlayerMixin$Fabric extends AbstractClientPlayer {
     }
 
     @Inject(method = "playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", at = @At("HEAD"), cancellable = true)
-    public void simpleinventorycontainers$playSound(SoundEvent sound, float volume, float pitch, CallbackInfo callback) {
+    public void easyshulkerboxes$playSound(SoundEvent sound, float volume, float pitch, CallbackInfo callback) {
         PlayLevelSoundEvents.ENTITY.invoker().onPlaySoundAtEntity(this, sound, this.getSoundSource(), volume, pitch).ifPresent(unit -> callback.cancel());
     }
 }

@@ -21,7 +21,7 @@ abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> ext
     }
 
     @Inject(method = "renderSlot", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;enableDepthTest()V", shift = At.Shift.BEFORE))
-    private void simpleinventorycontainers$renderSlot(PoseStack poseStack, Slot slot, CallbackInfo callback) {
+    private void easyshulkerboxes$renderSlot(PoseStack poseStack, Slot slot, CallbackInfo callback) {
         // this was supposed to render on the Forge container foreground event, but the blitOffset wouldn't behave
         // (it was rendering in front of items and behaved differently on the creative screen and there were also difference between Forge and Fabric for some reason)
         // so here goes the mixin ¯\_(ツ)_/¯

@@ -29,12 +29,12 @@ abstract class ServerLevelMixin$Fabric extends Level {
     }
 
     @Inject(method = "playSeededSound(Lnet/minecraft/world/entity/player/Player;DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFJ)V", at = @At("HEAD"), cancellable = true)
-    public void simpleinventorycontainers$playSeededSound(@Nullable Player player, double x, double y, double z, SoundEvent soundEvent, SoundSource source, float volume, float pitch, long seed, CallbackInfo callback) {
+    public void easyshulkerboxes$playSeededSound(@Nullable Player player, double x, double y, double z, SoundEvent soundEvent, SoundSource source, float volume, float pitch, long seed, CallbackInfo callback) {
         PlayLevelSoundEvents.POSITION.invoker().onPlaySoundAtPosition(this, new Vec3(x, y, z), soundEvent, source, volume, pitch).ifPresent(unit -> callback.cancel());
     }
 
     @Inject(method = "playSeededSound(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFJ)V", at = @At("HEAD"), cancellable = true)
-    public void simpleinventorycontainers$playSeededSound(@Nullable Player player, Entity entity, SoundEvent soundEvent, SoundSource soundSource, float volume, float pitch, long seed, CallbackInfo callback) {
+    public void easyshulkerboxes$playSeededSound(@Nullable Player player, Entity entity, SoundEvent soundEvent, SoundSource soundSource, float volume, float pitch, long seed, CallbackInfo callback) {
         PlayLevelSoundEvents.ENTITY.invoker().onPlaySoundAtEntity(entity, soundEvent, soundSource, volume, pitch).ifPresent(unit -> callback.cancel());
     }
 }
