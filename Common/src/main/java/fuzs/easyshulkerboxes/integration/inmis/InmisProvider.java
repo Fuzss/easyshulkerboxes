@@ -1,4 +1,4 @@
-package fuzs.easyshulkerboxes.integration;
+package fuzs.easyshulkerboxes.integration.inmis;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonElement;
@@ -27,8 +27,8 @@ public class InmisProvider extends GenericItemContainerProvider {
     @Nullable
     private Set<Item> inmisBackpacks;
 
-    public InmisProvider(int inventoryWidth, int inventoryHeight, @Nullable DyeColor backgroundColor, String... nbtKey) {
-        super(inventoryWidth, inventoryHeight, backgroundColor, nbtKey);
+    public InmisProvider(int inventoryWidth, int inventoryHeight, @Nullable DyeColor backgroundColor) {
+        super(inventoryWidth, inventoryHeight, backgroundColor, "Inventory");
     }
 
     @Override
@@ -60,6 +60,6 @@ public class InmisProvider extends GenericItemContainerProvider {
             dyeColor = DyeColor.byName(GsonHelper.getAsString(jsonObject, "background_color"), null);
         }
         String[] nbtKey = GsonHelper.getAsString(jsonObject, "nbt_key", ContainerItemHelper.TAG_ITEMS).split("/");
-        return new InmisProvider(inventoryWidth, inventoryHeight, dyeColor, nbtKey);
+        return new InmisProvider(inventoryWidth, inventoryHeight, dyeColor);
     }
 }

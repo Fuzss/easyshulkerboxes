@@ -29,6 +29,16 @@ public interface ItemContainerProvider {
     boolean canProvideContainer(ItemStack containerStack, Player player);
 
     /**
+     * does the item stack have data for stored items
+     * <p>an easy check if the corresponding container is empty without having to create a container instance
+     * <p>mainly used by tooltip image and client-side mouse scroll handler
+     *
+     * @param containerStack the container stack
+     * @return is the item stack tag with stored item data present
+     */
+    boolean hasItemContainerTag(ItemStack containerStack);
+
+    /**
      * get the container provided by <code>stack</code> as a {@link SimpleContainer}
      *
      * @param containerStack item stack providing the container

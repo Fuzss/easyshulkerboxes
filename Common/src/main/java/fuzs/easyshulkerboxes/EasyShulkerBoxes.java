@@ -4,7 +4,11 @@ import fuzs.easyshulkerboxes.api.world.item.container.SerializableItemContainerP
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.init.ModRegistry;
-import fuzs.easyshulkerboxes.integration.*;
+import fuzs.easyshulkerboxes.integration.backpacked.BackpackedIntegration;
+import fuzs.easyshulkerboxes.integration.inmis.InmisIntegration;
+import fuzs.easyshulkerboxes.integration.inmis.InmisProvider;
+import fuzs.easyshulkerboxes.integration.reinforcedshulkerboxes.ReinforcedShulkerBoxesIntegration;
+import fuzs.easyshulkerboxes.integration.simplebackpack.SimpleBackpackIntegration;
 import fuzs.easyshulkerboxes.network.S2CEnderChestSetContentMessage;
 import fuzs.easyshulkerboxes.network.S2CEnderChestSetSlotMessage;
 import fuzs.easyshulkerboxes.network.S2CSyncItemContainerProvider;
@@ -74,6 +78,7 @@ public class EasyShulkerBoxes implements ModConstructor {
         ItemContainerProviders.registerBuiltInProvider(Items.DISPENSER, new BlockEntityProvider(BlockEntityType.DISPENSER, 3, 3));
         ItemContainerProviders.registerBuiltInProvider(Items.CHEST, new BlockEntityProvider(BlockEntityType.CHEST, 9, 3));
         ItemContainerProviders.registerBuiltInProvider(Items.TRAPPED_CHEST, new BlockEntityProvider(BlockEntityType.TRAPPED_CHEST, 9, 3));
+        ItemContainerProviders.registerBuiltInProvider(Items.BARREL, new BlockEntityProvider(BlockEntityType.BARREL, 9, 3));
         ItemContainerProviders.registerBuiltInProvider(Items.HOPPER, new BlockEntityProvider(BlockEntityType.HOPPER, 5, 1));
         ItemContainerProviders.registerBuiltInProvider(Items.FURNACE, new BlockEntityViewProvider(BlockEntityType.FURNACE, 3, 1));
         ItemContainerProviders.registerBuiltInProvider(Items.BLAST_FURNACE, new BlockEntityViewProvider(BlockEntityType.BLAST_FURNACE, 3, 1));

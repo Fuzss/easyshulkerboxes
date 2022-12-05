@@ -1,4 +1,4 @@
-package fuzs.easyshulkerboxes.integration;
+package fuzs.easyshulkerboxes.integration.simplebackpack;
 
 import fuzs.easyshulkerboxes.world.item.container.BundleProvider;
 import fuzs.easyshulkerboxes.world.item.container.EnderChestProvider;

@@ -1,4 +1,4 @@
-package fuzs.easyshulkerboxes.integration;
+package fuzs.easyshulkerboxes.integration.inmis;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

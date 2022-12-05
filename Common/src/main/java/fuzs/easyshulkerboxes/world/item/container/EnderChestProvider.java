@@ -16,6 +16,11 @@ public class EnderChestProvider extends ItemContainerProviderImpl {
     private static final float[] DEFAULT_ENDER_CHEST_COLOR = {0.16470589F, 0.38431373F, 0.33333334F};
 
     @Override
+    public boolean hasItemContainerTag(ItemStack containerStack) {
+        return true;
+    }
+
+    @Override
     public SimpleContainer getItemContainer(ItemStack containerStack, Player player, boolean allowSaving) {
         return player.getEnderChestInventory();
     }

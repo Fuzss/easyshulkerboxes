@@ -54,7 +54,7 @@ public class BundleProvider extends ItemContainerProviderImpl {
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack containerStack, Player player) {
-        if (ContainerItemHelper.hasItemContainerTag(containerStack, this, ContainerItemHelper.TAG_ITEMS)) {
+        if (this.hasItemContainerTag(containerStack)) {
             return super.getTooltipImage(containerStack, player);
         }
         // make sure to always override bundle tooltip, as otherwise vanilla tooltip would show for empty bundles

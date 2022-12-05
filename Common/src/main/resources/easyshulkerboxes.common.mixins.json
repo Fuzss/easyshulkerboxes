@@ -12,8 +12,9 @@
     "client.AbstractContainerScreenMixin",
     "client.ItemRendererMixin",
     "client.MultiPlayerGameModeMixin",
-    "client.accessor.BundleItemAccessor",
-    "client.accessor.AbstractContainerScreenAccessor"
+    "client.accessor.AbstractContainerMenuAccessor",
+    "client.accessor.AbstractContainerScreenAccessor",
+    "client.accessor.BundleItemAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

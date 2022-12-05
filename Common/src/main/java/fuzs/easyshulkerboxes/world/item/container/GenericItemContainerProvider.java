@@ -62,12 +62,13 @@ public class GenericItemContainerProvider extends ItemContainerProviderImpl {
         return this.nbtKey[this.nbtKey.length - 1];
     }
 
-    private boolean hasNbtPath() {
-        return this.nbtKey.length > 1;
-    }
-
     private String[] getNbtPath() {
         return Arrays.copyOf(this.nbtKey, this.nbtKey.length - 1);
+    }
+
+    @Override
+    public boolean hasItemContainerTag(ItemStack containerStack) {
+        return ContainerItemHelper.hasItemContainerTag(containerStack, this, this.getNbtKey());
     }
 
     @Override
@@ -124,11 +125,6 @@ public class GenericItemContainerProvider extends ItemContainerProviderImpl {
 
     protected void setItemDataToStack(ItemStack containerStack, @Nullable CompoundTag tag) {
         containerStack.setTag(tag);
-    }
-
-    @Override
-    public boolean canProvideTooltipImage(ItemStack containerStack, Player player) {
-        return ContainerItemHelper.hasItemContainerTag(containerStack, this, this.getNbtKey());
     }
 
     @Override
