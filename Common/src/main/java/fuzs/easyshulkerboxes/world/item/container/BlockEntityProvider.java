@@ -14,37 +14,29 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class BlockEntityProvider extends GenericItemContainerProvider {
-    private static final String BLOCK_ENTITY_TAG = "BlockEntityTag";
-
-    protected final BlockEntityType<?> blockEntityType;
+    private final ResourceLocation blockEntityTypeId;
+    @Nullable
+    private BlockEntityType<?> blockEntityType;
 
     public BlockEntityProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight) {
+        this(Registry.BLOCK_ENTITY_TYPE.getKey(blockEntityType), inventoryWidth, inventoryHeight);
+    }
+
+    public BlockEntityProvider(ResourceLocation blockEntityTypeId, int inventoryWidth, int inventoryHeight) {
         super(inventoryWidth, inventoryHeight);
-        this.blockEntityType = blockEntityType;
+        this.blockEntityTypeId = blockEntityTypeId;
     }
 
-    public BlockEntityProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, @Nullable DyeColor backgroundColor) {
-        super(inventoryWidth, inventoryHeight, backgroundColor);
-        this.blockEntityType = blockEntityType;
+    public BlockEntityProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, @Nullable DyeColor dyeColor, String... nbtKey) {
+        this(Registry.BLOCK_ENTITY_TYPE.getKey(blockEntityType), inventoryWidth, inventoryHeight, dyeColor, nbtKey);
     }
 
-    public BlockEntityProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, @Nullable DyeColor backgroundColor, String... nbtKey) {
-        super(inventoryWidth, inventoryHeight, backgroundColor, nbtKey);
-        this.blockEntityType = blockEntityType;
-    }
-
-    public BlockEntityProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, @NotNull float[] backgroundColor, String... nbtKey) {
-        super(inventoryWidth, inventoryHeight, backgroundColor, nbtKey);
-        this.blockEntityType = blockEntityType;
-    }
-
-    public BlockEntityProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, String... nbtKey) {
-        super(inventoryWidth, inventoryHeight, nbtKey);
-        this.blockEntityType = blockEntityType;
+    public BlockEntityProvider(ResourceLocation blockEntityTypeId, int inventoryWidth, int inventoryHeight, @Nullable DyeColor dyeColor, String... nbtKey) {
+        super(inventoryWidth, inventoryHeight, dyeColor, nbtKey);
+        this.blockEntityTypeId = blockEntityTypeId;
     }
 
     @Override
@@ -54,23 +46,34 @@ public class BlockEntityProvider extends GenericItemContainerProvider {
 
     @Override
     public SimpleContainer getItemContainer(ItemStack containerStack, Player player, boolean allowSaving) {
-        return ContainerItemHelper.loadGenericItemContainer(containerStack, this.blockEntityType, this, this.getInventorySize(), allowSaving, this.getNbtKey());
+        return ContainerItemHelper.loadItemContainer(containerStack, this, this.getInventorySize(), allowSaving, this.getNbtKey());
     }
 
     @Override
-    public @Nullable CompoundTag getItemSourceTag(ItemStack containerStack, boolean force) {
-        return force ? containerStack.getOrCreateTagElement(BLOCK_ENTITY_TAG) : containerStack.getTagElement(BLOCK_ENTITY_TAG);
+    protected @Nullable CompoundTag getItemDataBase(ItemStack containerStack) {
+        return BlockItem.getBlockEntityData(containerStack);
     }
 
     @Override
-    public boolean canProvideTooltipImage(ItemStack containerStack, Player player) {
-        return ContainerItemHelper.hasItemContainerTag(containerStack, this, this.getNbtKey());
+    protected void setItemDataToStack(ItemStack containerStack, @Nullable CompoundTag tag) {
+        BlockItem.setBlockEntityData(containerStack, this.getBlockEntityType(), tag == null ? new CompoundTag() : tag);
+    }
+
+    public BlockEntityType<?> getBlockEntityType() {
+        if (this.blockEntityType == null) {
+            if (Registry.BLOCK_ENTITY_TYPE.containsKey(this.blockEntityTypeId)) {
+                this.blockEntityType = Registry.BLOCK_ENTITY_TYPE.get(this.blockEntityTypeId);
+            } else {
+                throw new IllegalArgumentException("%s is not a valid block entity type".formatted(this.blockEntityTypeId));
+            }
+        }
+        return this.blockEntityType;
     }
 
     @Override
     public void toJson(JsonObject jsonObject) {
         super.toJson(jsonObject);
-        jsonObject.addProperty("block_entity_type", Registry.BLOCK_ENTITY_TYPE.getKey(this.blockEntityType).toString());
+        jsonObject.addProperty("block_entity_type", this.blockEntityTypeId.toString());
     }
 
     public static ItemContainerProvider fromJson(JsonElement jsonElement) {

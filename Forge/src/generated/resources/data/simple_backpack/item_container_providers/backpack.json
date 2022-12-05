@@ -1,6 +1,7 @@
 {
-  "type": "easyshulkerboxes:simplebackpack",
+  "type": "easyshulkerboxes:item",
   "inventory_width": 9,
   "inventory_height": 6,
-  "background_color": "brown"
+  "background_color": "brown",
+  "nbt_key": "backpack/Items"
 }

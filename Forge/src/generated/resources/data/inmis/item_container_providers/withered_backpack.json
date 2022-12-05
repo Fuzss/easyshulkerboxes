@@ -1,0 +1,7 @@
+{
+  "type": "easyshulkerboxes:inmis",
+  "inventory_width": 11,
+  "inventory_height": 6,
+  "background_color": "black",
+  "nbt_key": "Inventory"
+}

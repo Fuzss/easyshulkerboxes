@@ -1,4 +1,7 @@
 {
   "type": "easyshulkerboxes:shulker_box",
-  "background_color": "pink"
+  "inventory_width": 9,
+  "inventory_height": 3,
+  "background_color": "pink",
+  "block_entity_type": "minecraft:shulker_box"
 }

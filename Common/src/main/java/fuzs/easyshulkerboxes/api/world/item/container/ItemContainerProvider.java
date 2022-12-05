@@ -1,6 +1,7 @@
 package fuzs.easyshulkerboxes.api.world.item.container;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -21,8 +22,8 @@ public interface ItemContainerProvider {
     /**
      * does this provider support item inventory interactions (extracting and adding items)
      *
-     * @param containerStack  the container stack
-     * @param player the player performing the interaction
+     * @param containerStack the container stack
+     * @param player         the player performing the interaction
      * @return are inventory interactions allowed (is a container present on this item)
      */
     boolean canProvideContainer(ItemStack containerStack, Player player);
@@ -30,24 +31,41 @@ public interface ItemContainerProvider {
     /**
      * get the container provided by <code>stack</code> as a {@link SimpleContainer}
      *
-     * @param containerStack       item stack providing the container
-     * @param player      player involved in the interaction
-     * @param allowSaving attach a saving listener to the container (this is set to <code>false</code> when creating a container e.g. for rendering a tooltip)
+     * @param containerStack item stack providing the container
+     * @param player         player involved in the interaction
+     * @param allowSaving    attach a saving listener to the container (this is set to <code>false</code> when creating a container e.g. for rendering a tooltip)
      * @return the container
      */
     SimpleContainer getItemContainer(ItemStack containerStack, Player player, boolean allowSaving);
 
     /**
      * read the item tag containing the stored inventory (usually as an <code>Items</code> sub-tag)
-     * <p>mainly required for items with block entity data, as the inventory is stored as part of the block entity data,
-     * not directly in the item tag
+     * <p>this method is mainly required for items with block entity data, as the inventory is stored as part of the block entity data,
+     * not directly in the item tag, so we need to override this method then
      *
      * @param containerStack stack to read item tag from
-     * @param force create a new tag if none is present
      * @return the tag
      */
     @Nullable
-    CompoundTag getItemTag(ItemStack containerStack, boolean force);
+    default CompoundTag getItemData(ItemStack containerStack) {
+        return containerStack.getTag();
+    }
+
+    /**
+     * sets items stored in a {@link ListTag} to an item stack's tag, if the list is empty the tag key (<code>nbtKey</code>)
+     * is properly removed (possibly removing the whole stack tag if it is empty afterwards)
+     *
+     * @param containerStack stack to set item tag data for
+     * @param itemsTag       items to save as {@link ListTag}
+     * @param nbtKey         nbt key to store <code>itemsTag</code> as
+     */
+    default void setItemData(ItemStack containerStack, ListTag itemsTag, String nbtKey) {
+        if (itemsTag.isEmpty()) {
+            containerStack.removeTagKey(nbtKey);
+        } else {
+            containerStack.addTagElement(nbtKey, itemsTag);
+        }
+    }
 
     /**
      * called on the client-side to sync changes made during inventory item interactions back to the server

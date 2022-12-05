@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
+/**
+ * an extension to {@link ItemContainerProvider} that allows for serialization as JSON, which is required for the data-driven side of Easy Shulker Boxes
+ */
 public interface SerializableItemContainerProvider extends ItemContainerProvider {
     Map<ResourceLocation, Serializer> REGISTRY_BY_ID = Collections.synchronizedMap(Maps.newHashMap());
     Map<Class<? extends SerializableItemContainerProvider>, Serializer> REGISTRY_BY_TYPE = Collections.synchronizedMap(Maps.newHashMap());

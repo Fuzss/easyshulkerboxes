@@ -28,7 +28,8 @@ public class BundleProvider extends ItemContainerProviderImpl {
 
     @Override
     public SimpleContainer getItemContainer(ItemStack containerStack, Player player, boolean allowSaving) {
-        return ContainerItemHelper.loadBundleItemContainer(containerStack, this, allowSaving);
+        // add one additional slot, so we can add items in the inventory
+        return ContainerItemHelper.loadItemContainer(containerStack, this, items -> new SimpleContainer(items + 1), allowSaving, ContainerItemHelper.TAG_ITEMS);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class BundleProvider extends ItemContainerProviderImpl {
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack containerStack, Player player) {
-        if (ContainerItemHelper.hasItemContainerTag(containerStack, this)) {
+        if (ContainerItemHelper.hasItemContainerTag(containerStack, this, ContainerItemHelper.TAG_ITEMS)) {
             return super.getTooltipImage(containerStack, player);
         }
         // make sure to always override bundle tooltip, as otherwise vanilla tooltip would show for empty bundles

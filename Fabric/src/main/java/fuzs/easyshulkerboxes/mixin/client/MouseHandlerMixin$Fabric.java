@@ -15,6 +15,7 @@ abstract class MouseHandlerMixin$Fabric {
     @Shadow
     private int activeButton;
 
+    @SuppressWarnings("target")
     @Inject(method = "method_1602(Lnet/minecraft/client/gui/screens/Screen;DDDD)V", at = @At("HEAD"), cancellable = true)
     private void easyshulkerboxes$onMove$0(Screen screen, double mouseX, double mouseY, double dragX, double dragY, CallbackInfo callback) {
         if (MouseDragEvents.BEFORE.invoker().beforeMouseDrag(screen, mouseX, mouseY, this.activeButton, dragX, dragY).isPresent()) {
@@ -22,6 +23,7 @@ abstract class MouseHandlerMixin$Fabric {
         }
     }
 
+    @SuppressWarnings("target")
     @Inject(method = "method_1602(Lnet/minecraft/client/gui/screens/Screen;DDDD)V", at = @At("TAIL"))
     private void easyshulkerboxes$onMove$1(Screen screen, double mouseX, double mouseY, double dragX, double dragY, CallbackInfo callback) {
         // on Forge this only runs when Screen::mouseDragged returns false, but vanilla does not capture the result from that method invocation

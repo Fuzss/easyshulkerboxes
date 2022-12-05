@@ -9,6 +9,8 @@ import fuzs.easyshulkerboxes.world.item.container.helper.ContainerItemHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -19,13 +21,19 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public class InmisProvider extends GenericItemContainerProvider {
-    private static final List<ResourceLocation> INMIS_BACKPACK_IDS = Stream.of("inmis:baby_backpack", "inmis:frayed_backpack", "inmis:plated_backpack", "inmis:gilded_backpack", "inmis:bejeweled_backpack", "inmis:blazing_backpack", "inmis:withered_backpack", "inmis:endless_backpack").map(ResourceLocation::new).toList();
+    private static final List<ResourceLocation> INMIS_BACKPACK_IDS = Stream.of("baby_backpack", "frayed_backpack", "plated_backpack", "gilded_backpack", "bejeweled_backpack", "blazing_backpack", "withered_backpack", "endless_backpack")
+            .map(InmisIntegration::id).toList();
 
     @Nullable
     private Set<Item> inmisBackpacks;
 
     public InmisProvider(int inventoryWidth, int inventoryHeight, @Nullable DyeColor backgroundColor, String... nbtKey) {
         super(inventoryWidth, inventoryHeight, backgroundColor, nbtKey);
+    }
+
+    @Override
+    public SimpleContainer getItemContainer(ItemStack containerStack, Player player, boolean allowSaving) {
+        return ContainerItemHelper.loadItemContainer(containerStack, this, items -> new SimpleInmisContainerWithSlots(this.getInventorySize()), allowSaving, this.getNbtKey());
     }
 
     @Override

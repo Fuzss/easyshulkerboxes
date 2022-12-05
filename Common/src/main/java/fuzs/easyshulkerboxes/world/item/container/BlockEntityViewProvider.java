@@ -11,7 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class BlockEntityViewProvider extends BlockEntityProvider {
@@ -20,16 +19,16 @@ public class BlockEntityViewProvider extends BlockEntityProvider {
         super(blockEntityType, inventoryWidth, inventoryHeight);
     }
 
-    public BlockEntityViewProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, @Nullable DyeColor backgroundColor, String... nbtKey) {
-        super(blockEntityType, inventoryWidth, inventoryHeight, backgroundColor, nbtKey);
+    public BlockEntityViewProvider(ResourceLocation blockEntityTypeId, int inventoryWidth, int inventoryHeight) {
+        super(blockEntityTypeId, inventoryWidth, inventoryHeight);
     }
 
-    public BlockEntityViewProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, @NotNull float[] backgroundColor, String... nbtKey) {
-        super(blockEntityType, inventoryWidth, inventoryHeight, backgroundColor, nbtKey);
+    public BlockEntityViewProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, @Nullable DyeColor dyeColor, String... nbtKey) {
+        super(blockEntityType, inventoryWidth, inventoryHeight, dyeColor, nbtKey);
     }
 
-    public BlockEntityViewProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, String... nbtKey) {
-        super(blockEntityType, inventoryWidth, inventoryHeight, nbtKey);
+    public BlockEntityViewProvider(ResourceLocation blockEntityTypeId, int inventoryWidth, int inventoryHeight, @Nullable DyeColor dyeColor, String... nbtKey) {
+        super(blockEntityTypeId, inventoryWidth, inventoryHeight, dyeColor, nbtKey);
     }
 
     @Override

@@ -13,10 +13,8 @@ import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -28,17 +26,12 @@ import java.util.function.ToIntFunction;
 public class ContainerItemHelper {
     public static final String TAG_ITEMS = "Items";
 
-    public static SimpleContainer loadBundleItemContainer(ItemStack stack, ItemContainerProvider provider, boolean allowSaving) {
-        // add one additional slot, so we can add items in the inventory
-        return loadItemContainer(stack, null, provider, items -> new SimpleContainer(items + 1), allowSaving, TAG_ITEMS);
+    public static SimpleContainer loadItemContainer(ItemStack stack, ItemContainerProvider provider, int inventorySize, boolean allowSaving, String nbtKey) {
+        return loadItemContainer(stack, provider, items -> new SimpleContainerWithSlots(inventorySize), allowSaving, nbtKey);
     }
 
-    public static SimpleContainer loadGenericItemContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, ItemContainerProvider provider, int containerSize, boolean allowSaving, String nbtKey) {
-        return loadItemContainer(stack, blockEntityType, provider, items -> new SimpleContainerWithSlots(containerSize), allowSaving, nbtKey);
-    }
-
-    private static SimpleContainer loadItemContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, ItemContainerProvider provider, IntFunction<SimpleContainer> containerFactory, boolean allowSaving, String nbtKey) {
-        CompoundTag tag = provider.getItemTag(stack, false);
+    public static SimpleContainer loadItemContainer(ItemStack stack, ItemContainerProvider provider, IntFunction<SimpleContainer> containerFactory, boolean allowSaving, String nbtKey) {
+        CompoundTag tag = provider.getItemData(stack);
         ListTag items = null;
         if (tag != null && tag.contains(nbtKey)) {
             items = tag.getList(nbtKey, 10);
@@ -49,42 +42,11 @@ public class ContainerItemHelper {
         }
         if (allowSaving) {
             simpleContainer.addListener(container -> {
-                ListTag listTag = ((SimpleContainer) container).createTag();
-                saveItemContainer(stack, blockEntityType, provider, listTag, nbtKey);
+                ListTag itemsTag = ((SimpleContainer) container).createTag();
+                provider.setItemData(stack, itemsTag, nbtKey);
             });
         }
         return simpleContainer;
-    }
-
-    private static void saveItemContainer(ItemStack stack, @Nullable BlockEntityType<?> blockEntityType, ItemContainerProvider provider, ListTag listTag, String nbtKey) {
-        if (!listTag.isEmpty()) {
-            CompoundTag itemTag = provider.getItemTag(stack, true);
-            if (itemTag != null) {
-                itemTag.put(nbtKey, listTag);
-            }
-        } else {
-
-        }
-
-
-        if (blockEntityType == null) {
-            if (listTag.isEmpty()) {
-                stack.removeTagKey(nbtKey);
-            } else {
-                stack.addTagElement(nbtKey, listTag);
-            }
-        } else {
-            CompoundTag tag = BlockItem.getBlockEntityData(stack);
-            if (tag == null) {
-                tag = new CompoundTag();
-            } else {
-                tag.remove(nbtKey);
-            }
-            if (!listTag.isEmpty()) {
-                tag.put(nbtKey, listTag);
-            }
-            BlockItem.setBlockEntityData(stack, blockEntityType, tag);
-        }
     }
 
     public static boolean overrideStackedOnOther(Supplier<SimpleContainer> supplier, Slot slot, ClickAction clickAction, Player player, ToIntFunction<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
@@ -159,12 +121,8 @@ public class ContainerItemHelper {
         return OptionalInt.empty();
     }
 
-    public static boolean hasItemContainerTag(ItemStack stack, ItemContainerProvider provider) {
-        return hasItemContainerTag(stack, provider, TAG_ITEMS);
-    }
-
     public static boolean hasItemContainerTag(ItemStack stack, ItemContainerProvider provider, String nbtKey) {
-        CompoundTag tag = provider.getItemTag(stack, false);
+        CompoundTag tag = provider.getItemData(stack);
         return tag != null && tag.contains(nbtKey);
     }
 

@@ -10,8 +10,8 @@ import net.minecraft.world.item.ItemStack;
  */
 public class SimpleContainerWithSlots extends SimpleContainer {
 
-    public SimpleContainerWithSlots(int size) {
-        super(size);
+    public SimpleContainerWithSlots(int inventorySize) {
+        super(inventorySize);
     }
 
     @Override

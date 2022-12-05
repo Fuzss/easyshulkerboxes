@@ -4,7 +4,7 @@ import fuzs.easyshulkerboxes.api.world.item.container.SerializableItemContainerP
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.init.ModRegistry;
-import fuzs.easyshulkerboxes.integration.InmisProvider;
+import fuzs.easyshulkerboxes.integration.*;
 import fuzs.easyshulkerboxes.network.S2CEnderChestSetContentMessage;
 import fuzs.easyshulkerboxes.network.S2CEnderChestSetSlotMessage;
 import fuzs.easyshulkerboxes.network.S2CSyncItemContainerProvider;
@@ -20,6 +20,11 @@ import fuzs.puzzleslib.core.ModLoaderEnvironment;
 import fuzs.puzzleslib.network.MessageDirection;
 import fuzs.puzzleslib.network.NetworkHandler;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,10 +57,46 @@ public class EasyShulkerBoxes implements ModConstructor {
 
     @Override
     public void onCommonSetup() {
+        registerBuiltInProviders();
+        registerIntegrationProviders();
         registerItemContainerProviderSerializers();
         if (ModLoaderEnvironment.INSTANCE.isDevelopmentEnvironment()) {
             ItemContainerProviders.serializeBuiltInProviders();
         }
+    }
+
+    private static void registerBuiltInProviders() {
+        registerShulkerBoxProviders();
+        ItemContainerProviders.registerBuiltInProvider(Items.ENDER_CHEST, new EnderChestProvider());
+        ItemContainerProviders.registerBuiltInProvider(Items.BUNDLE, new BundleProvider());
+        ItemContainerProviders.registerBuiltInProvider(Items.FILLED_MAP, new MapProvider());
+        ItemContainerProviders.registerBuiltInProvider(Items.DROPPER, new BlockEntityProvider(BlockEntityType.DROPPER, 3, 3));
+        ItemContainerProviders.registerBuiltInProvider(Items.DISPENSER, new BlockEntityProvider(BlockEntityType.DISPENSER, 3, 3));
+        ItemContainerProviders.registerBuiltInProvider(Items.CHEST, new BlockEntityProvider(BlockEntityType.CHEST, 9, 3));
+        ItemContainerProviders.registerBuiltInProvider(Items.TRAPPED_CHEST, new BlockEntityProvider(BlockEntityType.TRAPPED_CHEST, 9, 3));
+        ItemContainerProviders.registerBuiltInProvider(Items.HOPPER, new BlockEntityProvider(BlockEntityType.HOPPER, 5, 1));
+        ItemContainerProviders.registerBuiltInProvider(Items.FURNACE, new BlockEntityViewProvider(BlockEntityType.FURNACE, 3, 1));
+        ItemContainerProviders.registerBuiltInProvider(Items.BLAST_FURNACE, new BlockEntityViewProvider(BlockEntityType.BLAST_FURNACE, 3, 1));
+        ItemContainerProviders.registerBuiltInProvider(Items.SMOKER, new BlockEntityViewProvider(BlockEntityType.SMOKER, 3, 1));
+        ItemContainerProviders.registerBuiltInProvider(Items.BREWING_STAND, new BlockEntityViewProvider(BlockEntityType.BREWING_STAND, 5, 1));
+        ItemContainerProviders.registerBuiltInProvider(Items.CAMPFIRE, new BlockEntityViewProvider(BlockEntityType.CAMPFIRE, 4, 1));
+        ItemContainerProviders.registerBuiltInProvider(Items.SOUL_CAMPFIRE, new BlockEntityViewProvider(BlockEntityType.CAMPFIRE, 4, 1));
+    }
+
+    private static void registerShulkerBoxProviders() {
+        ItemContainerProviders.registerBuiltInProvider(Items.SHULKER_BOX, new ShulkerBoxProvider(BlockEntityType.SHULKER_BOX, 9, 3));
+        for (DyeColor dyeColor : DyeColor.values()) {
+            // only affects vanilla shulker boxes, other mods might add shulker boxes with a different inventory size
+            Item item = ShulkerBoxBlock.getBlockByColor(dyeColor).asItem();
+            ItemContainerProviders.registerBuiltInProvider(item, new ShulkerBoxProvider(BlockEntityType.SHULKER_BOX, 9, 3, dyeColor));
+        }
+    }
+
+    private static void registerIntegrationProviders() {
+        BackpackedIntegration.registerProviders();
+        SimpleBackpackIntegration.registerProviders();
+        InmisIntegration.registerProviders();
+        ReinforcedShulkerBoxesIntegration.registerProviders();
     }
 
     private static void registerItemContainerProviderSerializers() {

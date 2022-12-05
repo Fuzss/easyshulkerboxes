@@ -5,10 +5,12 @@ import fuzs.easyshulkerboxes.api.world.item.container.SerializableItemContainerP
 import fuzs.easyshulkerboxes.world.item.container.helper.ContainerItemHelper;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -18,11 +20,6 @@ public abstract class ItemContainerProviderImpl implements SerializableItemConta
     @Override
     public boolean canProvideContainer(ItemStack containerStack, Player player) {
         return containerStack.getCount() == 1;
-    }
-
-    @Override
-    public @Nullable CompoundTag getItemTag(ItemStack containerStack, boolean force) {
-        return force ? containerStack.getOrCreateTag() : containerStack.getTag();
     }
 
     @Override
