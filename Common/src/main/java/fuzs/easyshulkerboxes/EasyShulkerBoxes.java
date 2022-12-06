@@ -5,6 +5,7 @@ import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.init.ModRegistry;
 import fuzs.easyshulkerboxes.integration.backpacked.BackpackedIntegration;
+import fuzs.easyshulkerboxes.integration.bagofholding.BagOfHoldingIntegration;
 import fuzs.easyshulkerboxes.integration.inmis.InmisIntegration;
 import fuzs.easyshulkerboxes.integration.inmis.InmisProvider;
 import fuzs.easyshulkerboxes.integration.reinforcedshulkerboxes.ReinforcedShulkerBoxesIntegration;
@@ -98,6 +99,7 @@ public class EasyShulkerBoxes implements ModConstructor {
     }
 
     private static void registerIntegrationProviders() {
+        BagOfHoldingIntegration.registerProviders();
         BackpackedIntegration.registerProviders();
         SimpleBackpackIntegration.registerProviders();
         InmisIntegration.registerProviders();

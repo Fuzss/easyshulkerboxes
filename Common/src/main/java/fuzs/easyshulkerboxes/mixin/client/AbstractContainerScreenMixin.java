@@ -21,8 +21,7 @@ abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> ext
         super(component);
     }
 
-    // having 'remap = false' on here crashes Forge on start-up for some reason, so just suppress the warning complaining about the missing mapping
-    @SuppressWarnings("target")
+    // having 'remap = false' on here crashes Forge on start-up for some reason
     @Inject(method = "renderSlot", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;enableDepthTest()V", shift = At.Shift.BEFORE))
     private void easyshulkerboxes$renderSlot(PoseStack poseStack, Slot slot, CallbackInfo callback) {
         // this was supposed to render on the Forge container foreground event, but the blitOffset wouldn't behave

@@ -29,6 +29,7 @@ public class GenericItemContainerProvider extends ItemContainerProviderImpl {
     private final DyeColor dyeColor;
     private final String[] nbtKey;
     private final float[] backgroundColor;
+    private boolean filterContainerItems;
 
     public GenericItemContainerProvider(int inventoryWidth, int inventoryHeight) {
         this(inventoryWidth, inventoryHeight, null, ContainerItemHelper.TAG_ITEMS);
@@ -40,6 +41,11 @@ public class GenericItemContainerProvider extends ItemContainerProviderImpl {
         this.dyeColor = dyeColor;
         this.backgroundColor = dyeColor == null ? this.getDefaultBackgroundColor() : ContainerItemHelper.getBackgroundColor(dyeColor);
         this.nbtKey = nbtKey.length == 0 ? new String[]{ContainerItemHelper.TAG_ITEMS} : nbtKey;
+    }
+
+    public GenericItemContainerProvider filterContainerItems() {
+        this.filterContainerItems = true;
+        return this;
     }
 
     public int getInventoryWidth() {
@@ -74,6 +80,11 @@ public class GenericItemContainerProvider extends ItemContainerProviderImpl {
     @Override
     public SimpleContainer getItemContainer(ItemStack containerStack, Player player, boolean allowSaving) {
         return ContainerItemHelper.loadItemContainer(containerStack, this, this.getInventorySize(), allowSaving, this.getNbtKey());
+    }
+
+    @Override
+    public boolean isItemAllowedInContainer(ItemStack containerStack, ItemStack stackToAdd) {
+        return !this.filterContainerItems || stackToAdd.getItem().canFitInsideContainerItems();
     }
 
     @Nullable
@@ -142,6 +153,9 @@ public class GenericItemContainerProvider extends ItemContainerProviderImpl {
         if (this.nbtKey.length != 1 || !this.nbtKey[0].equals(ContainerItemHelper.TAG_ITEMS)) {
             jsonObject.addProperty("nbt_key", String.join("/", this.nbtKey));
         }
+        if (this.filterContainerItems) {
+            jsonObject.addProperty("filter_container_items", true);
+        }
     }
 
     public static ItemContainerProvider fromJson(JsonElement jsonElement) {
@@ -153,6 +167,12 @@ public class GenericItemContainerProvider extends ItemContainerProviderImpl {
             dyeColor = DyeColor.byName(GsonHelper.getAsString(jsonObject, "background_color"), null);
         }
         String[] nbtKey = GsonHelper.getAsString(jsonObject, "nbt_key", ContainerItemHelper.TAG_ITEMS).split("/");
-        return new GenericItemContainerProvider(inventoryWidth, inventoryHeight, dyeColor, nbtKey);
+        GenericItemContainerProvider provider = new GenericItemContainerProvider(inventoryWidth, inventoryHeight, dyeColor, nbtKey);
+        if (jsonObject.has("filter_container_items")) {
+            if (GsonHelper.getAsBoolean(jsonObject, "filter_container_items")) {
+                provider.filterContainerItems();
+            }
+        }
+        return provider;
     }
 }
