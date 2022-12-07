@@ -68,9 +68,4 @@ public abstract class AbstractItemContainerProvider implements ItemContainerProv
     public void broadcastContainerChanges(Player player) {
 
     }
-
-    @Override
-    public void toJson(JsonObject jsonObject) {
-
-    }
 }

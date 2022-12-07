@@ -1,6 +1,7 @@
 package fuzs.easyshulkerboxes.world.item.container;
 
 import com.google.gson.JsonObject;
+import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.easyshulkerboxes.world.item.container.helper.ContainerItemHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -17,6 +18,7 @@ public class BlockEntityProvider extends SimpleItemProvider {
     private final ResourceLocation blockEntityTypeId;
     @Nullable
     private BlockEntityType<?> blockEntityType;
+    private boolean anyGameMode;
 
     public BlockEntityProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight) {
         this(Registry.BLOCK_ENTITY_TYPE.getKey(blockEntityType), inventoryWidth, inventoryHeight);
@@ -36,9 +38,22 @@ public class BlockEntityProvider extends SimpleItemProvider {
         this.blockEntityTypeId = blockEntityTypeId;
     }
 
+    public static ItemContainerProvider shulkerBoxProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight, @Nullable DyeColor dyeColor) {
+        return new BlockEntityProvider(blockEntityType, inventoryWidth, inventoryHeight, dyeColor).anyGameMode().filterContainerItems();
+    }
+
+    public static ItemContainerProvider shulkerBoxProvider(ResourceLocation blockEntityTypeId, int inventoryWidth, int inventoryHeight, @Nullable DyeColor dyeColor) {
+        return new BlockEntityProvider(blockEntityTypeId, inventoryWidth, inventoryHeight, dyeColor).anyGameMode().filterContainerItems();
+    }
+
+    public BlockEntityProvider anyGameMode() {
+        this.anyGameMode = true;
+        return this;
+    }
+
     @Override
     public boolean canProvideContainer(ItemStack containerStack, Player player) {
-        return super.canProvideContainer(containerStack, player) && player.getAbilities().instabuild;
+        return super.canProvideContainer(containerStack, player) && (this.anyGameMode || player.getAbilities().instabuild);
     }
 
     @Override
@@ -69,7 +84,10 @@ public class BlockEntityProvider extends SimpleItemProvider {
 
     @Override
     public void toJson(JsonObject jsonObject) {
-        super.toJson(jsonObject);
         jsonObject.addProperty("block_entity_type", this.blockEntityTypeId.toString());
+        if (this.anyGameMode) {
+            jsonObject.addProperty("any_game_mode", true);
+        }
+        super.toJson(jsonObject);
     }
 }

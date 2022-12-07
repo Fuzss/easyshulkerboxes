@@ -34,7 +34,7 @@ public class BundleProvider extends NestedTagItemProvider {
 
     @Override
     public boolean isItemAllowedInContainer(ItemStack containerStack, ItemStack stackToAdd) {
-        return stackToAdd.getItem().canFitInsideContainerItems();
+        return super.isItemAllowedInContainer(containerStack, stackToAdd) && stackToAdd.getItem().canFitInsideContainerItems();
     }
 
     @Override
@@ -68,7 +68,7 @@ public class BundleProvider extends NestedTagItemProvider {
 
     @Override
     public void toJson(JsonObject jsonObject) {
-        super.toJson(jsonObject);
         jsonObject.addProperty("capacity", this.capacity);
+        super.toJson(jsonObject);
     }
 }

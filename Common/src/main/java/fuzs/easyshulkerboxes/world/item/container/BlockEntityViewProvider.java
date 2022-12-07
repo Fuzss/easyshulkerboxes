@@ -26,6 +26,11 @@ public class BlockEntityViewProvider extends BlockEntityProvider {
     }
 
     @Override
+    public BlockEntityProvider anyGameMode() {
+        return this;
+    }
+
+    @Override
     public boolean canProvideContainer(ItemStack containerStack, Player player) {
         return false;
     }

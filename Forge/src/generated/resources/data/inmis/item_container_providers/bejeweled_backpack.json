@@ -1,7 +1,17 @@
 {
   "type": "easyshulkerboxes:inmis",
+  "inventory_width": 9,
+  "inventory_height": 5,
   "background_color": "light_blue",
   "nbt_key": "Inventory",
-  "inventory_width": 9,
-  "inventory_height": 5
+  "disallowed_items": [
+    "inmis:baby_backpack",
+    "inmis:frayed_backpack",
+    "inmis:plated_backpack",
+    "inmis:gilded_backpack",
+    "inmis:bejeweled_backpack",
+    "inmis:blazing_backpack",
+    "inmis:withered_backpack",
+    "inmis:endless_backpack"
+  ]
 }

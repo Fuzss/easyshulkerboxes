@@ -1,6 +1,6 @@
 package fuzs.easyshulkerboxes.integration.reinforcedshulkerboxes;
 
-import fuzs.easyshulkerboxes.world.item.container.ShulkerBoxProvider;
+import fuzs.easyshulkerboxes.world.item.container.BlockEntityProvider;
 import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
@@ -10,9 +10,9 @@ public class ReinforcedShulkerBoxesIntegration {
 
     public static void registerProviders() {
         for (ShulkerBoxMaterial material : ShulkerBoxMaterial.values()) {
-            ItemContainerProviders.registerBuiltInProvider(material.id(), new ShulkerBoxProvider(material.id(), material.width, material.height));
+            ItemContainerProviders.registerBuiltInProvider(material.id(), BlockEntityProvider.shulkerBoxProvider(material.id(), material.width, material.height, null));
             for (DyeColor dyeColor : DyeColor.values()) {
-                ItemContainerProviders.registerBuiltInProvider(material.id(dyeColor), new ShulkerBoxProvider(material.id(), material.width, material.height, dyeColor));
+                ItemContainerProviders.registerBuiltInProvider(material.id(dyeColor), BlockEntityProvider.shulkerBoxProvider(material.id(), material.width, material.height, dyeColor));
             }
         }
     }

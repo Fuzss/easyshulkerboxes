@@ -1,5 +1,6 @@
 package fuzs.easyshulkerboxes.world.item.container;
 
+import com.google.gson.JsonObject;
 import fuzs.easyshulkerboxes.capability.EnderChestMenuCapability;
 import fuzs.easyshulkerboxes.init.ModRegistry;
 import fuzs.easyshulkerboxes.world.inventory.tooltip.ContainerItemTooltip;
@@ -42,5 +43,10 @@ public class EnderChestProvider extends AbstractItemContainerProvider {
         if (player.level.isClientSide) {
             ModRegistry.ENDER_CHEST_MENU_CAPABILITY.maybeGet(player).map(EnderChestMenuCapability::getEnderChestMenu).ifPresent(AbstractContainerMenu::broadcastChanges);
         }
+    }
+
+    @Override
+    public void toJson(JsonObject jsonObject) {
+
     }
 }

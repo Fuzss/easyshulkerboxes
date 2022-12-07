@@ -1,5 +1,6 @@
 package fuzs.easyshulkerboxes.world.item.container;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
@@ -11,8 +12,10 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.StreamSupport;
 
 public class ItemContainerProviderBuilder {
     private int inventoryWidth;
@@ -23,6 +26,8 @@ public class ItemContainerProviderBuilder {
     private boolean filterContainerItems;
     private BlockEntityType<?> blockEntityType;
     private int capacity;
+    private List<String> disallowedItems;
+    private boolean anyGameMode;
 
     private ItemContainerProviderBuilder() {
 
@@ -32,7 +37,14 @@ public class ItemContainerProviderBuilder {
         return jsonElement -> {
             ItemContainerProviderBuilder builder = new ItemContainerProviderBuilder();
             builder.fromJson(jsonElement);
-            return factory.apply(builder);
+            ItemContainerProvider provider = factory.apply(builder);
+            if (provider instanceof SimpleItemProvider itemProvider && builder.filterContainerItems) {
+                itemProvider.filterContainerItems();
+            }
+            if (provider instanceof NestedTagItemProvider nestedTagProvider) {
+                nestedTagProvider.disallowValues(builder.disallowedItems);
+            }
+            return provider;
         };
     }
 
@@ -47,7 +59,39 @@ public class ItemContainerProviderBuilder {
             ResourceLocation blockEntityTypeKey = new ResourceLocation(GsonHelper.getAsString(jsonObject, "block_entity_type"));
             this.blockEntityType = Registry.BLOCK_ENTITY_TYPE.get(blockEntityTypeKey);
         }
-        this.capacity = GsonHelper.getAsInt(jsonElement.getAsJsonObject(), "capacity", -1);
+        this.capacity = GsonHelper.getAsInt(jsonObject, "capacity", -1);
+        JsonArray disallowedItemsData = GsonHelper.getAsJsonArray(jsonObject, "disallowed_items", new JsonArray());
+        this.disallowedItems = StreamSupport.stream(disallowedItemsData.spliterator(), false).map(JsonElement::getAsString).toList();
+        this.anyGameMode = GsonHelper.getAsBoolean(jsonObject, "any_game_mode", false);
+    }
+
+    public ItemContainerProvider toSimpleItemContainerProvider() {
+        this.checkInventorySize("item");
+        return new SimpleItemProvider(this.inventoryWidth, this.inventoryHeight, this.dyeColor, this.nbtKey);
+    }
+
+    public ItemContainerProvider toBlockEntityProvider() {
+        this.checkInventorySize("block_entity");
+        Objects.requireNonNull(this.blockEntityType, this.getMessage("block_entity_type", "block_entity"));
+        BlockEntityProvider provider = new BlockEntityProvider(this.blockEntityType, this.inventoryWidth, this.inventoryHeight, this.dyeColor, this.nbtKey);
+        if (this.anyGameMode) provider.anyGameMode();
+        return provider;
+    }
+
+    public ItemContainerProvider toBlockEntityViewProvider() {
+        this.checkInventorySize("block_entity_view");
+        Objects.requireNonNull(this.blockEntityType, this.getMessage("block_entity_type", "block_entity_view"));
+        return new BlockEntityViewProvider(this.blockEntityType, this.inventoryWidth, this.inventoryHeight, this.dyeColor, this.nbtKey);
+    }
+
+    public ItemContainerProvider toBundleProvider() {
+        if (this.capacity == -1)
+            throw new IllegalStateException(this.getMessage("capacity", "bundle"));
+        return new BundleProvider(this.capacity, this.dyeColor, this.nbtKey);
+    }
+
+    public ItemContainerProvider toEnderChestProvider() {
+        return new EnderChestProvider();
     }
 
     private void checkInventorySize(String type) {
@@ -59,46 +103,5 @@ public class ItemContainerProviderBuilder {
 
     private String getMessage(String jsonKey, String providerType) {
         return "'%s' not set for provider of type '%s'".formatted(jsonKey, providerType);
-    }
-
-    public ItemContainerProvider toSimpleItemContainerProvider() {
-        this.checkInventorySize("item");
-        SimpleItemProvider provider = new SimpleItemProvider(this.inventoryWidth, this.inventoryHeight, this.dyeColor, this.nbtKey);
-        if (this.filterContainerItems) provider.filterContainerItems();
-        return provider;
-    }
-
-    public ItemContainerProvider toBlockEntityProvider() {
-        this.checkInventorySize("block_entity");
-        Objects.requireNonNull(this.blockEntityType, this.getMessage("block_entity_type", "block_entity"));
-        SimpleItemProvider provider = new BlockEntityProvider(this.blockEntityType, this.inventoryWidth, this.inventoryHeight, this.dyeColor, this.nbtKey);
-        if (this.filterContainerItems) provider.filterContainerItems();
-        return provider;
-    }
-
-    public ItemContainerProvider toBlockEntityViewProvider() {
-        this.checkInventorySize("block_entity_view");
-        Objects.requireNonNull(this.blockEntityType, this.getMessage("block_entity_type", "block_entity_view"));
-        SimpleItemProvider provider = new BlockEntityViewProvider(this.blockEntityType, this.inventoryWidth, this.inventoryHeight, this.dyeColor, this.nbtKey);
-        if (this.filterContainerItems) provider.filterContainerItems();
-        return provider;
-    }
-
-    public ItemContainerProvider toShulkerBoxProvider() {
-        this.checkInventorySize("shulker_box");
-        Objects.requireNonNull(this.blockEntityType, this.getMessage("block_entity_type", "shulker_box"));
-        SimpleItemProvider provider = new ShulkerBoxProvider(this.blockEntityType, this.inventoryWidth, this.inventoryHeight, this.dyeColor, this.nbtKey);
-        if (this.filterContainerItems) provider.filterContainerItems();
-        return provider;
-    }
-
-    public ItemContainerProvider toBundleProvider() {
-        if (this.capacity == -1)
-            throw new IllegalStateException(this.getMessage("capacity", "bundle"));
-        return new BundleProvider(this.capacity, this.dyeColor, this.nbtKey);
-    }
-
-    public ItemContainerProvider toEnderChestProvider() {
-        return new EnderChestProvider();
     }
 }

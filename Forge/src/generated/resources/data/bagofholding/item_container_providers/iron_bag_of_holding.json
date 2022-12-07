@@ -1,7 +1,7 @@
 {
   "type": "easyshulkerboxes:item",
-  "background_color": "white",
   "inventory_width": 9,
   "inventory_height": 3,
-  "filter_container_items": true
+  "filter_container_items": true,
+  "background_color": "white"
 }

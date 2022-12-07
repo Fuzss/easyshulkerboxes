@@ -48,32 +48,37 @@ right-clicked from the hotbar. This provider is intended for backpack items from
 <details>
 <summary>Available string keys</summary>
 
-| Key                 | Required | Description                                                                                                                                                                                                                    |
-|---------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `inventory_width`   | `true`   | Inventory slots width (amount of columns in the item's container screen, e.g. 9 for a simple chest).                                                                                                                           |
-| `inventory_height`  | `true`   | Inventory slots height (amount of rows in the item's container screen, e.g. 3 for a simple chest).                                                                                                                             |
-| `background_color`  | `false`  | The background color used on the item tooltip, defaults to vanilla's gray container background color.                                                                                                                          |
-| `nbt_key`           | `false`  | The string key used in the item nbt tag to store inventory contents, defaults to `Items`. This is treated like a path with parts separated by `/` in case the inventory contents tag is not on the root level of the item tag. |
+| Key                      | Required | Description                                                                                                                                                                                                                    |
+|--------------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `inventory_width`        | `true`   | Inventory slots width (amount of columns in the item's container screen, e.g. 9 for a simple chest).                                                                                                                           |
+| `inventory_height`       | `true`   | Inventory slots height (amount of rows in the item's container screen, e.g. 3 for a simple chest).                                                                                                                             |
+| `background_color`       | `false`  | The background color used on the item tooltip, defaults to vanilla's gray container background color.                                                                                                                          |
+| `nbt_key`                | `false`  | The string key used in the item nbt tag to store inventory contents, defaults to `Items`. This is treated like a path with parts separated by `/` in case the inventory contents tag is not on the root level of the item tag. |
+| `disallowed_items`       | `false`  | Json array of items and item tags included by their internal identifier not allowed to be put into the container belonging to this item. Empty by default.                                                                     |
+| `filter_container_items` | `false`  | Are shulker boxes (and similar modded items) **NOT** allowed to be put into the container belonging to this item, defaults to `false`.                                                                                         |
 
 </details>
 
 ### Item Provider Type: `easyshulkerboxes:block_entity`
 
 This type is used for block items that provide a block entity when placed down. The item inventory can only be
-interacted with (adding/removing items) in creative mode.
+interacted with (adding/removing items) in creative mode by default.
 
-**Examples:** `minecraft:chest`, `minecraft:hopper`
+**Examples:** `minecraft:shulker_box`, `minecraft:hopper`
 
 <details>
 <summary>Available string keys</summary>
 
-| Key                 | Required | Description                                                                                                                                                                                                                    |
-|---------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `inventory_width`   | `true`   | Inventory slots width (amount of columns in the item's container screen, e.g. 9 for a simple chest).                                                                                                                           |
-| `inventory_height`  | `true`   | Inventory slots height (amount of rows in the item's container screen, e.g. 3 for a simple chest).                                                                                                                             |
-| `block_entity_type` | `true`   | The block entity type id.                                                                                                                                                                                                      |
-| `background_color`  | `false`  | The background color used on the item tooltip, defaults to vanilla's gray container background color.                                                                                                                          |
-| `nbt_key`           | `false`  | The string key used in the item nbt tag to store inventory contents, defaults to `Items`. This is treated like a path with parts separated by `/` in case the inventory contents tag is not on the root level of the item tag. |
+| Key                      | Required | Description                                                                                                                                                                                                                    |
+|--------------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `inventory_width`        | `true`   | Inventory slots width (amount of columns in the item's container screen, e.g. 9 for a simple chest).                                                                                                                           |
+| `inventory_height`       | `true`   | Inventory slots height (amount of rows in the item's container screen, e.g. 3 for a simple chest).                                                                                                                             |
+| `block_entity_type`      | `true`   | The block entity type id.                                                                                                                                                                                                      |
+| `background_color`       | `false`  | The background color used on the item tooltip, defaults to vanilla's gray container background color.                                                                                                                          |
+| `nbt_key`                | `false`  | The string key used in the item nbt tag to store inventory contents, defaults to `Items`. This is treated like a path with parts separated by `/` in case the inventory contents tag is not on the root level of the item tag. |
+| `disallowed_items`       | `false`  | Json array of items and item tags included by their internal identifier not allowed to be put into the container belonging to this item. Empty by default.                                                                     |
+| `filter_container_items` | `false`  | Are shulker boxes (and similar modded items) **NOT** allowed to be put into the container belonging to this item, defaults to `false`.                                                                                         |
+| `any_game_mode`          | `false`  | Can the player interact with the item's inventory in any game mode, not just creative, defaults to `false`. This is enabled for the built-in shulker box providers.                                                            |
 
 </details>
 
@@ -88,33 +93,15 @@ restrictions on their inventory slots (like output and fuel slots).
 <details>
 <summary>Available string keys</summary>
 
-| Key                 | Required | Description                                                                                                                                                                                                                    |
-|---------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `inventory_width`   | `true`   | Inventory slots width (amount of columns in the item's container screen, e.g. 9 for a simple chest).                                                                                                                           |
-| `inventory_height`  | `true`   | Inventory slots height (amount of rows in the item's container screen, e.g. 3 for a simple chest).                                                                                                                             |
-| `block_entity_type` | `true`   | The block entity type id.                                                                                                                                                                                                      |
-| `background_color`  | `false`  | The background color used on the item tooltip, defaults to vanilla's gray container background color.                                                                                                                          |
-| `nbt_key`           | `false`  | The string key used in the item nbt tag to store inventory contents, defaults to `Items`. This is treated like a path with parts separated by `/` in case the inventory contents tag is not on the root level of the item tag. |
-
-</details>
-
-### Item Provider Type: `easyshulkerboxes:shulker_box`
-
-This type is a special case for block entities used for shulker boxes. Opposed to normal block entities interacting with
-the item is possible in any game mode. Also, this type prevents other shulker boxes from being added to the inventory.
-
-**Examples:** `minecraft:shulker_box`, `minecraft:yellow_shulker_box`
-
-<details>
-<summary>Available string keys</summary>
-
-| Key                 | Required | Description                                                                                                                                                                                                                    |
-|---------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `inventory_width`   | `true`   | Inventory slots width (amount of columns in the item's container screen, e.g. 9 for a simple chest).                                                                                                                           |
-| `inventory_height`  | `true`   | Inventory slots height (amount of rows in the item's container screen, e.g. 3 for a simple chest).                                                                                                                             |
-| `block_entity_type` | `true`   | The block entity type id.                                                                                                                                                                                                      |
-| `background_color`  | `false`  | The background color used on the item tooltip, defaults to vanilla's gray container background color.                                                                                                                          |
-| `nbt_key`           | `false`  | The string key used in the item nbt tag to store inventory contents, defaults to `Items`. This is treated like a path with parts separated by `/` in case the inventory contents tag is not on the root level of the item tag. |
+| Key                      | Required | Description                                                                                                                                                                                                                    |
+|--------------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `inventory_width`        | `true`   | Inventory slots width (amount of columns in the item's container screen, e.g. 9 for a simple chest).                                                                                                                           |
+| `inventory_height`       | `true`   | Inventory slots height (amount of rows in the item's container screen, e.g. 3 for a simple chest).                                                                                                                             |
+| `block_entity_type`      | `true`   | The block entity type id.                                                                                                                                                                                                      |
+| `background_color`       | `false`  | The background color used on the item tooltip, defaults to vanilla's gray container background color.                                                                                                                          |
+| `nbt_key`                | `false`  | The string key used in the item nbt tag to store inventory contents, defaults to `Items`. This is treated like a path with parts separated by `/` in case the inventory contents tag is not on the root level of the item tag. |
+| `disallowed_items`       | `false`  | Json array of items and item tags included by their internal identifier not allowed to be put into the container belonging to this item. Empty by default.                                                                     |
+| `filter_container_items` | `false`  | Are shulker boxes (and similar modded items) **NOT** allowed to be put into the container belonging to this item, defaults to `false`.                                                                                         |
 
 </details>
 
@@ -129,17 +116,19 @@ There are no additional settings available for this type.
 ### Item Provider Type: `easyshulkerboxes:bundle`
 
 This type is used for bundle items. Instead of specifying inventory dimensions, the capacity of the bundle must be set.
+Shulker boxes (and similar modded items) **CANNOT** be added to the bundle inventory.
 
 **Examples:** `minecraft:bundle`
 
 <details>
 <summary>Available string keys</summary>
 
-| Key                | Required | Description                                                                                                                                                                                                                    |
-|--------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `capacity`         | `true`   | Total capacity of the bundle (the available weight), is 64 for the vanilla bundle.                                                                                                                                             |
-| `background_color` | `false`  | The background color used on the item tooltip, defaults to vanilla's gray container background color.                                                                                                                          |
-| `nbt_key`          | `false`  | The string key used in the item nbt tag to store inventory contents, defaults to `Items`. This is treated like a path with parts separated by `/` in case the inventory contents tag is not on the root level of the item tag. |
+| Key                      | Required | Description                                                                                                                                                                                                                    |
+|--------------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `capacity`               | `true`   | Total capacity of the bundle (the available weight), is 64 for the vanilla bundle.                                                                                                                                             |
+| `background_color`       | `false`  | The background color used on the item tooltip, defaults to vanilla's gray container background color.                                                                                                                          |
+| `nbt_key`                | `false`  | The string key used in the item nbt tag to store inventory contents, defaults to `Items`. This is treated like a path with parts separated by `/` in case the inventory contents tag is not on the root level of the item tag. |
+| `disallowed_items`       | `false`  | Json array of items and item tags included by their internal identifier not allowed to be put into the container belonging to this item. Empty by default.                                                                     |
 
 </details>
 

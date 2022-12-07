@@ -1,7 +1,8 @@
 {
   "type": "easyshulkerboxes:shulker_box",
-  "background_color": "blue",
+  "block_entity_type": "reinfshulker:gold_shulker_box",
   "inventory_width": 9,
   "inventory_height": 9,
-  "block_entity_type": "reinfshulker:gold_shulker_box"
+  "filter_container_items": true,
+  "background_color": "blue"
 }

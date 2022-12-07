@@ -1,5 +1,5 @@
 {
   "type": "easyshulkerboxes:bundle",
-  "background_color": "brown",
-  "capacity": 64
+  "capacity": 64,
+  "background_color": "brown"
 }

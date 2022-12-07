@@ -89,11 +89,11 @@ public class EasyShulkerBoxes implements ModConstructor {
     }
 
     private static void registerShulkerBoxProviders() {
-        ItemContainerProviders.registerBuiltInProvider(Items.SHULKER_BOX, new ShulkerBoxProvider(BlockEntityType.SHULKER_BOX, 9, 3));
+        ItemContainerProviders.registerBuiltInProvider(Items.SHULKER_BOX, BlockEntityProvider.shulkerBoxProvider(BlockEntityType.SHULKER_BOX, 9, 3, null));
         for (DyeColor dyeColor : DyeColor.values()) {
             // only affects vanilla shulker boxes, other mods might add shulker boxes with a different inventory size
             Item item = ShulkerBoxBlock.getBlockByColor(dyeColor).asItem();
-            ItemContainerProviders.registerBuiltInProvider(item, new ShulkerBoxProvider(BlockEntityType.SHULKER_BOX, 9, 3, dyeColor));
+            ItemContainerProviders.registerBuiltInProvider(item, BlockEntityProvider.shulkerBoxProvider(BlockEntityType.SHULKER_BOX, 9, 3, dyeColor));
         }
     }
 
@@ -112,6 +112,5 @@ public class EasyShulkerBoxes implements ModConstructor {
         ItemContainerProviderSerializers.register(EnderChestProvider.class, new ResourceLocation(MOD_ID, "ender_chest"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toEnderChestProvider));
         ItemContainerProviderSerializers.register(SimpleItemProvider.class, new ResourceLocation(MOD_ID, "item"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toSimpleItemContainerProvider));
         ItemContainerProviderSerializers.register(MapProvider.class, new ResourceLocation(MOD_ID, "map"), jsonElement -> new MapProvider());
-        ItemContainerProviderSerializers.register(ShulkerBoxProvider.class, new ResourceLocation(MOD_ID, "shulker_box"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toShulkerBoxProvider));
     }
 }

@@ -50,7 +50,7 @@ public class SimpleItemProvider extends NestedTagItemProvider {
 
     @Override
     public boolean isItemAllowedInContainer(ItemStack containerStack, ItemStack stackToAdd) {
-        return !this.filterContainerItems || stackToAdd.getItem().canFitInsideContainerItems();
+        return super.isItemAllowedInContainer(containerStack, stackToAdd) && (!this.filterContainerItems || stackToAdd.getItem().canFitInsideContainerItems());
     }
 
     @Override
@@ -60,11 +60,11 @@ public class SimpleItemProvider extends NestedTagItemProvider {
 
     @Override
     public void toJson(JsonObject jsonObject) {
-        super.toJson(jsonObject);
         jsonObject.addProperty("inventory_width", this.getInventoryWidth());
         jsonObject.addProperty("inventory_height", this.getInventoryHeight());
         if (this.filterContainerItems) {
             jsonObject.addProperty("filter_container_items", true);
         }
+        super.toJson(jsonObject);
     }
 }
