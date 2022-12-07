@@ -66,7 +66,7 @@ public class BackpackedIntegration {
     }});
 
     public static void registerProviders() {
-        ItemContainerProviders.registerBuiltInProvider(id("backpack"), new SimpleItemProvider(9, 1, DyeColor.BROWN).disallowValues(DISALLOWED_ITEMS));
+        ItemContainerProviders.registerBuiltInProvider(id("backpack"), new SimpleItemProvider(9, 1, DyeColor.BROWN).filterContainerItems().disallowValues(DISALLOWED_ITEMS));
     }
 
     public static ResourceLocation id(String path) {

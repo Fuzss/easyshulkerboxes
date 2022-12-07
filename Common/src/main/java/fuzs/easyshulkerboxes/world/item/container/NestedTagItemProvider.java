@@ -111,18 +111,18 @@ public abstract class NestedTagItemProvider extends AbstractItemContainerProvide
 
     @Override
     public final void setItemData(ItemStack containerStack, ListTag itemsTag, String nbtKey) {
-        CompoundTag itemData = this.getItemData(containerStack);
+        CompoundTag itemDataBase = this.getItemDataBase(containerStack);
         if (itemsTag.isEmpty()) {
-            CompoundTag tag = this.getItemDataAtPath(itemData, false);
-            if (tag != null) tag.remove(nbtKey);
+            CompoundTag itemData = this.getItemDataAtPath(itemDataBase, false);
+            if (itemData != null) itemData.remove(nbtKey);
         } else {
-            if (itemData == null) itemData = new CompoundTag();
-            CompoundTag tag = this.getItemDataAtPath(itemData, true);
-            Objects.requireNonNull(tag, "tag at path %s was null".formatted(Arrays.toString(this.getNbtPath())));
-            tag.put(nbtKey, itemsTag);
+            if (itemDataBase == null) itemDataBase = new CompoundTag();
+            CompoundTag itemData = this.getItemDataAtPath(itemDataBase, true);
+            Objects.requireNonNull(itemData, "tag at path %s was null".formatted(Arrays.toString(this.getNbtPath())));
+            itemData.put(nbtKey, itemsTag);
         }
-        if (itemData != null && itemData.isEmpty()) itemData = null;
-        this.setItemDataToStack(containerStack, itemData);
+        if (itemDataBase != null && itemDataBase.isEmpty()) itemDataBase = null;
+        this.setItemDataToStack(containerStack, itemDataBase);
     }
 
     protected void setItemDataToStack(ItemStack containerStack, @Nullable CompoundTag tag) {

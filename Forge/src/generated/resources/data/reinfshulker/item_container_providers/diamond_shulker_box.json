@@ -1,6 +1,7 @@
 {
-  "type": "easyshulkerboxes:shulker_box",
+  "type": "easyshulkerboxes:block_entity",
   "block_entity_type": "reinfshulker:diamond_shulker_box",
+  "any_game_mode": true,
   "inventory_width": 12,
   "inventory_height": 9,
   "filter_container_items": true

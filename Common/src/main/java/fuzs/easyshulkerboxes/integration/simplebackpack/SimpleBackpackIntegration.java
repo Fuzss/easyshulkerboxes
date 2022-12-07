@@ -11,7 +11,7 @@ public class SimpleBackpackIntegration {
 
     public static void registerProviders() {
         ItemContainerProviders.registerBuiltInProvider(id("ender_pack"), new EnderChestProvider());
-        ItemContainerProviders.registerBuiltInProvider(id("backpack"), new SimpleItemProvider(9, 6, DyeColor.BROWN, "backpack/Items"));
+        ItemContainerProviders.registerBuiltInProvider(id("backpack"), new SimpleItemProvider(9, 6, DyeColor.BROWN, "backpack/Items").filterContainerItems());
         ItemContainerProviders.registerBuiltInProvider(id("simple_bundle"), new BundleProvider(3456));
     }
 

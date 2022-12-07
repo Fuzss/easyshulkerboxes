@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
-## [v4.4.0-1.19.2] - 2022-12-07
+## [v4.4.0-1.19.2] - 2022-12-08
 ### Added
 - Added a fully data-driven system for defining support for Easy Shulker Boxes' features for any item using data packs
 - This system allows users to manually add support for other mods (intended for backpack and shulker box mods, check out the documentation on GitHub)

@@ -2,6 +2,7 @@
   "type": "easyshulkerboxes:item",
   "inventory_width": 9,
   "inventory_height": 6,
+  "filter_container_items": true,
   "background_color": "brown",
   "nbt_key": "backpack/Items"
 }
