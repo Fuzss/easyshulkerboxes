@@ -1,7 +1,7 @@
 {
   "type": "easyshulkerboxes:shulker_box",
+  "background_color": "pink",
   "inventory_width": 12,
   "inventory_height": 9,
-  "background_color": "pink",
   "block_entity_type": "reinfshulker:netherite_shulker_box"
 }

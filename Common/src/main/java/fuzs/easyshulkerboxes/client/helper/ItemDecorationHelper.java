@@ -29,7 +29,7 @@ public class ItemDecorationHelper {
     private static final Map<ItemContainerProvider, DynamicItemDecorator> DECORATORS_CACHE = Maps.newIdentityHashMap();
 
     @Nullable
-    public static Slot activeSlot;
+    private static Slot activeSlot;
 
     private static DynamicItemDecorator getDynamicItemDecorator(ItemDecoratorPredicate filter, BooleanSupplier allow) {
         return (Font font, ItemStack stack, int itemPosX, int itemPosY, float blitOffset) -> {
@@ -94,6 +94,10 @@ public class ItemDecorationHelper {
 
     public static void clearCache() {
         DECORATORS_CACHE.clear();
+    }
+
+    public static void setActiveSlot(@Nullable Slot activeSlot) {
+        ItemDecorationHelper.activeSlot = activeSlot;
     }
 
     @FunctionalInterface

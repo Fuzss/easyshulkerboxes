@@ -6,7 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
 import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
-import fuzs.easyshulkerboxes.api.world.item.container.SerializableItemContainerProvider;
+import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProviderSerializers;
 import fuzs.easyshulkerboxes.core.CommonAbstractions;
 import fuzs.easyshulkerboxes.network.S2CSyncItemContainerProvider;
 import fuzs.puzzleslib.core.ModLoaderEnvironment;
@@ -27,7 +27,7 @@ import java.util.Map;
 public class ItemContainerProviders extends SimpleJsonResourceReloadListener {
     public static final ItemContainerProviders INSTANCE = CommonAbstractions.INSTANCE.getItemContainerProviders();
     protected static final String ITEM_CONTAINER_PROVIDERS_KEY = "item_container_providers";
-    private static final Map<ResourceLocation, SerializableItemContainerProvider> BUILT_IN_PROVIDERS = Maps.newHashMap();
+    private static final Map<ResourceLocation, ItemContainerProvider> BUILT_IN_PROVIDERS = Maps.newHashMap();
 
     private Map<ResourceLocation, JsonElement> rawProviders = ImmutableMap.of();
     private Map<Item, ItemContainerProvider> providers = ImmutableMap.of();
@@ -55,7 +55,7 @@ public class ItemContainerProviders extends SimpleJsonResourceReloadListener {
                 JsonObject jsonObject = entry.getValue().getAsJsonObject();
                 // modded items may not be present, but we register default providers for some
                 if (!Registry.ITEM.containsKey(item)) continue;
-                ItemContainerProvider provider = SerializableItemContainerProvider.deserialize(jsonObject);
+                ItemContainerProvider provider = ItemContainerProviderSerializers.deserialize(jsonObject);
                 builder.put(Registry.ITEM.get(item), provider);
             } catch (Exception e) {
                 EasyShulkerBoxes.LOGGER.error("Couldn't parse item container provider {}", item, e);
@@ -71,19 +71,19 @@ public class ItemContainerProviders extends SimpleJsonResourceReloadListener {
     }
 
     public static void serializeBuiltInProviders() {
-        for (Map.Entry<ResourceLocation, SerializableItemContainerProvider> entry : BUILT_IN_PROVIDERS.entrySet()) {
-            JsonElement jsonElement = SerializableItemContainerProvider.serialize(entry.getValue());
+        for (Map.Entry<ResourceLocation, ItemContainerProvider> entry : BUILT_IN_PROVIDERS.entrySet()) {
+            JsonElement jsonElement = ItemContainerProviderSerializers.serialize(entry.getValue());
             ResourceLocation item = entry.getKey();
             Path path = ModLoaderEnvironment.INSTANCE.getGameDir().resolve("generated").resolve("data").resolve(item.getNamespace()).resolve(ITEM_CONTAINER_PROVIDERS_KEY).resolve(item.getPath() + ".json");
             JsonConfigFileUtil.saveToFile(path.toFile(), jsonElement);
         }
     }
 
-    public static void registerBuiltInProvider(ItemLike item, SerializableItemContainerProvider provider) {
+    public static void registerBuiltInProvider(ItemLike item, ItemContainerProvider provider) {
         registerBuiltInProvider(Registry.ITEM.getKey(item.asItem()), provider);
     }
 
-    public static void registerBuiltInProvider(ResourceLocation item, SerializableItemContainerProvider provider) {
+    public static void registerBuiltInProvider(ResourceLocation item, ItemContainerProvider provider) {
         BUILT_IN_PROVIDERS.put(item, provider);
     }
 }

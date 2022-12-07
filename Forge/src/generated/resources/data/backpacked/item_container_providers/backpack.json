@@ -1,6 +1,6 @@
 {
   "type": "easyshulkerboxes:item",
+  "background_color": "brown",
   "inventory_width": 9,
-  "inventory_height": 1,
-  "background_color": "brown"
+  "inventory_height": 1
 }

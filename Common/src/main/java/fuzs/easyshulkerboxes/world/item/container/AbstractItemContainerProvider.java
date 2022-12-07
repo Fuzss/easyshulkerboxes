@@ -1,7 +1,7 @@
 package fuzs.easyshulkerboxes.world.item.container;
 
 import com.google.gson.JsonObject;
-import fuzs.easyshulkerboxes.api.world.item.container.SerializableItemContainerProvider;
+import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.easyshulkerboxes.world.item.container.helper.ContainerItemHelper;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.SimpleContainer;
@@ -11,16 +11,11 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
 
-public abstract class ItemContainerProviderImpl implements SerializableItemContainerProvider {
+public abstract class AbstractItemContainerProvider implements ItemContainerProvider {
 
     @Override
     public boolean canProvideContainer(ItemStack containerStack, Player player) {
         return containerStack.getCount() == 1;
-    }
-
-    @Override
-    public boolean hasItemContainerTag(ItemStack containerStack) {
-        return ContainerItemHelper.hasItemContainerTag(containerStack, this, ContainerItemHelper.TAG_ITEMS);
     }
 
     @Override

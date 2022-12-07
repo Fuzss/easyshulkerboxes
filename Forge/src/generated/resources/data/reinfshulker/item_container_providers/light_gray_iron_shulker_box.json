@@ -1,7 +1,7 @@
 {
   "type": "easyshulkerboxes:shulker_box",
+  "background_color": "light_gray",
   "inventory_width": 9,
   "inventory_height": 6,
-  "background_color": "light_gray",
   "block_entity_type": "reinfshulker:iron_shulker_box"
 }

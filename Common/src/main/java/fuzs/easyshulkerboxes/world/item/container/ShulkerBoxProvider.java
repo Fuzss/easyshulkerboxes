@@ -1,12 +1,6 @@
 package fuzs.easyshulkerboxes.world.item.container;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
-import fuzs.easyshulkerboxes.world.item.container.helper.ContainerItemHelper;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -33,6 +27,11 @@ public class ShulkerBoxProvider extends BlockEntityProvider {
     }
 
     @Override
+    public SimpleItemProvider filterContainerItems() {
+        return this;
+    }
+
+    @Override
     protected float[] getDefaultBackgroundColor() {
         return DEFAULT_SHULKER_BOX_COLOR;
     }
@@ -46,19 +45,5 @@ public class ShulkerBoxProvider extends BlockEntityProvider {
     public boolean canProvideContainer(ItemStack containerStack, Player player) {
         // some mods make empty shulker boxes stackable, disable this mod then as it would allow for item duplication otherwise
         return containerStack.getCount() == 1;
-    }
-
-    public static ItemContainerProvider fromJson(JsonElement jsonElement) {
-        JsonObject jsonObject = jsonElement.getAsJsonObject();
-        int inventoryWidth = GsonHelper.getAsInt(jsonObject, "inventory_width");
-        int inventoryHeight = GsonHelper.getAsInt(jsonObject, "inventory_height");
-        DyeColor dyeColor = null;
-        if (jsonObject.has("background_color")) {
-            dyeColor = DyeColor.byName(GsonHelper.getAsString(jsonObject, "background_color"), null);
-        }
-        String[] nbtKey = GsonHelper.getAsString(jsonObject, "nbt_key", ContainerItemHelper.TAG_ITEMS).split("/");
-        ResourceLocation blockEntityTypeKey = new ResourceLocation(GsonHelper.getAsString(jsonObject, "block_entity_type"));
-        BlockEntityType<?> blockEntityType = Registry.BLOCK_ENTITY_TYPE.get(blockEntityTypeKey);
-        return new ShulkerBoxProvider(blockEntityType, inventoryWidth, inventoryHeight, dyeColor, nbtKey);
     }
 }

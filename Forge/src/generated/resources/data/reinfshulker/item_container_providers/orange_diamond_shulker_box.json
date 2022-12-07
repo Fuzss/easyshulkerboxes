@@ -1,7 +1,7 @@
 {
   "type": "easyshulkerboxes:shulker_box",
+  "background_color": "orange",
   "inventory_width": 12,
   "inventory_height": 9,
-  "background_color": "orange",
   "block_entity_type": "reinfshulker:diamond_shulker_box"
 }

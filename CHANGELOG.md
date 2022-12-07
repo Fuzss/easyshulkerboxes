@@ -3,11 +3,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
-## [v4.4.0-1.19.2] - 2022-12-04
+## [v4.4.0-1.19.2] - 2022-12-07
 ### Added
 - Added a fully data-driven system for defining support for Easy Shulker Boxes' features for any item using data packs
 - This system allows users to manually add support for other mods (intended for backpack and shulker box mods, check out the documentation on GitHub)
-- Default support is available for the following mods: Backpacked (Forge), Inmis (Fabric), Simple Backpack (Fabric)
+- Default support is available for the following mods: Bag Of Holding (Forge+Fabric), Backpacked (Forge), Inmis (Fabric), Simple Backpack (Fabric), Reinforced Shulker Boxes (Fabric)
+- Also note that mod support only works for the default config settings of those mods. When changing backpack sizes in a mod, you'll have to provide your own data pack to adjust the sizes for Easy Shulker Boxes
 ### Fixed
 - Fixed bundles still showing the vanilla tooltip image when empty
 - Fixed compatibility with Mouse Tweaks mod

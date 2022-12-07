@@ -34,11 +34,11 @@ abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> ext
 
     @Inject(method = "renderSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderGuiItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V", shift = At.Shift.BEFORE))
     private void easyshulkerboxes$renderSlot$0(PoseStack poseStack, Slot slot, CallbackInfo callback) {
-        ItemDecorationHelper.activeSlot = slot;
+        ItemDecorationHelper.setActiveSlot(slot);
     }
 
     @Inject(method = "renderSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderGuiItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V", shift = At.Shift.AFTER))
     private void easyshulkerboxes$renderSlot$1(PoseStack poseStack, Slot slot, CallbackInfo callback) {
-        ItemDecorationHelper.activeSlot = null;
+        ItemDecorationHelper.setActiveSlot(null);
     }
 }

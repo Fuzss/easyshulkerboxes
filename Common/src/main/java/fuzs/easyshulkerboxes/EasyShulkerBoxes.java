@@ -1,13 +1,12 @@
 package fuzs.easyshulkerboxes;
 
-import fuzs.easyshulkerboxes.api.world.item.container.SerializableItemContainerProvider;
+import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProviderSerializers;
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.init.ModRegistry;
 import fuzs.easyshulkerboxes.integration.backpacked.BackpackedIntegration;
 import fuzs.easyshulkerboxes.integration.bagofholding.BagOfHoldingIntegration;
 import fuzs.easyshulkerboxes.integration.inmis.InmisIntegration;
-import fuzs.easyshulkerboxes.integration.inmis.InmisProvider;
 import fuzs.easyshulkerboxes.integration.reinforcedshulkerboxes.ReinforcedShulkerBoxesIntegration;
 import fuzs.easyshulkerboxes.integration.simplebackpack.SimpleBackpackIntegration;
 import fuzs.easyshulkerboxes.network.S2CEnderChestSetContentMessage;
@@ -63,8 +62,8 @@ public class EasyShulkerBoxes implements ModConstructor {
     @Override
     public void onCommonSetup() {
         registerBuiltInProviders();
-        registerIntegrationProviders();
         registerItemContainerProviderSerializers();
+        registerIntegrationProviders();
         if (ModLoaderEnvironment.INSTANCE.isDevelopmentEnvironment()) {
             ItemContainerProviders.serializeBuiltInProviders();
         }
@@ -73,7 +72,7 @@ public class EasyShulkerBoxes implements ModConstructor {
     private static void registerBuiltInProviders() {
         registerShulkerBoxProviders();
         ItemContainerProviders.registerBuiltInProvider(Items.ENDER_CHEST, new EnderChestProvider());
-        ItemContainerProviders.registerBuiltInProvider(Items.BUNDLE, new BundleProvider());
+        ItemContainerProviders.registerBuiltInProvider(Items.BUNDLE, new BundleProvider(64));
         ItemContainerProviders.registerBuiltInProvider(Items.FILLED_MAP, new MapProvider());
         ItemContainerProviders.registerBuiltInProvider(Items.DROPPER, new BlockEntityProvider(BlockEntityType.DROPPER, 3, 3));
         ItemContainerProviders.registerBuiltInProvider(Items.DISPENSER, new BlockEntityProvider(BlockEntityType.DISPENSER, 3, 3));
@@ -107,13 +106,12 @@ public class EasyShulkerBoxes implements ModConstructor {
     }
 
     private static void registerItemContainerProviderSerializers() {
-        SerializableItemContainerProvider.register(BlockEntityProvider.class, new ResourceLocation(MOD_ID, "block_entity"), BlockEntityProvider::fromJson);
-        SerializableItemContainerProvider.register(BlockEntityViewProvider.class, new ResourceLocation(MOD_ID, "block_entity_view"), BlockEntityViewProvider::fromJson);
-        SerializableItemContainerProvider.register(BundleProvider.class, new ResourceLocation(MOD_ID, "bundle"), BundleProvider::fromJson);
-        SerializableItemContainerProvider.register(EnderChestProvider.class, new ResourceLocation(MOD_ID, "ender_chest"), EnderChestProvider::fromJson);
-        SerializableItemContainerProvider.register(GenericItemContainerProvider.class, new ResourceLocation(MOD_ID, "item"), GenericItemContainerProvider::fromJson);
-        SerializableItemContainerProvider.register(MapProvider.class, new ResourceLocation(MOD_ID, "map"), MapProvider::fromJson);
-        SerializableItemContainerProvider.register(ShulkerBoxProvider.class, new ResourceLocation(MOD_ID, "shulker_box"), ShulkerBoxProvider::fromJson);
-        SerializableItemContainerProvider.register(InmisProvider.class, new ResourceLocation(MOD_ID, "inmis"), InmisProvider::fromJson);
+        ItemContainerProviderSerializers.register(BlockEntityProvider.class, new ResourceLocation(MOD_ID, "block_entity"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toBlockEntityProvider));
+        ItemContainerProviderSerializers.register(BlockEntityViewProvider.class, new ResourceLocation(MOD_ID, "block_entity_view"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toBlockEntityViewProvider));
+        ItemContainerProviderSerializers.register(BundleProvider.class, new ResourceLocation(MOD_ID, "bundle"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toBundleProvider));
+        ItemContainerProviderSerializers.register(EnderChestProvider.class, new ResourceLocation(MOD_ID, "ender_chest"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toEnderChestProvider));
+        ItemContainerProviderSerializers.register(SimpleItemProvider.class, new ResourceLocation(MOD_ID, "item"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toSimpleItemContainerProvider));
+        ItemContainerProviderSerializers.register(MapProvider.class, new ResourceLocation(MOD_ID, "map"), jsonElement -> new MapProvider());
+        ItemContainerProviderSerializers.register(ShulkerBoxProvider.class, new ResourceLocation(MOD_ID, "shulker_box"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toShulkerBoxProvider));
     }
 }

@@ -6,7 +6,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Inmis mod needs a custom container implementation as it stored items in a separate <code>Stack</code> tag, usually stacks are stored in the same tag as the slot id
+ * Inmis mod needs a custom container implementation as it stored items in a separate <code>Stack</code> tag, usually in vanilla stacks are stored in the same tag as the slot id
  */
 public class SimpleInmisContainerWithSlots extends SimpleContainer {
 

@@ -1,13 +1,12 @@
 package fuzs.easyshulkerboxes.client.gui.screens.inventory.tooltip;
 
 import fuzs.easyshulkerboxes.world.inventory.tooltip.ModBundleTooltip;
-import net.minecraft.world.item.DyeColor;
 
 public class ModClientBundleTooltip extends AbstractClientContainerItemTooltip {
     private final boolean isBundleFull;
 
     public ModClientBundleTooltip(ModBundleTooltip tooltip) {
-        super(tooltip.items(), DyeColor.BROWN.getTextureDiffuseColors());
+        super(tooltip.items(), tooltip.backgroundColor());
         this.isBundleFull = tooltip.isBundleFull();
     }
 

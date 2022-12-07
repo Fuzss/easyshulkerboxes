@@ -1,9 +1,7 @@
 package fuzs.easyshulkerboxes.world.item.container;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
-import fuzs.easyshulkerboxes.api.world.item.container.SerializableItemContainerProvider;
 import fuzs.easyshulkerboxes.world.inventory.tooltip.MapTooltip;
 import fuzs.puzzleslib.proxy.Proxy;
 import net.minecraft.world.SimpleContainer;
@@ -16,7 +14,7 @@ import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
 import java.util.Optional;
 
-public class MapProvider implements SerializableItemContainerProvider {
+public class MapProvider implements ItemContainerProvider {
 
     @Override
     public boolean canProvideContainer(ItemStack containerStack, Player player) {
@@ -71,9 +69,5 @@ public class MapProvider implements SerializableItemContainerProvider {
     @Override
     public void toJson(JsonObject jsonObject) {
 
-    }
-
-    public static ItemContainerProvider fromJson(JsonElement jsonElement) {
-        return new MapProvider();
     }
 }

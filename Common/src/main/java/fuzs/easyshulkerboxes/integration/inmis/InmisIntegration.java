@@ -1,5 +1,7 @@
 package fuzs.easyshulkerboxes.integration.inmis;
 
+import fuzs.easyshulkerboxes.EasyShulkerBoxes;
+import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProviderSerializers;
 import fuzs.easyshulkerboxes.world.item.container.EnderChestProvider;
 import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
 import net.minecraft.resources.ResourceLocation;
@@ -17,6 +19,7 @@ public class InmisIntegration {
         ItemContainerProviders.registerBuiltInProvider(id("withered_backpack"), new InmisProvider(11, 6, DyeColor.BLACK));
         ItemContainerProviders.registerBuiltInProvider(id("endless_backpack"), new InmisProvider(15, 6, DyeColor.CYAN));
         ItemContainerProviders.registerBuiltInProvider(id("ender_pouch"), new EnderChestProvider());
+        ItemContainerProviderSerializers.register(InmisProvider.class, new ResourceLocation(EasyShulkerBoxes.MOD_ID, "inmis"), InmisProvider::fromJson);
     }
     
     public static ResourceLocation id(String path) {

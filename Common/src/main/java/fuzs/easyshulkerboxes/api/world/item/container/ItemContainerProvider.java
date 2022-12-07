@@ -1,5 +1,6 @@
 package fuzs.easyshulkerboxes.api.world.item.container;
 
+import com.google.gson.JsonObject;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.SimpleContainer;
@@ -134,4 +135,11 @@ public interface ItemContainerProvider {
      * @return the image tooltip provided by <code>containerStack</code>
      */
     Optional<TooltipComponent> getTooltipImage(ItemStack containerStack, Player player);
+
+    /**
+     * serialize this provider to json for syncing to client (as part of data pack contents)
+     *
+     * @param jsonObject the json object to add data to
+     */
+    void toJson(JsonObject jsonObject);
 }

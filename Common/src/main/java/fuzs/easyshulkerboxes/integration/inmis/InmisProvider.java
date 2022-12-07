@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
-import fuzs.easyshulkerboxes.world.item.container.GenericItemContainerProvider;
+import fuzs.easyshulkerboxes.world.item.container.SimpleItemProvider;
 import fuzs.easyshulkerboxes.world.item.container.helper.ContainerItemHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-public class InmisProvider extends GenericItemContainerProvider {
+public class InmisProvider extends SimpleItemProvider {
     private static final List<ResourceLocation> INMIS_BACKPACK_IDS = Stream.of("baby_backpack", "frayed_backpack", "plated_backpack", "gilded_backpack", "bejeweled_backpack", "blazing_backpack", "withered_backpack", "endless_backpack")
             .map(InmisIntegration::id).toList();
 
@@ -55,11 +55,7 @@ public class InmisProvider extends GenericItemContainerProvider {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         int inventoryWidth = GsonHelper.getAsInt(jsonObject, "inventory_width");
         int inventoryHeight = GsonHelper.getAsInt(jsonObject, "inventory_height");
-        DyeColor dyeColor = null;
-        if (jsonObject.has("background_color")) {
-            dyeColor = DyeColor.byName(GsonHelper.getAsString(jsonObject, "background_color"), null);
-        }
-        String[] nbtKey = GsonHelper.getAsString(jsonObject, "nbt_key", ContainerItemHelper.TAG_ITEMS).split("/");
+        DyeColor dyeColor = DyeColor.byName(GsonHelper.getAsString(jsonObject, "background_color", ""), null);
         return new InmisProvider(inventoryWidth, inventoryHeight, dyeColor);
     }
 }
