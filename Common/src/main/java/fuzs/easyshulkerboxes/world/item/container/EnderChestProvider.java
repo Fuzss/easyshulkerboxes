@@ -5,11 +5,14 @@ import fuzs.easyshulkerboxes.capability.EnderChestMenuCapability;
 import fuzs.easyshulkerboxes.init.ModRegistry;
 import fuzs.easyshulkerboxes.world.inventory.tooltip.ContainerItemTooltip;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 public class EnderChestProvider extends AbstractItemContainerProvider {
     /**
@@ -18,13 +21,23 @@ public class EnderChestProvider extends AbstractItemContainerProvider {
     private static final float[] DEFAULT_ENDER_CHEST_COLOR = {0.16470589F, 0.38431373F, 0.33333334F};
 
     @Override
-    public boolean hasItemContainerTag(ItemStack containerStack) {
+    public SimpleContainer getItemContainer(ItemStack containerStack, Player player, boolean allowSaving) {
+        return player.getEnderChestInventory();
+    }
+
+    @Override
+    public boolean hasItemContainerData(ItemStack containerStack) {
         return true;
     }
 
     @Override
-    public SimpleContainer getItemContainer(ItemStack containerStack, Player player, boolean allowSaving) {
-        return player.getEnderChestInventory();
+    public @Nullable CompoundTag getItemContainerData(ItemStack containerStack) {
+        return null;
+    }
+
+    @Override
+    public void setItemContainerData(ItemStack containerStack, ListTag itemsTag, String nbtKey) {
+
     }
 
     @Override

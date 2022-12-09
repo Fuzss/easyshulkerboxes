@@ -74,19 +74,19 @@ public abstract class NestedTagItemProvider extends AbstractItemContainerProvide
     }
 
     @Override
-    public boolean hasItemContainerTag(ItemStack containerStack) {
+    public boolean hasItemContainerData(ItemStack containerStack) {
         return ContainerItemHelper.hasItemContainerTag(containerStack, this, this.getNbtKey());
     }
 
     @Nullable
     @Override
-    public final CompoundTag getItemData(ItemStack containerStack) {
+    public final CompoundTag getItemContainerData(ItemStack containerStack) {
         return this.getItemDataAtPath(this.getItemDataBase(containerStack), false);
     }
 
     @Nullable
     protected CompoundTag getItemDataBase(ItemStack containerStack) {
-        return super.getItemData(containerStack);
+        return containerStack.getTag();
     }
 
     @Nullable
@@ -110,7 +110,7 @@ public abstract class NestedTagItemProvider extends AbstractItemContainerProvide
     }
 
     @Override
-    public final void setItemData(ItemStack containerStack, ListTag itemsTag, String nbtKey) {
+    public final void setItemContainerData(ItemStack containerStack, ListTag itemsTag, String nbtKey) {
         CompoundTag itemDataBase = this.getItemDataBase(containerStack);
         if (itemsTag.isEmpty()) {
             CompoundTag itemData = this.getItemDataAtPath(itemDataBase, false);

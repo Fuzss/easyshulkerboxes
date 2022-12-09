@@ -31,7 +31,7 @@ public class ContainerItemHelper {
     }
 
     public static SimpleContainer loadItemContainer(ItemStack stack, ItemContainerProvider provider, IntFunction<SimpleContainer> containerFactory, boolean allowSaving, String nbtKey) {
-        CompoundTag tag = provider.getItemData(stack);
+        CompoundTag tag = provider.getItemContainerData(stack);
         ListTag items = null;
         if (tag != null && tag.contains(nbtKey)) {
             items = tag.getList(nbtKey, 10);
@@ -43,7 +43,7 @@ public class ContainerItemHelper {
         if (allowSaving) {
             simpleContainer.addListener(container -> {
                 ListTag itemsTag = ((SimpleContainer) container).createTag();
-                provider.setItemData(stack, itemsTag, nbtKey);
+                provider.setItemContainerData(stack, itemsTag, nbtKey);
             });
         }
         return simpleContainer;
@@ -122,7 +122,7 @@ public class ContainerItemHelper {
     }
 
     public static boolean hasItemContainerTag(ItemStack stack, ItemContainerProvider provider, String nbtKey) {
-        CompoundTag tag = provider.getItemData(stack);
+        CompoundTag tag = provider.getItemContainerData(stack);
         return tag != null && tag.contains(nbtKey);
     }
 

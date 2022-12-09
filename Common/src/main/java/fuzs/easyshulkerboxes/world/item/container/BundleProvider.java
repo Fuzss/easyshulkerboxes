@@ -54,7 +54,7 @@ public class BundleProvider extends NestedTagItemProvider {
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack containerStack, Player player) {
-        if (this.hasItemContainerTag(containerStack)) {
+        if (this.hasItemContainerData(containerStack)) {
             return super.getTooltipImage(containerStack, player);
         }
         // make sure to always override bundle tooltip, as otherwise vanilla tooltip would show for empty bundles

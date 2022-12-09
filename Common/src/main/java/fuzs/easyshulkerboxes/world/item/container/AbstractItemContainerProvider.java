@@ -1,6 +1,5 @@
 package fuzs.easyshulkerboxes.world.item.container;
 
-import com.google.gson.JsonObject;
 import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.easyshulkerboxes.world.item.container.helper.ContainerItemHelper;
 import net.minecraft.core.NonNullList;
@@ -14,8 +13,13 @@ import java.util.Optional;
 public abstract class AbstractItemContainerProvider implements ItemContainerProvider {
 
     @Override
-    public boolean canProvideContainer(ItemStack containerStack, Player player) {
+    public boolean canPlayerUseContainer(ItemStack containerStack, Player player) {
         return containerStack.getCount() == 1;
+    }
+
+    @Override
+    public void broadcastContainerChanges(Player player) {
+
     }
 
     @Override
@@ -48,12 +52,12 @@ public abstract class AbstractItemContainerProvider implements ItemContainerProv
     }
 
     private boolean canAcceptItem(Player player, ItemStack containerStack, ItemStack stack) {
-        return this.canProvideContainer(containerStack, player) && !stack.isEmpty() && this.isItemAllowedInContainer(containerStack, stack);
+        return this.canPlayerUseContainer(containerStack, player) && !stack.isEmpty() && this.isItemAllowedInContainer(containerStack, stack);
     }
 
     @Override
     public boolean canProvideTooltipImage(ItemStack containerStack, Player player) {
-        return this.hasItemContainerTag(containerStack);
+        return this.hasItemContainerData(containerStack);
     }
 
     @Override
@@ -63,9 +67,4 @@ public abstract class AbstractItemContainerProvider implements ItemContainerProv
     }
 
     protected abstract TooltipComponent internal$getTooltipImage(ItemStack stack, NonNullList<ItemStack> items);
-
-    @Override
-    public void broadcastContainerChanges(Player player) {
-
-    }
 }

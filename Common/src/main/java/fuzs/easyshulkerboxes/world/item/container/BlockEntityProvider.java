@@ -52,8 +52,8 @@ public class BlockEntityProvider extends SimpleItemProvider {
     }
 
     @Override
-    public boolean canProvideContainer(ItemStack containerStack, Player player) {
-        return super.canProvideContainer(containerStack, player) && (this.anyGameMode || player.getAbilities().instabuild);
+    public boolean canPlayerUseContainer(ItemStack containerStack, Player player) {
+        return super.canPlayerUseContainer(containerStack, player) && (this.anyGameMode || player.getAbilities().instabuild);
     }
 
     @Override

@@ -100,8 +100,6 @@ restrictions on their inventory slots (like output and fuel slots).
 | `block_entity_type`      | `true`   | The block entity type id.                                                                                                                                                                                                      |
 | `background_color`       | `false`  | The background color used on the item tooltip, defaults to vanilla's gray container background color.                                                                                                                          |
 | `nbt_key`                | `false`  | The string key used in the item nbt tag to store inventory contents, defaults to `Items`. This is treated like a path with parts separated by `/` in case the inventory contents tag is not on the root level of the item tag. |
-| `disallowed_items`       | `false`  | Json array of items and item tags included by their internal identifier not allowed to be put into the container belonging to this item. Empty by default.                                                                     |
-| `filter_container_items` | `false`  | Are shulker boxes (and similar modded items) **NOT** allowed to be put into the container belonging to this item, defaults to `false`.                                                                                         |
 
 </details>
 

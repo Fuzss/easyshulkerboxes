@@ -25,7 +25,7 @@ abstract class ItemStackMixin {
     public void easyshulkerboxes$overrideStackedOnOther(Slot slot, ClickAction clickAction, Player player, CallbackInfoReturnable<Boolean> callback) {
         ItemStack containerStack = (ItemStack) (Object) this;
         ItemContainerProvider provider = ItemContainerProviders.INSTANCE.get(containerStack.getItem());
-        if (provider != null && provider.canProvideContainer(containerStack, player)) {
+        if (provider != null && provider.canPlayerUseContainer(containerStack, player)) {
             boolean success = ContainerItemHelper.overrideStackedOnOther(() -> provider.getItemContainer(containerStack, player, true), slot, clickAction, player, stack -> provider.getAcceptableItemCount(containerStack, stack, player), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
             if (success) provider.broadcastContainerChanges(player);
             callback.setReturnValue(success);
@@ -36,7 +36,7 @@ abstract class ItemStackMixin {
     public void easyshulkerboxes$overrideOtherStackedOnMe(ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, CallbackInfoReturnable<Boolean> callback) {
         ItemStack containerStack = (ItemStack) (Object) this;
         ItemContainerProvider provider = ItemContainerProviders.INSTANCE.get(containerStack.getItem());
-        if (provider != null && provider.canProvideContainer(containerStack, player)) {
+        if (provider != null && provider.canPlayerUseContainer(containerStack, player)) {
             boolean success = ContainerItemHelper.overrideOtherStackedOnMe(() -> provider.getItemContainer(containerStack, player, true), stackOnMe, slot, clickAction, player, slotAccess, stack -> provider.getAcceptableItemCount(containerStack, stack, player), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
             if (success) provider.broadcastContainerChanges(player);
             callback.setReturnValue(success);

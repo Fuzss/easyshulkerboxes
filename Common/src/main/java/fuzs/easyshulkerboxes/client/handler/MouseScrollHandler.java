@@ -29,7 +29,7 @@ public class MouseScrollHandler {
         if (hoveredSlot != null) {
             ItemStack stack = hoveredSlot.getItem();
             ItemContainerProvider provider = ItemContainerProviders.INSTANCE.get(stack.getItem());
-            if (provider != null && provider.hasItemContainerTag(stack)) {
+            if (provider != null && provider.hasItemContainerData(stack)) {
                 int signum = (int) Math.signum(verticalAmount);
                 if (signum != 0) {
                     Player player = CommonScreens.INSTANCE.getMinecraft(screen).player;

@@ -7,6 +7,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
+
 public class BlockEntityViewProvider extends BlockEntityProvider {
 
     public BlockEntityViewProvider(BlockEntityType<?> blockEntityType, int inventoryWidth, int inventoryHeight) {
@@ -26,12 +28,27 @@ public class BlockEntityViewProvider extends BlockEntityProvider {
     }
 
     @Override
+    public NestedTagItemProvider disallowValues(Collection<String> value) {
+        return this;
+    }
+
+    @Override
+    public NestedTagItemProvider disallowValue(String value) {
+        return this;
+    }
+
+    @Override
+    public SimpleItemProvider filterContainerItems() {
+        return this;
+    }
+
+    @Override
     public BlockEntityProvider anyGameMode() {
         return this;
     }
 
     @Override
-    public boolean canProvideContainer(ItemStack containerStack, Player player) {
+    public boolean canPlayerUseContainer(ItemStack containerStack, Player player) {
         return false;
     }
 }

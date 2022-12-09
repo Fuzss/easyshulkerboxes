@@ -40,7 +40,7 @@ public class MouseDragHandler {
         if (!shouldHandleMouseDrag(screen)) return Optional.empty();
         ItemStack carriedStack = ((AbstractContainerScreen<?>) screen).getMenu().getCarried();
         ItemContainerProvider provider = ItemContainerProviders.INSTANCE.get(carriedStack.getItem());
-        if (button == 1 && provider != null && provider.canProvideContainer(carriedStack, Proxy.INSTANCE.getClientPlayer())) {
+        if (button == 1 && provider != null && provider.canPlayerUseContainer(carriedStack, Proxy.INSTANCE.getClientPlayer())) {
             Slot slot = ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$findSlot(mouseX, mouseY);
             if (slot != null && slot.hasItem()) {
                 this.containerDragType = ContainerDragType.INSERT;

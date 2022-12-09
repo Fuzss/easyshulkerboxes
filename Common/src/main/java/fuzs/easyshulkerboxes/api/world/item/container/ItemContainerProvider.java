@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * an interface that when implemented represents a provider for any item to enable bundle-like inventory item interactions (extracting and adding items via right-clicking on the item) and bundle-like tooltips
  * <p>a container does not necessarily need to provide both item interactions and tooltips, what is provided is defined
- * by implementing {@link ItemContainerProvider#canProvideContainer} and {@link ItemContainerProvider#canProvideTooltipImage}
+ * by implementing {@link ItemContainerProvider#canPlayerUseContainer} and {@link ItemContainerProvider#canProvideTooltipImage}
  * <p>this overrides any already implemented behavior (the default providers in Easy Shulker Boxes actually do this for vanilla bundles)
  */
 public interface ItemContainerProvider {
@@ -27,17 +27,7 @@ public interface ItemContainerProvider {
      * @param player         the player performing the interaction
      * @return are inventory interactions allowed (is a container present on this item)
      */
-    boolean canProvideContainer(ItemStack containerStack, Player player);
-
-    /**
-     * does the item stack have data for stored items
-     * <p>an easy check if the corresponding container is empty without having to create a container instance
-     * <p>mainly used by tooltip image and client-side mouse scroll handler
-     *
-     * @param containerStack the container stack
-     * @return is the item stack tag with stored item data present
-     */
-    boolean hasItemContainerTag(ItemStack containerStack);
+    boolean canPlayerUseContainer(ItemStack containerStack, Player player);
 
     /**
      * get the container provided by <code>stack</code> as a {@link SimpleContainer}
@@ -50,6 +40,16 @@ public interface ItemContainerProvider {
     SimpleContainer getItemContainer(ItemStack containerStack, Player player, boolean allowSaving);
 
     /**
+     * does the item stack have data for stored items
+     * <p>an easy check if the corresponding container is empty without having to create a container instance
+     * <p>mainly used by tooltip image and client-side mouse scroll handler
+     *
+     * @param containerStack the container stack
+     * @return is the item stack tag with stored item data present
+     */
+    boolean hasItemContainerData(ItemStack containerStack);
+
+    /**
      * read the item tag containing the stored inventory (usually as an <code>Items</code> sub-tag)
      * <p>this method is mainly required for items with block entity data, as the inventory is stored as part of the block entity data,
      * not directly in the item tag, so we need to override this method then
@@ -58,9 +58,7 @@ public interface ItemContainerProvider {
      * @return the tag
      */
     @Nullable
-    default CompoundTag getItemData(ItemStack containerStack) {
-        return containerStack.getTag();
-    }
+    CompoundTag getItemContainerData(ItemStack containerStack);
 
     /**
      * sets items stored in a {@link ListTag} to an item stack's tag, if the list is empty the tag key (<code>nbtKey</code>)
@@ -70,13 +68,7 @@ public interface ItemContainerProvider {
      * @param itemsTag       items to save as {@link ListTag}
      * @param nbtKey         nbt key to store <code>itemsTag</code> as
      */
-    default void setItemData(ItemStack containerStack, ListTag itemsTag, String nbtKey) {
-        if (itemsTag.isEmpty()) {
-            containerStack.removeTagKey(nbtKey);
-        } else {
-            containerStack.addTagElement(nbtKey, itemsTag);
-        }
-    }
+    void setItemContainerData(ItemStack containerStack, ListTag itemsTag, String nbtKey);
 
     /**
      * called on the client-side to sync changes made during inventory item interactions back to the server
@@ -120,6 +112,8 @@ public interface ItemContainerProvider {
 
     /**
      * does this provider support an image tooltip
+     * <p>this is required despite {@link #getTooltipImage} providing an {@link Optional} when overriding
+     * the tooltip image for items which normally provide their own (like bundles)
      *
      * @param containerStack the item stack providing the container to show a tooltip for
      * @param player         player involved in the interaction
@@ -138,6 +132,7 @@ public interface ItemContainerProvider {
 
     /**
      * serialize this provider to json for syncing to client (as part of data pack contents)
+     * <p>a serializer needs to be registered in {@link ItemContainerProviderSerializers#register} additionally
      *
      * @param jsonObject the json object to add data to
      */
