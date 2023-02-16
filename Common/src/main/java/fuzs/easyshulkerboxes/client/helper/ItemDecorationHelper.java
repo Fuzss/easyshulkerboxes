@@ -64,7 +64,8 @@ public class ItemDecorationHelper {
         // also cannot use vanilla getter here as it throws an exception when menu type is null which is exactly what we want
         // accessor is definitely more performant than catching the exception, especially as this is called in rendering code
         if (((AbstractContainerMenuAccessor) menu).easyshulkerboxes$getMenuType() == null) {
-            if (slot.getClass() != Slot.class) {
+            // Scout mod uses slots with null container apparently
+            if (slot.getClass() != Slot.class && slot.container != null) {
                 return slot.container.getContainerSize() == 45;
             }
         }
