@@ -46,6 +46,21 @@ public record ForwardingItemContainerProvider(ItemContainerProvider provider) im
     }
 
     @Override
+    public boolean allowsPlayerInteractions(ItemStack containerStack, Player player) {
+        return this.provider.allowsPlayerInteractions(containerStack, player);
+    }
+
+    @Override
+    public void broadcastContainerChanges(Player player) {
+        this.provider.broadcastContainerChanges(player);
+    }
+
+    @Override
+    public boolean isItemAllowedInContainer(ItemStack containerStack, ItemStack stackToAdd) {
+        return this.provider.isItemAllowedInContainer(containerStack, stackToAdd);
+    }
+
+    @Override
     public boolean hasAnyOf(ItemStack containerStack, ItemStack stackToAdd, Player player) {
         if (this.canAcceptItem(containerStack, stackToAdd, player)) {
             return this.provider.hasAnyOf(containerStack, stackToAdd, player);

@@ -1,11 +1,11 @@
 package fuzs.easyshulkerboxes.core;
 
-import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
+import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProvidersListener;
 
 public class ForgeAbstractions implements CommonAbstractions {
 
     @Override
-    public ItemContainerProviders getItemContainerProviders() {
-        return new ItemContainerProviders();
+    public ItemContainerProvidersListener getItemContainerProviders() {
+        return new ItemContainerProvidersListener();
     }
 }

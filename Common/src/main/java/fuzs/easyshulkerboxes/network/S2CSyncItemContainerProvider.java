@@ -3,7 +3,7 @@ package fuzs.easyshulkerboxes.network;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import fuzs.easyshulkerboxes.client.helper.ItemDecorationHelper;
-import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
+import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProvidersListener;
 import fuzs.puzzleslib.json.JsonConfigFileUtil;
 import fuzs.puzzleslib.network.Message;
 import net.minecraft.network.FriendlyByteBuf;
@@ -46,7 +46,7 @@ public class S2CSyncItemContainerProvider implements Message<S2CSyncItemContaine
 
             @Override
             public void handle(S2CSyncItemContainerProvider message, Player player, Object gameInstance) {
-                ItemContainerProviders.INSTANCE.buildProviders(message.providers);
+                ItemContainerProvidersListener.INSTANCE.buildProviders(message.providers);
                 ItemDecorationHelper.clearCache();
             }
         };

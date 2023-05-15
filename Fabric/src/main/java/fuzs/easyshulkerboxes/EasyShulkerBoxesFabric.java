@@ -2,7 +2,7 @@ package fuzs.easyshulkerboxes;
 
 import fuzs.easyshulkerboxes.api.event.entity.living.LivingEvents;
 import fuzs.easyshulkerboxes.handler.EnderChestMenuHandler;
-import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
+import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProvidersListener;
 import fuzs.puzzleslib.core.CommonFactories;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -24,9 +24,9 @@ public class EasyShulkerBoxesFabric implements ModInitializer {
             EnderChestMenuHandler.onLivingTick(entity);
             return true;
         });
-        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener((IdentifiableResourceReloadListener) ItemContainerProviders.INSTANCE);
+        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener((IdentifiableResourceReloadListener) ItemContainerProvidersListener.INSTANCE);
         ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
-            ItemContainerProviders.INSTANCE.sendProvidersToPlayer(player);
+            ItemContainerProvidersListener.INSTANCE.sendProvidersToPlayer(player);
         });
     }
 }

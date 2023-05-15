@@ -4,10 +4,10 @@ import fuzs.easyshulkerboxes.EasyShulkerBoxes;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.resources.ResourceLocation;
 
-public class FabricItemContainerProviders extends ItemContainerProviders implements IdentifiableResourceReloadListener {
+public class FabricItemContainerProvidersListener extends ItemContainerProvidersListener implements IdentifiableResourceReloadListener {
 
     @Override
     public ResourceLocation getFabricId() {
-        return new ResourceLocation(EasyShulkerBoxes.MOD_ID, ITEM_CONTAINER_PROVIDERS_KEY);
+        return EasyShulkerBoxes.id(ITEM_CONTAINER_PROVIDERS_KEY);
     }
 }

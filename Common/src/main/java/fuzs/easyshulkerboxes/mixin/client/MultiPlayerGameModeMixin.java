@@ -14,10 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 abstract class MultiPlayerGameModeMixin {
 
     @Inject(method = "handleInventoryMouseClick", at = @At("HEAD"))
-    public void easyshulkerboxes$handleInventoryMouseClick(int containerId, int slotId, int mouseButton, ClickType clickType, Player player, CallbackInfo callback) {
-        AbstractContainerMenu abstractContainerMenu = player.containerMenu;
-        if (containerId == abstractContainerMenu.containerId) {
-            MouseScrollHandler.ensureHasSentCurrentSlot();
-        }
+    public void handleInventoryMouseClick(int containerId, int slotId, int mouseButton, ClickType clickType, Player player, CallbackInfo callback) {
+        if (containerId == player.containerMenu.containerId) MouseScrollHandler.ensureHasSentCurrentSlot();
     }
 }

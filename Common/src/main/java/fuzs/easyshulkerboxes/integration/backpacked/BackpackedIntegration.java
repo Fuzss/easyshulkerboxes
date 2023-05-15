@@ -2,7 +2,7 @@ package fuzs.easyshulkerboxes.integration.backpacked;
 
 import com.google.common.collect.ImmutableList;
 import fuzs.easyshulkerboxes.world.item.container.SimpleItemProvider;
-import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
+import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProvidersListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 
@@ -66,7 +66,7 @@ public class BackpackedIntegration {
     }});
 
     public static void registerProviders() {
-        ItemContainerProviders.registerBuiltInProvider(id("backpack"), new SimpleItemProvider(9, 1, DyeColor.BROWN).filterContainerItems().disallowValues(DISALLOWED_ITEMS));
+        ItemContainerProvidersListener.registerBuiltInProvider(id("backpack"), new SimpleItemProvider(9, 1, DyeColor.BROWN).filterContainerItems().disallowValues(DISALLOWED_ITEMS));
     }
 
     public static ResourceLocation id(String path) {

@@ -8,7 +8,7 @@ import fuzs.easyshulkerboxes.EasyShulkerBoxes;
 import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.mixin.client.accessor.AbstractContainerMenuAccessor;
-import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
+import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProvidersListener;
 import fuzs.puzzleslib.client.renderer.entity.DynamicItemDecorator;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -76,7 +76,7 @@ public class ItemDecorationHelper {
 
     public static void render(Font font, ItemStack stack, int itemPosX, int itemPosY, float blitOffset) {
         resetRenderState();
-        ItemContainerProvider provider = ItemContainerProviders.INSTANCE.get(stack.getItem());
+        ItemContainerProvider provider = ItemContainerProvidersListener.INSTANCE.get(stack.getItem());
         if (provider != null) {
             DynamicItemDecorator itemDecorator = DECORATORS_CACHE.computeIfAbsent(provider, $ -> ItemDecorationHelper.getDynamicItemDecorator((AbstractContainerScreen<?> screen, ItemStack containerStack, ItemStack carriedStack) -> {
                 Minecraft minecraft = Minecraft.getInstance();

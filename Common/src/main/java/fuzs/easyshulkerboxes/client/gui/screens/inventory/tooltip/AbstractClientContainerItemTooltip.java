@@ -6,10 +6,10 @@ import fuzs.easyshulkerboxes.EasyShulkerBoxes;
 import fuzs.easyshulkerboxes.client.core.ClientAbstractions;
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.world.inventory.helper.ContainerSlotHelper;
+import fuzs.puzzleslib.client.gui.screens.CommonScreens;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.GameRenderer;
@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -26,7 +27,7 @@ import java.util.Optional;
 
 public abstract class AbstractClientContainerItemTooltip extends ExpandableClientTooltipComponent {
     public static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/widgets.png");
-    public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(EasyShulkerBoxes.MOD_ID, "textures/gui/container/inventory_tooltip.png");
+    public static final ResourceLocation TEXTURE_LOCATION = EasyShulkerBoxes.id("textures/gui/container/inventory_tooltip.png");
     private static final int BORDER_SIZE = 7;
     private static final MutableInt ACTIVE_CONTAINER_ITEM_TOOLTIPS = new MutableInt();
 
@@ -85,24 +86,37 @@ public abstract class AbstractClientContainerItemTooltip extends ExpandableClien
         }
         // reset color for other mods
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        this.drawSelectedSlotTooltip(mouseX, mouseY, poseStack, lastFilledSlot, font);
+        this.drawSelectedSlotTooltip(font, mouseX, mouseY, poseStack, lastFilledSlot);
         ACTIVE_CONTAINER_ITEM_TOOLTIPS.decrement();
     }
 
-    private void drawSelectedSlotTooltip(int mouseX, int mouseY, PoseStack poseStack, int lastFilledSlot, Font font) {
+    private void drawSelectedSlotTooltip(Font font, int mouseX, int mouseY, PoseStack poseStack, int lastFilledSlot) {
         if (!EasyShulkerBoxes.CONFIG.get(ClientConfig.class).selectedItemTooltip.isActive()) return;
         if (ACTIVE_CONTAINER_ITEM_TOOLTIPS.intValue() > 1) return;
-        if (lastFilledSlot >= 0 && lastFilledSlot < this.items.size()) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.screen != null && !willTooltipBeMoved(minecraft, font, mouseX, mouseY) && lastFilledSlot >= 0 && lastFilledSlot < this.items.size()) {
             ItemStack stack = this.items.get(lastFilledSlot);
-            Screen currentScreen = Minecraft.getInstance().screen;
-            List<Component> tooltipFromItem = currentScreen.getTooltipFromItem(stack);
-            Optional<TooltipComponent> tooltipImage = stack.getTooltipImage();
-            List<ClientTooltipComponent> tooltipComponents = ClientAbstractions.INSTANCE.getTooltipComponents(currentScreen, font, mouseX, mouseY, stack);
+            List<Component> itemTooltip = minecraft.screen.getTooltipFromItem(stack);
+            Optional<TooltipComponent> itemTooltipImage = stack.getTooltipImage();
+            List<ClientTooltipComponent> tooltipComponents = ClientAbstractions.INSTANCE.getTooltipComponents(minecraft.screen, font, mouseX, mouseY, stack);
             int maxWidth = tooltipComponents.stream().mapToInt(tooltipComponent -> tooltipComponent.getWidth(font)).max().orElse(0);
             poseStack.pushPose();
-            currentScreen.renderTooltip(poseStack, tooltipFromItem, tooltipImage, mouseX - maxWidth - 2 * 18, mouseY);
+            minecraft.screen.renderTooltip(poseStack, itemTooltip, itemTooltipImage, mouseX - maxWidth - 2 * 18, mouseY);
             poseStack.popPose();
         }
+    }
+
+    private static boolean willTooltipBeMoved(Minecraft minecraft, Font font, int mouseX, int mouseY) {
+        if (!(minecraft.screen instanceof AbstractContainerScreen<?> containerScreen)) return false;
+        Slot slot = CommonScreens.INSTANCE.getHoveredSlot(containerScreen);
+        if (slot != null && slot.hasItem()) {
+            List<ClientTooltipComponent> tooltipComponents = ClientAbstractions.INSTANCE.getTooltipComponents(containerScreen, font, mouseX, mouseY, slot.getItem());
+            int maxWidth = tooltipComponents.stream().mapToInt(tooltipComponent -> tooltipComponent.getWidth(font)).max().orElse(0);
+            // actual mouseX, tooltip components are passed the adjusted position where the tooltip should be rendered
+            mouseX = (int)( minecraft.mouseHandler.xpos() * (double) minecraft.getWindow().getGuiScaledWidth() / (double) minecraft.getWindow().getScreenWidth());
+            return mouseX + 12 + maxWidth > containerScreen.width;
+        }
+        return false;
     }
 
     private boolean defaultSize() {
@@ -118,8 +132,8 @@ public abstract class AbstractClientContainerItemTooltip extends ExpandableClien
     }
 
     private int getLastFilledSlot() {
-        if (EasyShulkerBoxes.CONFIG.get(ClientConfig.class).slotOverlay == ClientConfig.SlotOverlay.NONE) return -1;
-        int currentContainerSlot = ContainerSlotHelper.getCurrentContainerSlot(Minecraft.getInstance().player);
+        Minecraft minecraft = Minecraft.getInstance();
+        int currentContainerSlot = ContainerSlotHelper.getCurrentContainerSlot(minecraft.player);
         if (currentContainerSlot != -1 && currentContainerSlot < this.items.size()) {
             if (!this.items.get(currentContainerSlot).isEmpty()) {
                 return currentContainerSlot;

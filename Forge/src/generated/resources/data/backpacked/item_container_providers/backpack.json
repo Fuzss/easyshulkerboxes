@@ -1,8 +1,5 @@
 {
   "type": "easyshulkerboxes:item",
-  "inventory_width": 9,
-  "inventory_height": 1,
-  "filter_container_items": true,
   "background_color": "brown",
   "disallowed_items": [
     "travelersbackpack:custom_travelers_backpack",
@@ -54,5 +51,8 @@
     "create:black_toolbox",
     "mekanism:personal_chest",
     "supplementaries:sack"
-  ]
+  ],
+  "filter_container_items": true,
+  "inventory_height": 1,
+  "inventory_width": 9
 }

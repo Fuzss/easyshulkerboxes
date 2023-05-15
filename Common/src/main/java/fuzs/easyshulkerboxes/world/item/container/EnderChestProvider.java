@@ -14,7 +14,7 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public class EnderChestProvider extends AbstractItemContainerProvider {
+public class EnderChestProvider implements TooltipItemContainerProvider {
     /**
      * pretty ender color from tinted mod
      */
@@ -46,7 +46,7 @@ public class EnderChestProvider extends AbstractItemContainerProvider {
     }
 
     @Override
-    protected TooltipComponent createTooltipImageComponent(ItemStack containerStack, NonNullList<ItemStack> items) {
+    public TooltipComponent createTooltipImageComponent(ItemStack containerStack, NonNullList<ItemStack> items) {
         return new ContainerItemTooltip(items, 9, 3, DEFAULT_ENDER_CHEST_COLOR);
     }
 

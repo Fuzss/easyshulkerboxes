@@ -60,7 +60,7 @@ public class BundleProvider extends NestedTagItemProvider {
     }
 
     @Override
-    protected TooltipComponent createTooltipImageComponent(ItemStack containerStack, NonNullList<ItemStack> items) {
+    public TooltipComponent createTooltipImageComponent(ItemStack containerStack, NonNullList<ItemStack> items) {
         return new ModBundleTooltip(items, BundleItemAccessor.easyshulkerboxes$getContentWeight(containerStack) >= this.capacity, this.getBackgroundColor());
     }
 

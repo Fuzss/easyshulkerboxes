@@ -11,7 +11,7 @@ public class ClientConfig implements ConfigCore {
     @Config(description = "Select a key required to be held for seeing item inventory contents, otherwise show them always.")
     @Config.AllowedValues(values = {"KEY", "ALWAYS", "SHIFT", "CONTROL", "ALT"})
     String revealContentsRaw = TooltipContentsActivation.TOGGLE_VISUAL_CONTENTS_KEY.toString();
-    @Config(name = "slot_overlay", description = "Render a white overlay or the hotbar selected item frame over the slot the next item will be taken out when right-clicking the container item.")
+    @Config(description = "Render a white overlay or the hotbar selected item frame over the slot the next item will be taken out of when right-clicking the container item.")
     public SlotOverlay slotOverlay = SlotOverlay.HOVER;
     @Config(description = "Show an indicator on container items when the stack carried by the cursor can be added in your inventory.")
     public boolean containerItemIndicator = true;
@@ -31,6 +31,6 @@ public class ClientConfig implements ConfigCore {
     }
 
     public enum SlotOverlay {
-        NONE, HOTBAR, HOVER
+        HOTBAR, HOVER
     }
 }

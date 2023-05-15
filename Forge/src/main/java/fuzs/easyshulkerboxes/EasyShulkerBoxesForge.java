@@ -2,10 +2,11 @@ package fuzs.easyshulkerboxes;
 
 import fuzs.easyshulkerboxes.capability.ContainerSlotCapability;
 import fuzs.easyshulkerboxes.capability.EnderChestMenuCapability;
+import fuzs.easyshulkerboxes.data.ModItemContainerProvider;
 import fuzs.easyshulkerboxes.data.ModLanguageProvider;
 import fuzs.easyshulkerboxes.handler.EnderChestMenuHandler;
 import fuzs.easyshulkerboxes.init.ModRegistry;
-import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
+import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProvidersListener;
 import fuzs.puzzleslib.capability.ForgeCapabilityController;
 import fuzs.puzzleslib.core.CommonFactories;
 import net.minecraft.data.DataGenerator;
@@ -42,15 +43,15 @@ public class EasyShulkerBoxesForge {
             EnderChestMenuHandler.onLivingTick(evt.getEntity());
         });
         MinecraftForge.EVENT_BUS.addListener((final AddReloadListenerEvent evt) -> {
-            evt.addListener(ItemContainerProviders.INSTANCE);
+            evt.addListener(ItemContainerProvidersListener.INSTANCE);
         });
         MinecraftForge.EVENT_BUS.addListener((final OnDatapackSyncEvent evt) -> {
             ServerPlayer player = evt.getPlayer();
             if (player != null) {
-                ItemContainerProviders.INSTANCE.sendProvidersToPlayer(player);
+                ItemContainerProvidersListener.INSTANCE.sendProvidersToPlayer(player);
             } else {
                 for (ServerPlayer serverPlayer : evt.getPlayerList().getPlayers()) {
-                    ItemContainerProviders.INSTANCE.sendProvidersToPlayer(serverPlayer);
+                    ItemContainerProvidersListener.INSTANCE.sendProvidersToPlayer(serverPlayer);
                 }
             }
         });
@@ -60,6 +61,7 @@ public class EasyShulkerBoxesForge {
     public static void onGatherData(final GatherDataEvent evt) {
         DataGenerator generator = evt.getGenerator();
         final ExistingFileHelper existingFileHelper = evt.getExistingFileHelper();
+        generator.addProvider(true, new ModItemContainerProvider(generator));
         generator.addProvider(true, new ModLanguageProvider(generator, EasyShulkerBoxes.MOD_ID));
     }
 }

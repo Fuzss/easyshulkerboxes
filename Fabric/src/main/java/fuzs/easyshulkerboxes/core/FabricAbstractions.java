@@ -1,12 +1,12 @@
 package fuzs.easyshulkerboxes.core;
 
-import fuzs.easyshulkerboxes.world.item.storage.FabricItemContainerProviders;
-import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
+import fuzs.easyshulkerboxes.world.item.storage.FabricItemContainerProvidersListener;
+import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProvidersListener;
 
 public class FabricAbstractions implements CommonAbstractions {
 
     @Override
-    public ItemContainerProviders getItemContainerProviders() {
-        return new FabricItemContainerProviders();
+    public ItemContainerProvidersListener getItemContainerProviders() {
+        return new FabricItemContainerProvidersListener();
     }
 }

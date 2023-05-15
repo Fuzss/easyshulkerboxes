@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public abstract class NestedTagItemProvider extends AbstractItemContainerProvider {
+public abstract class NestedTagItemProvider implements TooltipItemContainerProvider {
     @Nullable
     private final DyeColor dyeColor;
     private final float[] backgroundColor;

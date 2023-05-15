@@ -23,7 +23,7 @@ abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> ext
 
     // having 'remap = false' on here crashes Forge on start-up for some reason
     @Inject(method = "renderSlot", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;enableDepthTest()V", shift = At.Shift.BEFORE))
-    private void easyshulkerboxes$renderSlot(PoseStack poseStack, Slot slot, CallbackInfo callback) {
+    private void renderSlot$0(PoseStack poseStack, Slot slot, CallbackInfo callback) {
         // this was supposed to render on the Forge container foreground event, but the blitOffset wouldn't behave
         // (it was rendering in front of items and behaved differently on the creative screen and there were also difference between Forge and Fabric for some reason)
         // so here goes the mixin ¯\_(ツ)_/¯
@@ -33,12 +33,12 @@ abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> ext
     }
 
     @Inject(method = "renderSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderGuiItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V", shift = At.Shift.BEFORE))
-    private void easyshulkerboxes$renderSlot$0(PoseStack poseStack, Slot slot, CallbackInfo callback) {
+    private void renderSlot$1(PoseStack poseStack, Slot slot, CallbackInfo callback) {
         ItemDecorationHelper.setActiveSlot(slot);
     }
 
     @Inject(method = "renderSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderGuiItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V", shift = At.Shift.AFTER))
-    private void easyshulkerboxes$renderSlot$1(PoseStack poseStack, Slot slot, CallbackInfo callback) {
+    private void renderSlot$2(PoseStack poseStack, Slot slot, CallbackInfo callback) {
         ItemDecorationHelper.setActiveSlot(null);
     }
 }

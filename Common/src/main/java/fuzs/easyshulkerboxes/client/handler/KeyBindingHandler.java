@@ -1,7 +1,7 @@
 package fuzs.easyshulkerboxes.client.handler;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import fuzs.easyshulkerboxes.client.core.ClientAbstractions;
+import fuzs.puzzleslib.client.core.ClientAbstractions;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.util.Unit;

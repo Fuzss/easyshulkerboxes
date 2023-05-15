@@ -1,90 +1,69 @@
 package fuzs.easyshulkerboxes.world.item.storage;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProviderSerializers;
-import fuzs.easyshulkerboxes.core.CommonAbstractions;
-import fuzs.easyshulkerboxes.network.S2CSyncItemContainerProvider;
-import fuzs.easyshulkerboxes.world.item.container.ForwardingItemContainerProvider;
-import fuzs.puzzleslib.core.ModLoaderEnvironment;
-import fuzs.puzzleslib.json.JsonConfigFileUtil;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.profiling.ProfilerFiller;
+import fuzs.easyshulkerboxes.integration.backpacked.BackpackedIntegration;
+import fuzs.easyshulkerboxes.integration.bagofholding.BagOfHoldingIntegration;
+import fuzs.easyshulkerboxes.integration.inmis.InmisIntegration;
+import fuzs.easyshulkerboxes.integration.reinforcedshulkerboxes.ReinforcedShulkerBoxesIntegration;
+import fuzs.easyshulkerboxes.integration.simplebackpack.SimpleBackpackIntegration;
+import fuzs.easyshulkerboxes.world.item.container.*;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.ItemLike;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
-import java.nio.file.Path;
-import java.util.Map;
+public class ItemContainerProviders {
 
-public class ItemContainerProviders extends SimpleJsonResourceReloadListener {
-    public static final ItemContainerProviders INSTANCE = CommonAbstractions.INSTANCE.getItemContainerProviders();
-    protected static final String ITEM_CONTAINER_PROVIDERS_KEY = "item_container_providers";
-    private static final Map<ResourceLocation, ItemContainerProvider> BUILT_IN_PROVIDERS = Maps.newHashMap();
-
-    private Map<ResourceLocation, JsonElement> rawProviders = ImmutableMap.of();
-    private Map<Item, ItemContainerProvider> providers = ImmutableMap.of();
-
-    public ItemContainerProviders() {
-        super(JsonConfigFileUtil.GSON, ITEM_CONTAINER_PROVIDERS_KEY);
+    public static void registerAllBuiltInProviders() {
+        registerBuiltInProviders();
+        registerIntegrationProviders();
+        registerItemContainerProviderSerializers();
     }
 
-    @Nullable
-    public ItemContainerProvider get(ItemLike item) {
-        return this.providers.get(item.asItem());
+    private static void registerBuiltInProviders() {
+        registerShulkerBoxProviders();
+        ItemContainerProvidersListener.registerBuiltInProvider(Items.ENDER_CHEST, new EnderChestProvider());
+        ItemContainerProvidersListener.registerBuiltInProvider(Items.BUNDLE, new BundleProvider(64));
+        ItemContainerProvidersListener.registerBuiltInProvider(Items.FILLED_MAP, new MapProvider());
+        ItemContainerProvidersListener.registerBuiltInProvider(Items.DROPPER, new BlockEntityProvider(BlockEntityType.DROPPER, 3, 3));
+        ItemContainerProvidersListener.registerBuiltInProvider(Items.DISPENSER, new BlockEntityProvider(BlockEntityType.DISPENSER, 3, 3));
+        ItemContainerProvidersListener.registerBuiltInProvider(Items.CHEST, new BlockEntityProvider(BlockEntityType.CHEST, 9, 3));
+        ItemContainerProvidersListener.registerBuiltInProvider(Items.TRAPPED_CHEST, new BlockEntityProvider(BlockEntityType.TRAPPED_CHEST, 9, 3));
+        ItemContainerProvidersListener.registerBuiltInProvider(Items.BARREL, new BlockEntityProvider(BlockEntityType.BARREL, 9, 3));
+        ItemContainerProvidersListener.registerBuiltInProvider(Items.HOPPER, new BlockEntityProvider(BlockEntityType.HOPPER, 5, 1));
+        ItemContainerProvidersListener.registerBuiltInProvider(Items.FURNACE, new BlockEntityViewProvider(BlockEntityType.FURNACE, 3, 1));
+        ItemContainerProvidersListener.registerBuiltInProvider(Items.BLAST_FURNACE, new BlockEntityViewProvider(BlockEntityType.BLAST_FURNACE, 3, 1));
+        ItemContainerProvidersListener.registerBuiltInProvider(Items.SMOKER, new BlockEntityViewProvider(BlockEntityType.SMOKER, 3, 1));
+        ItemContainerProvidersListener.registerBuiltInProvider(Items.BREWING_STAND, new BlockEntityViewProvider(BlockEntityType.BREWING_STAND, 5, 1));
+        ItemContainerProvidersListener.registerBuiltInProvider(Items.CAMPFIRE, new BlockEntityViewProvider(BlockEntityType.CAMPFIRE, 4, 1));
+        ItemContainerProvidersListener.registerBuiltInProvider(Items.SOUL_CAMPFIRE, new BlockEntityViewProvider(BlockEntityType.CAMPFIRE, 4, 1));
     }
 
-    @Override
-    protected void apply(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler) {
-        this.rawProviders = ImmutableMap.copyOf(object);
-        this.buildProviders(object);
-    }
-
-    public void buildProviders(Map<ResourceLocation, JsonElement> object) {
-        ImmutableMap.Builder<Item, ItemContainerProvider> builder = ImmutableMap.builder();
-        for (Map.Entry<ResourceLocation, JsonElement> entry : object.entrySet()) {
-            ResourceLocation item = entry.getKey();
-            try {
-                JsonObject jsonObject = entry.getValue().getAsJsonObject();
-                // modded items may not be present, but we register default providers for some
-                if (!Registry.ITEM.containsKey(item)) continue;
-                ItemContainerProvider provider = ItemContainerProviderSerializers.deserialize(jsonObject);
-                builder.put(Registry.ITEM.get(item), new ForwardingItemContainerProvider(provider));
-            } catch (Exception e) {
-                EasyShulkerBoxes.LOGGER.error("Couldn't parse item container provider {}", item, e);
-            }
-        }
-        this.providers = builder.build();
-    }
-
-    public void sendProvidersToPlayer(ServerPlayer player) {
-        if (ModLoaderEnvironment.INSTANCE.isServer()) {
-            EasyShulkerBoxes.NETWORK.sendTo(new S2CSyncItemContainerProvider(this.rawProviders), player);
+    private static void registerShulkerBoxProviders() {
+        ItemContainerProvidersListener.registerBuiltInProvider(Items.SHULKER_BOX, BlockEntityProvider.shulkerBoxProvider(BlockEntityType.SHULKER_BOX, 9, 3, null));
+        for (DyeColor dyeColor : DyeColor.values()) {
+            // only affects vanilla shulker boxes, other mods might add shulker boxes with a different inventory size
+            Item item = ShulkerBoxBlock.getBlockByColor(dyeColor).asItem();
+            ItemContainerProvidersListener.registerBuiltInProvider(item, BlockEntityProvider.shulkerBoxProvider(BlockEntityType.SHULKER_BOX, 9, 3, dyeColor));
         }
     }
 
-    public static void serializeBuiltInProviders() {
-        for (Map.Entry<ResourceLocation, ItemContainerProvider> entry : BUILT_IN_PROVIDERS.entrySet()) {
-            JsonElement jsonElement = ItemContainerProviderSerializers.serialize(entry.getValue());
-            ResourceLocation item = entry.getKey();
-            Path path = ModLoaderEnvironment.INSTANCE.getGameDir().resolve("generated").resolve("data").resolve(item.getNamespace()).resolve(ITEM_CONTAINER_PROVIDERS_KEY).resolve(item.getPath() + ".json");
-            JsonConfigFileUtil.saveToFile(path.toFile(), jsonElement);
-        }
+    private static void registerIntegrationProviders() {
+        BagOfHoldingIntegration.registerProviders();
+        BackpackedIntegration.registerProviders();
+        SimpleBackpackIntegration.registerProviders();
+        InmisIntegration.registerProviders();
+        ReinforcedShulkerBoxesIntegration.registerProviders();
     }
 
-    public static void registerBuiltInProvider(ItemLike item, ItemContainerProvider provider) {
-        registerBuiltInProvider(Registry.ITEM.getKey(item.asItem()), provider);
-    }
-
-    public static void registerBuiltInProvider(ResourceLocation item, ItemContainerProvider provider) {
-        BUILT_IN_PROVIDERS.put(item, provider);
+    private static void registerItemContainerProviderSerializers() {
+        ItemContainerProviderSerializers.register(BlockEntityProvider.class, EasyShulkerBoxes.id("block_entity"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toBlockEntityProvider));
+        ItemContainerProviderSerializers.register(BlockEntityViewProvider.class, EasyShulkerBoxes.id("block_entity_view"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toBlockEntityViewProvider));
+        ItemContainerProviderSerializers.register(BundleProvider.class, EasyShulkerBoxes.id("bundle"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toBundleProvider));
+        ItemContainerProviderSerializers.register(EnderChestProvider.class, EasyShulkerBoxes.id("ender_chest"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toEnderChestProvider));
+        ItemContainerProviderSerializers.register(SimpleItemProvider.class, EasyShulkerBoxes.id("item"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toSimpleItemContainerProvider));
+        ItemContainerProviderSerializers.register(MapProvider.class, EasyShulkerBoxes.id("map"), jsonElement -> new MapProvider());
     }
 }

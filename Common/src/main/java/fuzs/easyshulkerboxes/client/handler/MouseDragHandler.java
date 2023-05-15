@@ -6,7 +6,7 @@ import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.mixin.client.accessor.AbstractContainerScreenAccessor;
-import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
+import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProvidersListener;
 import fuzs.puzzleslib.client.gui.screens.CommonScreens;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -38,7 +38,7 @@ public class MouseDragHandler {
     public Optional<Unit> onMousePress(Screen screen, double mouseX, double mouseY, int button) {
         if (!shouldHandleMouseDrag(screen)) return Optional.empty();
         ItemStack carriedStack = ((AbstractContainerScreen<?>) screen).getMenu().getCarried();
-        ItemContainerProvider provider = ItemContainerProviders.INSTANCE.get(carriedStack.getItem());
+        ItemContainerProvider provider = ItemContainerProvidersListener.INSTANCE.get(carriedStack.getItem());
         Minecraft minecraft = CommonScreens.INSTANCE.getMinecraft(screen);
         if (button == 1 && provider != null && provider.allowsPlayerInteractions(carriedStack, minecraft.player)) {
             Slot slot = ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$findSlot(mouseX, mouseY);
@@ -67,7 +67,7 @@ public class MouseDragHandler {
             AbstractContainerMenu menu = ((AbstractContainerScreen<?>) screen).getMenu();
             if (slot != null && menu.canDragTo(slot) && !this.containerDragSlots.contains(slot)) {
                 ItemStack carriedStack = menu.getCarried();
-                ItemContainerProvider provider = ItemContainerProviders.INSTANCE.get(carriedStack.getItem());
+                ItemContainerProvider provider = ItemContainerProvidersListener.INSTANCE.get(carriedStack.getItem());
                 Objects.requireNonNull(provider, "provider is null");
                 Minecraft minecraft = CommonScreens.INSTANCE.getMinecraft(screen);
                 boolean interact = false;
