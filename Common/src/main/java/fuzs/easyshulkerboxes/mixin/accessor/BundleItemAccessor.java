@@ -1,4 +1,4 @@
-package fuzs.easyshulkerboxes.mixin.client.accessor;
+package fuzs.easyshulkerboxes.mixin.accessor;
 
 import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;

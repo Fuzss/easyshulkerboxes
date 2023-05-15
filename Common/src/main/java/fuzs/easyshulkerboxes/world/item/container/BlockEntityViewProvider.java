@@ -48,7 +48,7 @@ public class BlockEntityViewProvider extends BlockEntityProvider {
     }
 
     @Override
-    public boolean canPlayerUseContainer(ItemStack containerStack, Player player) {
+    public boolean allowsPlayerInteractions(ItemStack containerStack, Player player) {
         return false;
     }
 }

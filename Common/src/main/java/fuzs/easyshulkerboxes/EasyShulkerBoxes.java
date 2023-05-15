@@ -49,6 +49,10 @@ public class EasyShulkerBoxes implements ModConstructor {
         ModRegistry.touch();
         registerMessages();
     }
+    
+    public static ResourceLocation id(String path) {
+        return new ResourceLocation(MOD_ID, path);
+    }
 
     private static void registerMessages() {
         NETWORK.register(C2SCurrentSlotMessage.class, C2SCurrentSlotMessage::new, MessageDirection.TO_SERVER);
@@ -106,11 +110,11 @@ public class EasyShulkerBoxes implements ModConstructor {
     }
 
     private static void registerItemContainerProviderSerializers() {
-        ItemContainerProviderSerializers.register(BlockEntityProvider.class, new ResourceLocation(MOD_ID, "block_entity"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toBlockEntityProvider));
-        ItemContainerProviderSerializers.register(BlockEntityViewProvider.class, new ResourceLocation(MOD_ID, "block_entity_view"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toBlockEntityViewProvider));
-        ItemContainerProviderSerializers.register(BundleProvider.class, new ResourceLocation(MOD_ID, "bundle"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toBundleProvider));
-        ItemContainerProviderSerializers.register(EnderChestProvider.class, new ResourceLocation(MOD_ID, "ender_chest"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toEnderChestProvider));
-        ItemContainerProviderSerializers.register(SimpleItemProvider.class, new ResourceLocation(MOD_ID, "item"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toSimpleItemContainerProvider));
-        ItemContainerProviderSerializers.register(MapProvider.class, new ResourceLocation(MOD_ID, "map"), jsonElement -> new MapProvider());
+        ItemContainerProviderSerializers.register(BlockEntityProvider.class, id("block_entity"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toBlockEntityProvider));
+        ItemContainerProviderSerializers.register(BlockEntityViewProvider.class, id("block_entity_view"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toBlockEntityViewProvider));
+        ItemContainerProviderSerializers.register(BundleProvider.class, id("bundle"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toBundleProvider));
+        ItemContainerProviderSerializers.register(EnderChestProvider.class, id("ender_chest"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toEnderChestProvider));
+        ItemContainerProviderSerializers.register(SimpleItemProvider.class, id("item"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toSimpleItemContainerProvider));
+        ItemContainerProviderSerializers.register(MapProvider.class, id("map"), jsonElement -> new MapProvider());
     }
 }

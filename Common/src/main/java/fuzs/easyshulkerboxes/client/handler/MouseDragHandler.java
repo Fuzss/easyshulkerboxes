@@ -8,7 +8,7 @@ import fuzs.easyshulkerboxes.config.ServerConfig;
 import fuzs.easyshulkerboxes.mixin.client.accessor.AbstractContainerScreenAccessor;
 import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
 import fuzs.puzzleslib.client.gui.screens.CommonScreens;
-import fuzs.puzzleslib.proxy.Proxy;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -18,7 +18,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
@@ -40,7 +39,8 @@ public class MouseDragHandler {
         if (!shouldHandleMouseDrag(screen)) return Optional.empty();
         ItemStack carriedStack = ((AbstractContainerScreen<?>) screen).getMenu().getCarried();
         ItemContainerProvider provider = ItemContainerProviders.INSTANCE.get(carriedStack.getItem());
-        if (button == 1 && provider != null && provider.canPlayerUseContainer(carriedStack, Proxy.INSTANCE.getClientPlayer())) {
+        Minecraft minecraft = CommonScreens.INSTANCE.getMinecraft(screen);
+        if (button == 1 && provider != null && provider.allowsPlayerInteractions(carriedStack, minecraft.player)) {
             Slot slot = ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$findSlot(mouseX, mouseY);
             if (slot != null && slot.hasItem()) {
                 this.containerDragType = ContainerDragType.INSERT;
@@ -68,13 +68,13 @@ public class MouseDragHandler {
             if (slot != null && menu.canDragTo(slot) && !this.containerDragSlots.contains(slot)) {
                 ItemStack carriedStack = menu.getCarried();
                 ItemContainerProvider provider = ItemContainerProviders.INSTANCE.get(carriedStack.getItem());
-                Objects.requireNonNull(provider, "attempting to drag item with invalid provider");
+                Objects.requireNonNull(provider, "provider is null");
+                Minecraft minecraft = CommonScreens.INSTANCE.getMinecraft(screen);
                 boolean interact = false;
-                if (this.containerDragType == ContainerDragType.INSERT && slot.hasItem() && provider.canAddItem(carriedStack, slot.getItem(), Proxy.INSTANCE.getClientPlayer())) {
+                if (this.containerDragType == ContainerDragType.INSERT && slot.hasItem() && provider.canAddItem(carriedStack, slot.getItem(), minecraft.player)) {
                     interact = true;
                 } else if (this.containerDragType == ContainerDragType.REMOVE && !slot.hasItem()) {
-                    Player player = CommonScreens.INSTANCE.getMinecraft(screen).player;
-                    if (!provider.getItemContainer(carriedStack, player, false).isEmpty()) {
+                    if (!provider.getItemContainer(carriedStack, minecraft.player, false).isEmpty()) {
                         interact = true;
                     }
                 }

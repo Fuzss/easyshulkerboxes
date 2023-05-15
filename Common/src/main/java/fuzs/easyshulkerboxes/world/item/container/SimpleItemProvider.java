@@ -54,7 +54,7 @@ public class SimpleItemProvider extends NestedTagItemProvider {
     }
 
     @Override
-    protected TooltipComponent internal$getTooltipImage(ItemStack stack, NonNullList<ItemStack> items) {
+    protected TooltipComponent createTooltipImageComponent(ItemStack containerStack, NonNullList<ItemStack> items) {
         return new ContainerItemTooltip(items, this.getInventoryWidth(), this.getInventoryHeight(), this.getBackgroundColor());
     }
 

@@ -9,6 +9,7 @@ import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProviderSerializers;
 import fuzs.easyshulkerboxes.core.CommonAbstractions;
 import fuzs.easyshulkerboxes.network.S2CSyncItemContainerProvider;
+import fuzs.easyshulkerboxes.world.item.container.ForwardingItemContainerProvider;
 import fuzs.puzzleslib.core.ModLoaderEnvironment;
 import fuzs.puzzleslib.json.JsonConfigFileUtil;
 import net.minecraft.core.Registry;
@@ -56,7 +57,7 @@ public class ItemContainerProviders extends SimpleJsonResourceReloadListener {
                 // modded items may not be present, but we register default providers for some
                 if (!Registry.ITEM.containsKey(item)) continue;
                 ItemContainerProvider provider = ItemContainerProviderSerializers.deserialize(jsonObject);
-                builder.put(Registry.ITEM.get(item), provider);
+                builder.put(Registry.ITEM.get(item), new ForwardingItemContainerProvider(provider));
             } catch (Exception e) {
                 EasyShulkerBoxes.LOGGER.error("Couldn't parse item container provider {}", item, e);
             }

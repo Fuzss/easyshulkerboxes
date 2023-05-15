@@ -1,7 +1,7 @@
 package fuzs.easyshulkerboxes.world.item.container.helper;
 
 import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
-import fuzs.easyshulkerboxes.mixin.client.accessor.BundleItemAccessor;
+import fuzs.easyshulkerboxes.mixin.accessor.BundleItemAccessor;
 import fuzs.easyshulkerboxes.world.inventory.SimpleContainerWithSlots;
 import fuzs.easyshulkerboxes.world.inventory.helper.ContainerSlotHelper;
 import net.minecraft.core.NonNullList;

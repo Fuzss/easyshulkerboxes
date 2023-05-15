@@ -2,7 +2,6 @@ package fuzs.easyshulkerboxes.config;
 
 import com.google.common.collect.ImmutableMap;
 import fuzs.easyshulkerboxes.client.handler.KeyBindingHandler;
-import fuzs.easyshulkerboxes.client.init.ClientModRegistry;
 import fuzs.puzzleslib.proxy.Proxy;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -18,8 +17,8 @@ public abstract class TooltipContentsActivation {
 
         @Override
         public Component getComponent(String translationId) {
-            String keyName = ClientModRegistry.TOGGLE_VISUAL_CONTENTS_KEY_MAPPING.getTranslatedKeyMessage().getString().toUpperCase(Locale.ROOT);
-            return Component.translatable(translationId, Component.translatable("item.container.tooltip.press"), Component.literal(keyName).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY);
+            String keyName = KeyBindingHandler.TOGGLE_VISUAL_CONTENTS_KEY_MAPPING.getTranslatedKeyMessage().getString().toUpperCase(Locale.ROOT);
+            return Component.translatable(translationId, Component.translatable(TOOLTIP_PRESS_TRANSLATION_KEY), Component.literal(keyName).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY);
         }
 
         @Override
@@ -31,8 +30,8 @@ public abstract class TooltipContentsActivation {
 
         @Override
         public Component getComponent(String translationId) {
-            String keyName = ClientModRegistry.TOGGLE_SELECTED_TOOLTIPS_KEY_MAPPING.getTranslatedKeyMessage().getString().toUpperCase(Locale.ROOT);
-            return Component.translatable(translationId, Component.translatable("item.container.tooltip.press"), Component.literal(keyName).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY);
+            String keyName = KeyBindingHandler.TOGGLE_SELECTED_TOOLTIPS_KEY_MAPPING.getTranslatedKeyMessage().getString().toUpperCase(Locale.ROOT);
+            return Component.translatable(translationId, Component.translatable(TOOLTIP_PRESS_TRANSLATION_KEY), Component.literal(keyName).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY);
         }
 
         @Override
@@ -69,30 +68,32 @@ public abstract class TooltipContentsActivation {
         }
     };
 
-    public static final String REVEAL_CONTENTS_TRANSLATION_ID = "item.container.tooltip.revealContents";
-    public static final String SELECTED_ITEM_TOOLTIP_TRANSLATION_ID = "item.container.tooltip.selectedItemTooltip";
+    public static final String REVEAL_CONTENTS_TRANSLATION_KEY = "item.container.tooltip.revealContents";
+    public static final String SELECTED_ITEM_TOOLTIP_TRANSLATION_KEY = "item.container.tooltip.selectedItemTooltip";
+    public static final String TOOLTIP_HOLD_TRANSLATION_KEY = "item.container.tooltip.hold";
+    public static final String TOOLTIP_PRESS_TRANSLATION_KEY = "item.container.tooltip.press";
     public static final Map<String, TooltipContentsActivation> REVEAL_CONTENTS_BY_NAME = Stream.of(revealContents()).collect(ImmutableMap.toImmutableMap(Object::toString, Function.identity()));
     public static final Map<String, TooltipContentsActivation> SELECTED_ITEM_TOOLTIP_BY_NAME = Stream.of(selectedItemTooltip()).collect(ImmutableMap.toImmutableMap(Object::toString, Function.identity()));
 
-    private final String string;
+    private final String displayString;
     private final String name;
 
     public TooltipContentsActivation(String name) {
         this(name, name);
     }
 
-    private TooltipContentsActivation(String string, String name) {
-        this.string = string;
+    private TooltipContentsActivation(String displayString, String name) {
+        this.displayString = displayString;
         this.name = name;
     }
 
     @Override
     public String toString() {
-        return this.string;
+        return this.displayString;
     }
 
     public Component getComponent(String translationId) {
-        return Component.translatable(translationId, Component.translatable("item.container.tooltip.hold"), Component.literal(this.name).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY);
+        return Component.translatable(translationId, Component.translatable(TOOLTIP_HOLD_TRANSLATION_KEY), Component.literal(this.name).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY);
     }
 
     public abstract boolean isActive();

@@ -22,30 +22,30 @@ import java.util.Optional;
 abstract class ItemStackMixin {
 
     @Inject(method = "overrideStackedOnOther", at = @At("HEAD"), cancellable = true)
-    public void easyshulkerboxes$overrideStackedOnOther(Slot slot, ClickAction clickAction, Player player, CallbackInfoReturnable<Boolean> callback) {
-        ItemStack containerStack = (ItemStack) (Object) this;
+    public void overrideStackedOnOther(Slot slot, ClickAction clickAction, Player player, CallbackInfoReturnable<Boolean> callback) {
+        ItemStack containerStack = ItemStack.class.cast(this);
         ItemContainerProvider provider = ItemContainerProviders.INSTANCE.get(containerStack.getItem());
-        if (provider != null && provider.canPlayerUseContainer(containerStack, player)) {
-            boolean success = ContainerItemHelper.overrideStackedOnOther(() -> provider.getItemContainer(containerStack, player, true), slot, clickAction, player, stack -> provider.getAcceptableItemCount(containerStack, stack, player), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
-            if (success) provider.broadcastContainerChanges(player);
-            callback.setReturnValue(success);
+        if (provider != null && provider.allowsPlayerInteractions(containerStack, player)) {
+            boolean result = ContainerItemHelper.overrideStackedOnOther(() -> provider.getItemContainer(containerStack, player, true), slot, clickAction, player, stack -> provider.getAcceptableItemCount(containerStack, stack, player), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
+            if (result) provider.broadcastContainerChanges(player);
+            callback.setReturnValue(result);
         }
     }
 
     @Inject(method = "overrideOtherStackedOnMe", at = @At("HEAD"), cancellable = true)
-    public void easyshulkerboxes$overrideOtherStackedOnMe(ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, CallbackInfoReturnable<Boolean> callback) {
-        ItemStack containerStack = (ItemStack) (Object) this;
+    public void overrideOtherStackedOnMe(ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, CallbackInfoReturnable<Boolean> callback) {
+        ItemStack containerStack = ItemStack.class.cast(this);
         ItemContainerProvider provider = ItemContainerProviders.INSTANCE.get(containerStack.getItem());
-        if (provider != null && provider.canPlayerUseContainer(containerStack, player)) {
-            boolean success = ContainerItemHelper.overrideOtherStackedOnMe(() -> provider.getItemContainer(containerStack, player, true), stackOnMe, slot, clickAction, player, slotAccess, stack -> provider.getAcceptableItemCount(containerStack, stack, player), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
-            if (success) provider.broadcastContainerChanges(player);
-            callback.setReturnValue(success);
+        if (provider != null && provider.allowsPlayerInteractions(containerStack, player)) {
+            boolean result = ContainerItemHelper.overrideOtherStackedOnMe(() -> provider.getItemContainer(containerStack, player, true), stackOnMe, slot, clickAction, player, slotAccess, stack -> provider.getAcceptableItemCount(containerStack, stack, player), SoundEvents.BUNDLE_INSERT, SoundEvents.BUNDLE_REMOVE_ONE);
+            if (result) provider.broadcastContainerChanges(player);
+            callback.setReturnValue(result);
         }
     }
 
     @Inject(method = "getTooltipImage", at = @At("HEAD"), cancellable = true)
-    public void easyshulkerboxes$getTooltipImage(CallbackInfoReturnable<Optional<TooltipComponent>> callback) {
-        ItemStack containerStack = (ItemStack) (Object) this;
+    public void getTooltipImage(CallbackInfoReturnable<Optional<TooltipComponent>> callback) {
+        ItemStack containerStack = ItemStack.class.cast(this);
         ItemContainerProvider provider = ItemContainerProviders.INSTANCE.get(containerStack.getItem());
         if (provider != null && provider.canProvideTooltipImage(containerStack, Proxy.INSTANCE.getClientPlayer())) {
             callback.setReturnValue(provider.getTooltipImage(containerStack, Proxy.INSTANCE.getClientPlayer()));

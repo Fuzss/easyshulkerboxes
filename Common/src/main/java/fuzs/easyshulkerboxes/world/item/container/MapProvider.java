@@ -20,7 +20,7 @@ import java.util.Optional;
 public class MapProvider implements ItemContainerProvider {
 
     @Override
-    public boolean canPlayerUseContainer(ItemStack containerStack, Player player) {
+    public boolean allowsPlayerInteractions(ItemStack containerStack, Player player) {
         return false;
     }
 
@@ -41,11 +41,6 @@ public class MapProvider implements ItemContainerProvider {
 
     @Override
     public void setItemContainerData(ItemStack containerStack, ListTag itemsTag, String nbtKey) {
-
-    }
-
-    @Override
-    public void broadcastContainerChanges(Player player) {
 
     }
 

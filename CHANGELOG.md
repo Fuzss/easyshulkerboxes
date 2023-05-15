@@ -9,7 +9,10 @@ The format is based on [Keep a Changelog].
 - This system allows users to manually add support for other mods (intended for backpack and shulker box mods, check out the documentation on GitHub)
 - Default support is available for the following mods: Bag Of Holding (Forge+Fabric), Backpacked (Forge), Inmis (Fabric), Simple Backpack (Fabric), Reinforced Shulker Boxes (Fabric)
 - Also note that mod support only works for the default config settings of those mods. When changing backpack sizes in a mod, you'll have to provide your own data pack to adjust the sizes for Easy Shulker Boxes
+### Changed
+- Container item indicators (the small `+` shown when holding an item stack) now comes in different colors, showing if other stacks of the same item were found in the container
 ### Fixed
+- Fixed bundle interactions not working on servers
 - Fixed bundles still showing the vanilla tooltip image when empty
 - Fixed compatibility with Mouse Tweaks mod
 ### Removed

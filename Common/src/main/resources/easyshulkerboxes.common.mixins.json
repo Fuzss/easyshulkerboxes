@@ -6,15 +6,15 @@
   "refmap": "easyshulkerboxes.refmap.json",
   "mixins": [
     "ItemStackMixin",
-    "ShulkerBoxBlockMixin"
+    "ShulkerBoxBlockMixin",
+    "accessor.BundleItemAccessor"
   ],
   "client": [
     "client.AbstractContainerScreenMixin",
     "client.ItemRendererMixin",
     "client.MultiPlayerGameModeMixin",
     "client.accessor.AbstractContainerMenuAccessor",
-    "client.accessor.AbstractContainerScreenAccessor",
-    "client.accessor.BundleItemAccessor"
+    "client.accessor.AbstractContainerScreenAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

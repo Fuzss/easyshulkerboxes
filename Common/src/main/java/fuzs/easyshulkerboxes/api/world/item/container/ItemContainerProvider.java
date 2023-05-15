@@ -15,27 +15,29 @@ import java.util.Optional;
 /**
  * an interface that when implemented represents a provider for any item to enable bundle-like inventory item interactions (extracting and adding items via right-clicking on the item) and bundle-like tooltips
  * <p>a container does not necessarily need to provide both item interactions and tooltips, what is provided is defined
- * by implementing {@link ItemContainerProvider#canPlayerUseContainer} and {@link ItemContainerProvider#canProvideTooltipImage}
+ * by implementing {@link ItemContainerProvider#allowsPlayerInteractions} and {@link ItemContainerProvider#canProvideTooltipImage}
  * <p>this overrides any already implemented behavior (the default providers in Easy Shulker Boxes actually do this for vanilla bundles)
  */
 public interface ItemContainerProvider {
 
     /**
-     * does this provider support item inventory interactions (extracting and adding items)
+     * Does this provider support item inventory interactions (extracting and adding items) on the given <code>containterStack</code>.
      *
      * @param containerStack the container stack
      * @param player         the player performing the interaction
      * @return are inventory interactions allowed (is a container present on this item)
      */
-    boolean canPlayerUseContainer(ItemStack containerStack, Player player);
+    default boolean allowsPlayerInteractions(ItemStack containerStack, Player player) {
+        return containerStack.getCount() == 1;
+    }
 
     /**
-     * get the container provided by <code>stack</code> as a {@link SimpleContainer}
+     * Get the container implementation provided by <code>containerStack</code> as a {@link SimpleContainer}, must not return <code>null</code>.
      *
      * @param containerStack item stack providing the container
      * @param player         player involved in the interaction
      * @param allowSaving    attach a saving listener to the container (this is set to <code>false</code> when creating a container e.g. for rendering a tooltip)
-     * @return the container
+     * @return the provided container
      */
     SimpleContainer getItemContainer(ItemStack containerStack, Player player, boolean allowSaving);
 
@@ -57,12 +59,11 @@ public interface ItemContainerProvider {
      * @param containerStack stack to read item tag from
      * @return the tag
      */
-    @Nullable
-    CompoundTag getItemContainerData(ItemStack containerStack);
+    @Nullable CompoundTag getItemContainerData(ItemStack containerStack);
 
     /**
      * sets items stored in a {@link ListTag} to an item stack's tag, if the list is empty the tag key (<code>nbtKey</code>)
-     * is properly removed (possibly removing the whole stack tag if it is empty afterwards)
+     * is properly removed (possibly removing the whole stack tag if it is empty afterward)
      *
      * @param containerStack stack to set item tag data for
      * @param itemsTag       items to save as {@link ListTag}
@@ -77,7 +78,9 @@ public interface ItemContainerProvider {
      *
      * @param player the player performing the item interaction
      */
-    void broadcastContainerChanges(Player player);
+    default void broadcastContainerChanges(Player player) {
+
+    }
 
     /**
      * is <code>stack</code> allowed to be added to the container supplied by <code>containerStack</code>
@@ -87,28 +90,49 @@ public interface ItemContainerProvider {
      * @param stackToAdd     the stack to be added to the container
      * @return is <code>stack</code> allowed to be added to the container
      */
-    boolean isItemAllowedInContainer(ItemStack containerStack, ItemStack stackToAdd);
+    default boolean isItemAllowedInContainer(ItemStack containerStack, ItemStack stackToAdd) {
+        return true;
+    }
 
     /**
-     * is there enough space in the container provided by <code>containerStack</code> to add <code>stack</code> (not necessarily the full stack)
+     * Is there enough space in the container provided by <code>containerStack</code> to add <code>stack</code> (not necessarily the full stack).
+     * <p>Before this is called {@link #allowsPlayerInteractions(ItemStack, Player)} and {@link #isItemAllowedInContainer(ItemStack, ItemStack)} are checked.
      *
      * @param containerStack the item stack providing the container to add <code>stack</code> to
      * @param stackToAdd     the stack to be added to the container
      * @param player         the player interacting with both items
-     * @return is adding any portion of <code>stack</code> to the container possible
+     * @return is adding any portion of <code>stackToAdd</code> to the container possible
      */
-    boolean canAddItem(ItemStack containerStack, ItemStack stackToAdd, Player player);
+    default boolean canAddItem(ItemStack containerStack, ItemStack stackToAdd, Player player) {
+        return this.getItemContainer(containerStack, player, false).canAddItem(stackToAdd);
+    }
 
     /**
-     * how much space is available in the container provided by <code>containerStack</code> to add <code>stack</code>
-     * <p>mainly used by bundles, otherwise {@link ItemContainerProvider#canAddItem} should be enough
+     * Is there any item of the same type as <code>stackToAdd</code> already in the container provided by <code>containerStack</code>.
+     * <p>Before this is called {@link #allowsPlayerInteractions(ItemStack, Player)} and {@link #isItemAllowedInContainer(ItemStack, ItemStack)} are checked.
+     *
+     * @param containerStack the item stack providing the container to add <code>stack</code> to
+     * @param stackToAdd     the stack to be searched for in the container
+     * @param player         the player interacting with both items
+     * @return is any item of the same type as <code>stackToAdd</code> already in the container
+     */
+    default boolean hasAnyOf(ItemStack containerStack, ItemStack stackToAdd, Player player) {
+        return this.getItemContainer(containerStack, player, false).hasAnyMatching(stack -> stack.sameItem(stackToAdd));
+    }
+
+    /**
+     * How much space is available in the container provided by <code>containerStack</code> to add <code>stackToAdd</code>.
+     * <p>Mainly used by bundles, otherwise {@link ItemContainerProvider#canAddItem} should be enough.
+     * <p>Before this is called {@link #allowsPlayerInteractions(ItemStack, Player)} and {@link #isItemAllowedInContainer(ItemStack, ItemStack)} are checked.
      *
      * @param containerStack the item stack providing the container to add <code>stack</code> to
      * @param stackToAdd     the stack to be added to the container
      * @param player         the player interacting with both items
-     * @return is adding any portion of <code>stack</code> to the container possible
+     * @return the portion of <code>stackToAdd</code> that can be added to the container
      */
-    int getAcceptableItemCount(ItemStack containerStack, ItemStack stackToAdd, Player player);
+    default int getAcceptableItemCount(ItemStack containerStack, ItemStack stackToAdd, Player player) {
+        return stackToAdd.getCount();
+    }
 
     /**
      * does this provider support an image tooltip

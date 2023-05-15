@@ -27,7 +27,7 @@ public abstract class ExpandableClientTooltipComponent implements ClientTooltipC
     public final int getWidth(Font font) {
         TooltipContentsActivation activation = EasyShulkerBoxes.CONFIG.get(ClientConfig.class).revealContents;
         if (!activation.isActive()) {
-            Component component = activation.getComponent(TooltipContentsActivation.REVEAL_CONTENTS_TRANSLATION_ID);
+            Component component = activation.getComponent(TooltipContentsActivation.REVEAL_CONTENTS_TRANSLATION_KEY);
             return font.width(component);
         }
         return this.getExpandedWidth(font);
@@ -39,7 +39,7 @@ public abstract class ExpandableClientTooltipComponent implements ClientTooltipC
     public final void renderText(Font font, int mouseX, int mouseY, Matrix4f matrix4f, MultiBufferSource.BufferSource bufferSource) {
         TooltipContentsActivation activation = EasyShulkerBoxes.CONFIG.get(ClientConfig.class).revealContents;
         if (!activation.isActive()) {
-            Component component = activation.getComponent(TooltipContentsActivation.REVEAL_CONTENTS_TRANSLATION_ID);
+            Component component = activation.getComponent(TooltipContentsActivation.REVEAL_CONTENTS_TRANSLATION_KEY);
             font.drawInBatch(component, (float) mouseX, (float) mouseY, -1, true, matrix4f, bufferSource, false, 0, 15728880);
         }
     }

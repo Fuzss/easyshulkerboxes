@@ -46,7 +46,7 @@ public class EnderChestProvider extends AbstractItemContainerProvider {
     }
 
     @Override
-    protected TooltipComponent internal$getTooltipImage(ItemStack stack, NonNullList<ItemStack> items) {
+    protected TooltipComponent createTooltipImageComponent(ItemStack containerStack, NonNullList<ItemStack> items) {
         return new ContainerItemTooltip(items, 9, 3, DEFAULT_ENDER_CHEST_COLOR);
     }
 

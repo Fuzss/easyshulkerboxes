@@ -1,7 +1,7 @@
 package fuzs.easyshulkerboxes.world.item.container;
 
 import com.google.gson.JsonObject;
-import fuzs.easyshulkerboxes.mixin.client.accessor.BundleItemAccessor;
+import fuzs.easyshulkerboxes.mixin.accessor.BundleItemAccessor;
 import fuzs.easyshulkerboxes.world.inventory.tooltip.ModBundleTooltip;
 import fuzs.easyshulkerboxes.world.item.container.helper.ContainerItemHelper;
 import net.minecraft.core.NonNullList;
@@ -38,13 +38,13 @@ public class BundleProvider extends NestedTagItemProvider {
     }
 
     @Override
-    protected boolean internal$canAddItem(SimpleContainer container, ItemStack containerStack, ItemStack stack) {
-        return ContainerItemHelper.getAvailableBundleItemSpace(containerStack, stack, this.capacity) > 0;
+    public boolean canAddItem(ItemStack containerStack, ItemStack stackToAdd, Player player) {
+        return ContainerItemHelper.getAvailableBundleItemSpace(containerStack, stackToAdd, this.capacity) > 0;
     }
 
     @Override
-    protected int internal$getAcceptableItemCount(SimpleContainer container, ItemStack containerStack, ItemStack stack) {
-        return Math.min(ContainerItemHelper.getAvailableBundleItemSpace(containerStack, stack, this.capacity), super.internal$getAcceptableItemCount(container, containerStack, stack));
+    public int getAcceptableItemCount(ItemStack containerStack, ItemStack stackToAdd, Player player) {
+        return Math.min(ContainerItemHelper.getAvailableBundleItemSpace(containerStack, stackToAdd, this.capacity), super.getAcceptableItemCount(containerStack, stackToAdd, player));
     }
 
     @Override
@@ -54,16 +54,14 @@ public class BundleProvider extends NestedTagItemProvider {
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack containerStack, Player player) {
-        if (this.hasItemContainerData(containerStack)) {
-            return super.getTooltipImage(containerStack, player);
-        }
         // make sure to always override bundle tooltip, as otherwise vanilla tooltip would show for empty bundles
-        return Optional.empty();
+        if (!this.hasItemContainerData(containerStack)) return Optional.empty();
+        return super.getTooltipImage(containerStack, player);
     }
 
     @Override
-    protected TooltipComponent internal$getTooltipImage(ItemStack stack, NonNullList<ItemStack> items) {
-        return new ModBundleTooltip(items, BundleItemAccessor.easyshulkerboxes$getContentWeight(stack) >= this.capacity, this.getBackgroundColor());
+    protected TooltipComponent createTooltipImageComponent(ItemStack containerStack, NonNullList<ItemStack> items) {
+        return new ModBundleTooltip(items, BundleItemAccessor.easyshulkerboxes$getContentWeight(containerStack) >= this.capacity, this.getBackgroundColor());
     }
 
     @Override
