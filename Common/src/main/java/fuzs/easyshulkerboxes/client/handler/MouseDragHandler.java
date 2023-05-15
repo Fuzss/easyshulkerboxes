@@ -35,7 +35,7 @@ public class MouseDragHandler {
     @Nullable
     private ContainerDragType containerDragType;
 
-    public Optional<Unit> onMousePress(Screen screen, double mouseX, double mouseY, int button) {
+    public Optional<Unit> onBeforeMousePressed(Screen screen, double mouseX, double mouseY, int button) {
         if (!shouldHandleMouseDrag(screen)) return Optional.empty();
         ItemStack carriedStack = ((AbstractContainerScreen<?>) screen).getMenu().getCarried();
         ItemContainerProvider provider = ItemContainerProvidersListener.INSTANCE.get(carriedStack.getItem());
@@ -55,7 +55,7 @@ public class MouseDragHandler {
         return Optional.empty();
     }
 
-    public Optional<Unit> onMouseDrag(Screen screen, double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public Optional<Unit> onBeforeMouseDragged(Screen screen, double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (!shouldHandleMouseDrag(screen)) return Optional.empty();
         if (this.containerDragType != null) {
             if (button != 1) {
@@ -88,7 +88,7 @@ public class MouseDragHandler {
         return Optional.empty();
     }
 
-    public Optional<Unit> onMouseRelease(Screen screen, double mouseX, double mouseY, int button) {
+    public Optional<Unit> onBeforeMouseRelease(Screen screen, double mouseX, double mouseY, int button) {
         if (!shouldHandleMouseDrag(screen)) return Optional.empty();
         if (this.containerDragType != null) {
             if (button == 1 && !this.containerDragSlots.isEmpty()) {

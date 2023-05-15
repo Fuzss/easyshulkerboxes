@@ -1,6 +1,6 @@
 package fuzs.easyshulkerboxes.data;
 
-import fuzs.easyshulkerboxes.client.handler.KeyBindingHandler;
+import fuzs.easyshulkerboxes.client.handler.KeyBindingTogglesHandler;
 import fuzs.easyshulkerboxes.config.TooltipContentsActivation;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.data.DataGenerator;
@@ -18,8 +18,8 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(TooltipContentsActivation.SELECTED_ITEM_TOOLTIP_TRANSLATION_KEY, "%s %s to reveal selected item tooltip");
         this.add(TooltipContentsActivation.TOOLTIP_HOLD_TRANSLATION_KEY, "Hold");
         this.add(TooltipContentsActivation.TOOLTIP_PRESS_TRANSLATION_KEY, "Press");
-        this.add(KeyBindingHandler.TOGGLE_VISUAL_CONTENTS_KEY_MAPPING, "Toggle Visual Tooltip Contents");
-        this.add(KeyBindingHandler.TOGGLE_SELECTED_TOOLTIPS_KEY_MAPPING, "Toggle Selected Item Tooltips");
+        this.add(KeyBindingTogglesHandler.TOGGLE_VISUAL_CONTENTS_KEY_MAPPING, "Toggle Visual Tooltip Contents");
+        this.add(KeyBindingTogglesHandler.TOGGLE_SELECTED_TOOLTIPS_KEY_MAPPING, "Toggle Selected Item Tooltips");
     }
 
     public void add(KeyMapping keyMapping, String value) {

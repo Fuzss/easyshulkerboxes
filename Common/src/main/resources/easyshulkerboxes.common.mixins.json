@@ -14,7 +14,8 @@
     "client.ItemRendererMixin",
     "client.MultiPlayerGameModeMixin",
     "client.accessor.AbstractContainerMenuAccessor",
-    "client.accessor.AbstractContainerScreenAccessor"
+    "client.accessor.AbstractContainerScreenAccessor",
+    "client.accessor.ScreenAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

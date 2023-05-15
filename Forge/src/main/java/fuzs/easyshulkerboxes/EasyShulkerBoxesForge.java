@@ -1,6 +1,6 @@
 package fuzs.easyshulkerboxes;
 
-import fuzs.easyshulkerboxes.capability.ContainerSlotCapability;
+import fuzs.easyshulkerboxes.capability.ContainerClientInputCapability;
 import fuzs.easyshulkerboxes.capability.EnderChestMenuCapability;
 import fuzs.easyshulkerboxes.data.ModItemContainerProvider;
 import fuzs.easyshulkerboxes.data.ModLanguageProvider;
@@ -35,7 +35,7 @@ public class EasyShulkerBoxesForge {
 
     private static void registerCapabilities() {
         ForgeCapabilityController.setCapabilityToken(ModRegistry.ENDER_CHEST_MENU_CAPABILITY, new CapabilityToken<EnderChestMenuCapability>() {});
-        ForgeCapabilityController.setCapabilityToken(ModRegistry.CONTAINER_SLOT_CAPABILITY, new CapabilityToken<ContainerSlotCapability>() {});
+        ForgeCapabilityController.setCapabilityToken(ModRegistry.CONTAINER_SLOT_CAPABILITY, new CapabilityToken<ContainerClientInputCapability>() {});
     }
 
     private static void registerHandlers() {

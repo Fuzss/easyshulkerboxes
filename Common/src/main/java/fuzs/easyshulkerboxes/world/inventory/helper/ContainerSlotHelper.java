@@ -1,6 +1,6 @@
 package fuzs.easyshulkerboxes.world.inventory.helper;
 
-import fuzs.easyshulkerboxes.capability.ContainerSlotCapability;
+import fuzs.easyshulkerboxes.capability.ContainerClientInputCapability;
 import fuzs.easyshulkerboxes.init.ModRegistry;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
@@ -35,7 +35,17 @@ public class ContainerSlotHelper {
         });
     }
 
+    public static void extractSingleItem(Player player, boolean singleItemOnly) {
+        ModRegistry.CONTAINER_SLOT_CAPABILITY.maybeGet(player).ifPresent(capability -> {
+            capability.extractSingleItem(singleItemOnly);
+        });
+    }
+
     public static int getCurrentContainerSlot(Player player) {
-        return ModRegistry.CONTAINER_SLOT_CAPABILITY.maybeGet(player).map(ContainerSlotCapability::getCurrentSlot).orElse(-1);
+        return ModRegistry.CONTAINER_SLOT_CAPABILITY.maybeGet(player).map(ContainerClientInputCapability::getCurrentSlot).orElse(-1);
+    }
+
+    public static boolean extractSingleItemOnly(Player player) {
+        return ModRegistry.CONTAINER_SLOT_CAPABILITY.maybeGet(player).map(ContainerClientInputCapability::extractSingleItemOnly).orElse(false);
     }
 }

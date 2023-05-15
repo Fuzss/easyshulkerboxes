@@ -4,19 +4,22 @@ import fuzs.easyshulkerboxes.EasyShulkerBoxes;
 import fuzs.easyshulkerboxes.api.client.event.MouseDragEvents;
 import fuzs.easyshulkerboxes.api.event.PlayLevelSoundEvents;
 import fuzs.easyshulkerboxes.client.handler.EnderChestMenuClientHandler;
-import fuzs.easyshulkerboxes.client.handler.KeyBindingHandler;
+import fuzs.easyshulkerboxes.client.handler.KeyBindingTogglesHandler;
 import fuzs.easyshulkerboxes.client.handler.MouseDragHandler;
-import fuzs.easyshulkerboxes.client.handler.MouseScrollHandler;
+import fuzs.easyshulkerboxes.client.handler.ClientInputActionHandler;
 import fuzs.puzzleslib.client.core.ClientFactories;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
+import net.fabricmc.fabric.api.event.Event;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.resources.ResourceLocation;
 
 public class EasyShulkerBoxesFabricClient implements ClientModInitializer {
+    private static final ResourceLocation BEFORE_PHASE = EasyShulkerBoxes.id("before");
 
     @Override
     public void onInitializeClient() {
@@ -29,21 +32,29 @@ public class EasyShulkerBoxesFabricClient implements ClientModInitializer {
         ScreenEvents.BEFORE_INIT.register((client, _screen, scaledWidth, scaledHeight) -> {
             if (_screen instanceof AbstractContainerScreen<?>) {
                 ScreenMouseEvents.allowMouseScroll(_screen).register((screen, mouseX, mouseY, horizontalAmount, verticalAmount) -> {
-                    return MouseScrollHandler.onMouseScroll(screen, mouseX, mouseY, horizontalAmount, verticalAmount).isEmpty();
+                    return ClientInputActionHandler.onBeforeMouseScroll(screen, mouseX, mouseY, horizontalAmount, verticalAmount).isEmpty();
                 });
                 ScreenMouseEvents.allowMouseClick(_screen).register((Screen screen, double mouseX, double mouseY, int button) -> {
-                    return MouseDragHandler.INSTANCE.onMousePress(screen, mouseX, mouseY, button).isEmpty();
+                    return MouseDragHandler.INSTANCE.onBeforeMousePressed(screen, mouseX, mouseY, button).isEmpty();
+                });
+                ScreenMouseEvents.allowMouseClick(_screen).addPhaseOrdering(BEFORE_PHASE, Event.DEFAULT_PHASE);
+                ScreenMouseEvents.allowMouseClick(_screen).register(BEFORE_PHASE, (Screen screen, double mouseX, double mouseY, int button) -> {
+                    return ClientInputActionHandler.onBeforeMousePressed(screen, mouseX, mouseY, button).isEmpty();
                 });
                 ScreenMouseEvents.allowMouseRelease(_screen).register((Screen screen, double mouseX, double mouseY, int button) -> {
-                    return MouseDragHandler.INSTANCE.onMouseRelease(screen, mouseX, mouseY, button).isEmpty();
+                    return MouseDragHandler.INSTANCE.onBeforeMouseRelease(screen, mouseX, mouseY, button).isEmpty();
                 });
                 ScreenKeyboardEvents.allowKeyPress(_screen).register((Screen screen, int key, int scancode, int modifiers) -> {
-                    return KeyBindingHandler.onKeyPressed$Pre(screen, key, scancode, modifiers).isEmpty();
+                    return KeyBindingTogglesHandler.onBeforeKeyPressed(screen, key, scancode, modifiers).isEmpty();
                 });
+                ScreenKeyboardEvents.allowKeyPress(_screen).addPhaseOrdering(BEFORE_PHASE, Event.DEFAULT_PHASE);
+                ScreenKeyboardEvents.allowKeyPress(_screen).register(BEFORE_PHASE, (Screen screen, int key, int scancode, int modifiers) -> {
+                    return ClientInputActionHandler.onBeforeKeyPressed(screen, key, scancode, modifiers).isEmpty();
+                });
+                ScreenEvents.afterRender(_screen).register(ClientInputActionHandler::onAfterRender);
             }
         });
-        MouseDragEvents.BEFORE.register(MouseDragHandler.INSTANCE::onMouseDrag);
+        MouseDragEvents.BEFORE.register(MouseDragHandler.INSTANCE::onBeforeMouseDragged);
         PlayLevelSoundEvents.ENTITY.register(MouseDragHandler.INSTANCE::onPlaySoundAtPosition);
-//        ClientTickEvents.END_CLIENT_TICK.register(MouseScrollHandler::onClientTick$End);
     }
 }

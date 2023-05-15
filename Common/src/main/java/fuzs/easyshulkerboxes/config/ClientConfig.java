@@ -8,19 +8,23 @@ import java.util.Objects;
 public class ClientConfig implements ConfigCore {
     @Config(description = "Color item inventories on tooltips according to the container item's color.")
     public boolean colorfulTooltips = true;
-    @Config(description = "Select a key required to be held for seeing item inventory contents, otherwise show them always.")
-    @Config.AllowedValues(values = {"KEY", "ALWAYS", "SHIFT", "CONTROL", "ALT"})
+    @Config(name = "reveal_contents", description = "Select a modifier key required to be held for seeing item inventory contents, otherwise selecting \"KEY\" serves as a toggle.")
+    @Config.AllowedValues(values = {"KEY", "SHIFT", "CONTROL", "ALT"})
     String revealContentsRaw = TooltipContentsActivation.TOGGLE_VISUAL_CONTENTS_KEY.toString();
     @Config(description = "Render a white overlay or the hotbar selected item frame over the slot the next item will be taken out of when right-clicking the container item.")
     public SlotOverlay slotOverlay = SlotOverlay.HOVER;
     @Config(description = "Show an indicator on container items when the stack carried by the cursor can be added in your inventory.")
     public boolean containerItemIndicator = true;
-    @Config(description = "Show a tooltip for the item currently selected in a container item's tooltip next to the main tooltip, select a key required to be held to see that tooltip.")
-    @Config.AllowedValues(values = {"KEY", "ALWAYS", "SHIFT", "CONTROL", "ALT"})
+    @Config(name = "selected_item_tooltip", description = {"Show a tooltip for the item currently selected in a container item's tooltip next to the main tooltip.", "Select a modifier key required to be held to see that tooltip, otherwise selecting \"KEY\" serves as a toggle."})
+    @Config.AllowedValues(values = {"KEY", "SHIFT", "CONTROL", "ALT"})
     String selectedItemTooltipRaw = TooltipContentsActivation.TOGGLE_SELECTED_TOOLTIPS_KEY.toString();
+    @Config(name = "extract_single_item", description = "Select a modifier key required to be held to only extract a single item from container items instead of everything from the selected slot.")
+    @Config.AllowedValues(values = {"SHIFT", "CONTROL", "ALT"})
+    String extractSingleItemRaw = TooltipContentsActivation.CONTROL.toString();
 
     public TooltipContentsActivation revealContents;
     public TooltipContentsActivation selectedItemTooltip;
+    public TooltipContentsActivation extractSingleItem;
 
     @Override
     public void afterConfigReload() {
@@ -28,6 +32,8 @@ public class ClientConfig implements ConfigCore {
         Objects.requireNonNull(this.revealContents, "reveal contents is null");
         this.selectedItemTooltip = TooltipContentsActivation.SELECTED_ITEM_TOOLTIP_BY_NAME.get(this.selectedItemTooltipRaw);
         Objects.requireNonNull(this.selectedItemTooltip, "selected item tooltip is null");
+        this.extractSingleItem = TooltipContentsActivation.MODIFIER_KEYS_BY_NAME.get(this.extractSingleItemRaw);
+        Objects.requireNonNull(this.extractSingleItem, "extract single item is null");
     }
 
     public enum SlotOverlay {

@@ -75,30 +75,30 @@ public class ItemDecorationHelper {
     }
 
     public static void render(Font font, ItemStack stack, int itemPosX, int itemPosY, float blitOffset) {
-        resetRenderState();
         ItemContainerProvider provider = ItemContainerProvidersListener.INSTANCE.get(stack.getItem());
-        if (provider != null) {
-            DynamicItemDecorator itemDecorator = DECORATORS_CACHE.computeIfAbsent(provider, $ -> ItemDecorationHelper.getDynamicItemDecorator((AbstractContainerScreen<?> screen, ItemStack containerStack, ItemStack carriedStack) -> {
-                Minecraft minecraft = Minecraft.getInstance();
-                if (provider.canAddItem(containerStack, carriedStack, minecraft.player)) {
-                    if (provider.hasAnyOf(containerStack, carriedStack, minecraft.player)) {
-                        return ItemDecoratorType.PRESENT_AND_SPACE;
-                    }
-                    return ItemDecoratorType.SPACE;
-                } else if (provider.hasAnyOf(containerStack, carriedStack, minecraft.player)) {
-                    return ItemDecoratorType.PRESENT_NO_SPACE;
+        if (provider == null) return;
+        resetRenderState();
+        DynamicItemDecorator itemDecorator = DECORATORS_CACHE.computeIfAbsent(provider, $ -> ItemDecorationHelper.getDynamicItemDecorator((AbstractContainerScreen<?> screen, ItemStack containerStack, ItemStack carriedStack) -> {
+            Minecraft minecraft = Minecraft.getInstance();
+            if (provider.canAddItem(containerStack, carriedStack, minecraft.player)) {
+                if (provider.hasAnyOf(containerStack, carriedStack, minecraft.player)) {
+                    return ItemDecoratorType.PRESENT_AND_SPACE;
                 }
-                return ItemDecoratorType.NONE;
-            }, () -> EasyShulkerBoxes.CONFIG.get(ClientConfig.class).containerItemIndicator));
-            if (itemDecorator.renderItemDecorations(font, stack, itemPosX, itemPosY, blitOffset)) {
-                resetRenderState();
+                return ItemDecoratorType.SPACE;
+            } else if (provider.hasAnyOf(containerStack, carriedStack, minecraft.player)) {
+                return ItemDecoratorType.PRESENT_NO_SPACE;
             }
+            return ItemDecoratorType.NONE;
+        }, () -> EasyShulkerBoxes.CONFIG.get(ClientConfig.class).containerItemIndicator));
+        if (itemDecorator.renderItemDecorations(font, stack, itemPosX, itemPosY, blitOffset)) {
+            resetRenderState();
         }
     }
 
     private static void resetRenderState() {
         RenderSystem.enableTexture();
-        RenderSystem.enableDepthTest();
+        // this breaks trading discount strikethrough bar which will display behind the old price
+//        RenderSystem.enableDepthTest();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
     }

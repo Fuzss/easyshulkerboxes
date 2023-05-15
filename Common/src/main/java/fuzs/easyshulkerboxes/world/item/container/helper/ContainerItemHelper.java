@@ -15,11 +15,13 @@ import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.function.IntFunction;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
@@ -49,17 +51,21 @@ public class ContainerItemHelper {
         return simpleContainer;
     }
 
-    public static boolean overrideStackedOnOther(Supplier<SimpleContainer> supplier, Slot slot, ClickAction clickAction, Player player, ToIntFunction<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
+    public static boolean overrideStackedOnOther(Supplier<SimpleContainer> supplier, Slot slot, ClickAction clickAction, Player player, ToIntFunction<ItemStack> acceptableItemCount, SoundEvent insertSound, SoundEvent removeSound) {
         if (clickAction != ClickAction.SECONDARY) return false;
-        ItemStack hoveredStack = slot.getItem();
-        if (hoveredStack.isEmpty()) {
-            removeLastStack(supplier, player).ifPresent(stack1 -> {
+        ItemStack stackInSlot = slot.getItem();
+        boolean extractSingleItemOnly = ContainerSlotHelper.extractSingleItemOnly(player);
+        if (stackInSlot.isEmpty() || extractSingleItemOnly) {
+            ToIntFunction<ItemStack> amountToRemove = extractSingleItemOnly ? stack -> 1 : ItemStack::getCount;
+            removeLastStack(supplier, player, removedStack -> {
+                return stackInSlot.isEmpty() || ItemStack.isSameItemSameTags(stackInSlot, removedStack) && removedStack.getCount() <= stackInSlot.getMaxStackSize() - stackInSlot.getCount();
+            }, amountToRemove).ifPresent(removedStack -> {
+                addStack(supplier, player, slot.safeInsert(removedStack), acceptableItemCount);
                 player.playSound(removeSound, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
-                addStack(supplier, player, slot.safeInsert(stack1), itemFilter);
             });
         } else {
-            hoveredStack = slot.safeTake(hoveredStack.getCount(), hoveredStack.getCount(), player);
-            int transferredCount = addStack(supplier, player, hoveredStack, itemFilter);
+            ItemStack hoveredStack = slot.safeTake(stackInSlot.getCount(), stackInSlot.getCount(), player);
+            int transferredCount = addStack(supplier, player, hoveredStack, acceptableItemCount);
             hoveredStack.shrink(transferredCount);
             if (!hoveredStack.isEmpty()) {
                 slot.safeInsert(hoveredStack);
@@ -71,50 +77,86 @@ public class ContainerItemHelper {
         return true;
     }
 
-    public static boolean overrideOtherStackedOnMe(Supplier<SimpleContainer> supplier, ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, ToIntFunction<ItemStack> itemFilter, SoundEvent insertSound, SoundEvent removeSound) {
-        if (clickAction != ClickAction.SECONDARY || !slot.allowModification(player)) return false;
-        if (stackOnMe.isEmpty()) {
-            removeLastStack(supplier, player).ifPresent((p_186347_) -> {
+    public static boolean overrideOtherStackedOnMe(Supplier<SimpleContainer> supplier, ItemStack stackOnMe, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess, ToIntFunction<ItemStack> acceptableItemCount, SoundEvent insertSound, SoundEvent removeSound) {
+        if (!slot.allowModification(player)) return false;
+        boolean extractSingleItemOnly = ContainerSlotHelper.extractSingleItemOnly(player);
+        if (clickAction == ClickAction.SECONDARY && (stackOnMe.isEmpty() || extractSingleItemOnly)) {
+            ToIntFunction<ItemStack> amountToRemove = extractSingleItemOnly ? stack -> 1 : ItemStack::getCount;
+            Predicate<ItemStack> itemFilter = stackInSlot -> {
+                if (!stackOnMe.isEmpty()) {
+                    if (ItemStack.isSameItemSameTags(stackOnMe, stackInSlot)) {
+                        int remainingCapacity = stackOnMe.getMaxStackSize() - stackOnMe.getCount();
+                        return amountToRemove.applyAsInt(stackInSlot) <= remainingCapacity;
+                    }
+                    return false;
+                }
+                return true;
+            };
+            removeLastStack(supplier, player, itemFilter, amountToRemove).ifPresent(extractedStack -> {
+                if (stackOnMe.isEmpty()) {
+                    slotAccess.set(extractedStack);
+                } else {
+                    ItemStack hoveredStack = slotAccess.get();
+                    hoveredStack.grow(extractedStack.getCount());
+                    slotAccess.set(hoveredStack);
+                }
                 player.playSound(removeSound, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
-                slotAccess.set(p_186347_);
             });
-        } else {
-            int transferredCount = addStack(supplier, player, stackOnMe, itemFilter);
+            return true;
+        } else if (clickAction == ClickAction.SECONDARY || extractSingleItemOnly) {
+            if (clickAction == ClickAction.PRIMARY) acceptableItemCount = stack -> 1;
+            int transferredCount = addStack(supplier, player, stackOnMe, acceptableItemCount);
             if (transferredCount > 0) {
-                player.playSound(insertSound, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
                 stackOnMe.shrink(transferredCount);
+                player.playSound(insertSound, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
             }
+            return true;
         }
-        return true;
+        return false;
     }
 
-    private static int addStack(Supplier<SimpleContainer> supplier, Player player, ItemStack newStack, ToIntFunction<ItemStack> itemFilter) {
+    private static int addStack(Supplier<SimpleContainer> supplier, Player player, ItemStack newStack, ToIntFunction<ItemStack> acceptableItemCount) {
         if (newStack.isEmpty()) return 0;
         SimpleContainer container = supplier.get();
         ItemStack stackToAdd = newStack.copy();
-        stackToAdd.setCount(Math.min(itemFilter.applyAsInt(newStack), newStack.getCount()));
+        stackToAdd.setCount(Math.min(acceptableItemCount.applyAsInt(newStack), newStack.getCount()));
         if (stackToAdd.isEmpty()) return 0;
-        ItemStack remainingStack = container.addItem(stackToAdd);
-        ContainerSlotHelper.resetCurrentContainerSlot(player);
-        return stackToAdd.getCount() - remainingStack.getCount();
+        Pair<ItemStack, Integer> result = ItemMoveHelper.addItem(container, stackToAdd, ContainerSlotHelper.getCurrentContainerSlot(player));
+        ContainerSlotHelper.setCurrentContainerSlot(player, result.getRight());
+        return stackToAdd.getCount() - result.getLeft().getCount();
     }
 
-    private static Optional<ItemStack> removeLastStack(Supplier<SimpleContainer> supplier, Player player) {
-        SimpleContainer container = supplier.get();
-        return findSlotWithContent(container, player).stream().mapToObj(index -> container.removeItem(index, container.getItem(index).getCount())).findAny();
+    private static Optional<ItemStack> removeLastStack(Supplier<SimpleContainer> containerSupplier, Player player, Predicate<ItemStack> itemFilter, ToIntFunction<ItemStack> amountToRemove) {
+        SimpleContainer container = containerSupplier.get();
+        OptionalInt slotWithContent = findSlotWithContent(container, player, itemFilter, amountToRemove);
+        return slotWithContent.stream().mapToObj(index -> {
+            int amount = amountToRemove.applyAsInt(container.getItem(index));
+            return container.removeItem(index, amount);
+        }).findAny();
     }
 
-    private static OptionalInt findSlotWithContent(SimpleContainer container, Player player) {
+    private static OptionalInt findSlotWithContent(SimpleContainer container, Player player, Predicate<ItemStack> itemFilter, ToIntFunction<ItemStack> amountToRemove) {
         int currentContainerSlot = ContainerSlotHelper.getCurrentContainerSlot(player);
         if (currentContainerSlot >= 0 && currentContainerSlot < container.getContainerSize()) {
-            if (!container.getItem(currentContainerSlot).isEmpty()) {
-                ContainerSlotHelper.cycleCurrentSlotBackwards(player, container);
+            ItemStack stackInSlot = container.getItem(currentContainerSlot);
+            if (!stackInSlot.isEmpty() && itemFilter.test(stackInSlot)) {
+                // did we empty the slot, so cycle to a different one
+                if (stackInSlot.getCount() <= amountToRemove.applyAsInt(stackInSlot)) {
+                    ContainerSlotHelper.cycleCurrentSlotBackwards(player, container);
+                }
                 return OptionalInt.of(currentContainerSlot);
             }
         }
         for (int i = container.getContainerSize() - 1; i >= 0; i--) {
-            if (!container.getItem(i).isEmpty()) {
-                ContainerSlotHelper.resetCurrentContainerSlot(player);
+            ItemStack stackInSlot = container.getItem(i);
+            if (!stackInSlot.isEmpty() && itemFilter.test(stackInSlot)) {
+                // did we empty the slot, so cycle to a different one
+                if (stackInSlot.getCount() <= amountToRemove.applyAsInt(stackInSlot)) {
+                    ContainerSlotHelper.resetCurrentContainerSlot(player);
+                } else {
+                    // otherwise if not empty make sure this is the new current slot
+                    ContainerSlotHelper.setCurrentContainerSlot(player, i);
+                }
                 return OptionalInt.of(i);
             }
         }

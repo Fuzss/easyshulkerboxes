@@ -2,9 +2,13 @@ package fuzs.easyshulkerboxes.capability;
 
 import fuzs.puzzleslib.capability.data.CapabilityComponent;
 
-public interface ContainerSlotCapability extends CapabilityComponent {
+public interface ContainerClientInputCapability extends CapabilityComponent {
 
     int getCurrentSlot();
 
     void setCurrentSlot(int currentSlot);
+
+    boolean extractSingleItemOnly();
+
+    void extractSingleItem(boolean singleItemOnly);
 }

@@ -47,7 +47,7 @@
   "custom": {
     "cardinal-components": [
       "${modId}:ender_chest_menu",
-      "${modId}:container_slot"
+      "${modId}:container_client_input"
     ]
   }
 }

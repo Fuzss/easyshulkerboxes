@@ -2,8 +2,9 @@ package fuzs.easyshulkerboxes.capability;
 
 import net.minecraft.nbt.CompoundTag;
 
-public class ContainerSlotCapabilityImpl implements ContainerSlotCapability {
+public class ContainerClientInputCapabilityImpl implements ContainerClientInputCapability {
     private int currentSlot = -1;
+    private boolean modifierActive;
 
     @Override
     public int getCurrentSlot() {
@@ -13,6 +14,16 @@ public class ContainerSlotCapabilityImpl implements ContainerSlotCapability {
     @Override
     public void setCurrentSlot(int currentSlot) {
         this.currentSlot = currentSlot;
+    }
+
+    @Override
+    public boolean extractSingleItemOnly() {
+        return this.modifierActive;
+    }
+
+    @Override
+    public void extractSingleItem(boolean singleItemOnly) {
+        this.modifierActive = singleItemOnly;
     }
 
     @Override

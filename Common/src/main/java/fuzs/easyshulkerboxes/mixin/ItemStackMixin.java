@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Optional;
 
-@Mixin(value = ItemStack.class)
+@Mixin(ItemStack.class)
 abstract class ItemStackMixin {
 
     @Inject(method = "overrideStackedOnOther", at = @At("HEAD"), cancellable = true)

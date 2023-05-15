@@ -1,9 +1,8 @@
 package fuzs.easyshulkerboxes.mixin.client;
 
-import fuzs.easyshulkerboxes.client.handler.MouseScrollHandler;
+import fuzs.easyshulkerboxes.client.handler.ClientInputActionHandler;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,6 +14,6 @@ abstract class MultiPlayerGameModeMixin {
 
     @Inject(method = "handleInventoryMouseClick", at = @At("HEAD"))
     public void handleInventoryMouseClick(int containerId, int slotId, int mouseButton, ClickType clickType, Player player, CallbackInfo callback) {
-        if (containerId == player.containerMenu.containerId) MouseScrollHandler.ensureHasSentCurrentSlot();
+        if (containerId == player.containerMenu.containerId) ClientInputActionHandler.ensureHasSentContainerClientInput();
     }
 }
