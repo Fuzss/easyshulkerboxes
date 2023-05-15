@@ -18,9 +18,11 @@ public class ClientConfig implements ConfigCore {
     @Config(name = "selected_item_tooltip", description = {"Show a tooltip for the item currently selected in a container item's tooltip next to the main tooltip.", "Select a modifier key required to be held to see that tooltip, otherwise selecting \"KEY\" serves as a toggle."})
     @Config.AllowedValues(values = {"KEY", "SHIFT", "CONTROL", "ALT"})
     String selectedItemTooltipRaw = TooltipContentsActivation.TOGGLE_SELECTED_TOOLTIPS_KEY.toString();
-    @Config(name = "extract_single_item", description = "Select a modifier key required to be held to only extract a single item from container items instead of everything from the selected slot.")
+    @Config(name = "precision_mode", description = {"Select a modifier key required to be held to extract/insert only a single item from a container item instead of everything from the selected slot.", "In precision mode left-clicking inserts an item, and right-clicking extracts an item. The scroll wheel can also be used."})
     @Config.AllowedValues(values = {"SHIFT", "CONTROL", "ALT"})
     String extractSingleItemRaw = TooltipContentsActivation.CONTROL.toString();
+    @Config(description = "Disable sounds from inserting and extracting items from playing, as they trigger quite often with all the new interactions.")
+    public boolean disableInteractionSounds = true;
 
     public TooltipContentsActivation revealContents;
     public TooltipContentsActivation selectedItemTooltip;

@@ -1,6 +1,7 @@
 package fuzs.easyshulkerboxes.client.handler;
 
 import com.google.common.collect.Sets;
+import com.mojang.blaze3d.platform.InputConstants;
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
 import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.easyshulkerboxes.config.ClientConfig;
@@ -79,7 +80,7 @@ public class MouseDragHandler {
                     }
                 }
                 if (interact) {
-                    ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$slotClicked(slot, slot.index, 1, ClickType.PICKUP);
+                    ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$slotClicked(slot, slot.index, InputConstants.MOUSE_BUTTON_RIGHT, ClickType.PICKUP);
                     this.containerDragSlots.add(slot);
                     return Optional.of(Unit.INSTANCE);
                 }
@@ -92,9 +93,11 @@ public class MouseDragHandler {
         if (!shouldHandleMouseDrag(screen)) return Optional.empty();
         if (this.containerDragType != null) {
             if (button == 1 && !this.containerDragSlots.isEmpty()) {
-                // play this manually at the end, we suppress all interaction sounds played while dragging
-                SimpleSoundInstance sound = SimpleSoundInstance.forUI(this.containerDragType.sound, 0.8F, 0.8F + SoundInstance.createUnseededRandom().nextFloat() * 0.4F);
-                CommonScreens.INSTANCE.getMinecraft(screen).getSoundManager().play(sound);
+                if (!EasyShulkerBoxes.CONFIG.get(ClientConfig.class).disableInteractionSounds) {
+                    // play this manually at the end, we suppress all interaction sounds played while dragging
+                    SimpleSoundInstance sound = SimpleSoundInstance.forUI(this.containerDragType.sound, 0.8F, 0.8F + SoundInstance.createUnseededRandom().nextFloat() * 0.4F);
+                    CommonScreens.INSTANCE.getMinecraft(screen).getSoundManager().play(sound);
+                }
                 this.containerDragType = null;
                 this.containerDragSlots.clear();
                 return Optional.of(Unit.INSTANCE);

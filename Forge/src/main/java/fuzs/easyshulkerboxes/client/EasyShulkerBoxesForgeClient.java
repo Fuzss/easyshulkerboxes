@@ -1,10 +1,10 @@
 package fuzs.easyshulkerboxes.client;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
+import fuzs.easyshulkerboxes.client.handler.ClientInputActionHandler;
 import fuzs.easyshulkerboxes.client.handler.EnderChestMenuClientHandler;
 import fuzs.easyshulkerboxes.client.handler.KeyBindingTogglesHandler;
 import fuzs.easyshulkerboxes.client.handler.MouseDragHandler;
-import fuzs.easyshulkerboxes.client.handler.ClientInputActionHandler;
 import fuzs.puzzleslib.client.core.ClientFactories;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ScreenEvent;
@@ -55,6 +55,9 @@ public class EasyShulkerBoxesForgeClient {
         });
         MinecraftForge.EVENT_BUS.addListener((final PlayLevelSoundEvent.AtEntity evt) -> {
             MouseDragHandler.INSTANCE.onPlaySoundAtPosition(evt.getEntity(), evt.getSound(), evt.getSource(), evt.getOriginalVolume(), evt.getOriginalPitch()).ifPresent(unit -> evt.setCanceled(true));
+        });
+        MinecraftForge.EVENT_BUS.addListener((final PlayLevelSoundEvent.AtEntity evt) -> {
+            ClientInputActionHandler.onPlaySoundAtPosition(evt.getEntity(), evt.getSound(), evt.getSource(), evt.getOriginalVolume(), evt.getOriginalPitch()).ifPresent(unit -> evt.setCanceled(true));
         });
     }
 }

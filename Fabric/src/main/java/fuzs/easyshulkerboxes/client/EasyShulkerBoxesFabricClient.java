@@ -3,10 +3,10 @@ package fuzs.easyshulkerboxes.client;
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
 import fuzs.easyshulkerboxes.api.client.event.MouseDragEvents;
 import fuzs.easyshulkerboxes.api.event.PlayLevelSoundEvents;
+import fuzs.easyshulkerboxes.client.handler.ClientInputActionHandler;
 import fuzs.easyshulkerboxes.client.handler.EnderChestMenuClientHandler;
 import fuzs.easyshulkerboxes.client.handler.KeyBindingTogglesHandler;
 import fuzs.easyshulkerboxes.client.handler.MouseDragHandler;
-import fuzs.easyshulkerboxes.client.handler.ClientInputActionHandler;
 import fuzs.puzzleslib.client.core.ClientFactories;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
@@ -56,5 +56,6 @@ public class EasyShulkerBoxesFabricClient implements ClientModInitializer {
         });
         MouseDragEvents.BEFORE.register(MouseDragHandler.INSTANCE::onBeforeMouseDragged);
         PlayLevelSoundEvents.ENTITY.register(MouseDragHandler.INSTANCE::onPlaySoundAtPosition);
+        PlayLevelSoundEvents.ENTITY.register(ClientInputActionHandler::onPlaySoundAtPosition);
     }
 }
