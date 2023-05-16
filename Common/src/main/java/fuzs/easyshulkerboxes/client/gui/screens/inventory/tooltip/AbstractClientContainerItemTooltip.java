@@ -25,7 +25,7 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class AbstractClientContainerItemTooltip extends ExpandableClientTooltipComponent {
+public abstract class AbstractClientContainerItemTooltip extends ExpandableClientTooltipComponentImpl {
     public static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/widgets.png");
     public static final ResourceLocation TEXTURE_LOCATION = EasyShulkerBoxes.id("textures/gui/container/inventory_tooltip.png");
     private static final int BORDER_SIZE = 7;
@@ -91,7 +91,7 @@ public abstract class AbstractClientContainerItemTooltip extends ExpandableClien
     }
 
     private void drawSelectedSlotTooltip(Font font, int mouseX, int mouseY, PoseStack poseStack, int lastFilledSlot) {
-        if (!EasyShulkerBoxes.CONFIG.get(ClientConfig.class).selectedItemTooltip.isActive()) return;
+        if (!EasyShulkerBoxes.CONFIG.get(ClientConfig.class).selectedItemTooltips.isActive()) return;
         if (ACTIVE_CONTAINER_ITEM_TOOLTIPS.intValue() > 1) return;
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.screen != null && !willTooltipBeMoved(minecraft, font, mouseX, mouseY) && lastFilledSlot >= 0 && lastFilledSlot < this.items.size()) {
@@ -113,7 +113,7 @@ public abstract class AbstractClientContainerItemTooltip extends ExpandableClien
             List<ClientTooltipComponent> tooltipComponents = ClientAbstractions.INSTANCE.getTooltipComponents(containerScreen, font, mouseX, mouseY, slot.getItem());
             int maxWidth = tooltipComponents.stream().mapToInt(tooltipComponent -> tooltipComponent.getWidth(font)).max().orElse(0);
             // actual mouseX, tooltip components are passed the adjusted position where the tooltip should be rendered
-            mouseX = (int)( minecraft.mouseHandler.xpos() * (double) minecraft.getWindow().getGuiScaledWidth() / (double) minecraft.getWindow().getScreenWidth());
+            mouseX = (int) (minecraft.mouseHandler.xpos() * (double) minecraft.getWindow().getGuiScaledWidth() / (double) minecraft.getWindow().getScreenWidth());
             return mouseX + 12 + maxWidth > containerScreen.width;
         }
         return false;

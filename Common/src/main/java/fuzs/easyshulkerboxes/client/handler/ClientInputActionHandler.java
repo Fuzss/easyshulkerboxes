@@ -53,51 +53,60 @@ public class ClientInputActionHandler {
     public static void onAfterRender(Screen screen, PoseStack matrices, int mouseX, int mouseY, float tickDelta) {
         // renders vanilla item tooltips when a stack is carried and the cursor hovers over a container item
         // intended to be used with single item extraction/insertion feature to be able to continuously see what's going on in the container item
-        if (!shouldHandleMouseScroll(screen)) return;
-        if (!EasyShulkerBoxes.CONFIG.get(ClientConfig.class).extractSingleItem.isActive()) return;
-        AbstractContainerScreen<?> containerScreen = (AbstractContainerScreen<?>) screen;
-        if (!containerScreen.getMenu().getCarried().isEmpty()) {
-            Slot slot = CommonScreens.INSTANCE.getHoveredSlot(containerScreen);
-            if (slot != null) {
-                ItemStack stack = slot.getItem();
-                ItemContainerProvider provider = ItemContainerProvidersListener.INSTANCE.get(stack.getItem());
-                if (provider != null && provider.hasItemContainerData(stack)) {
-                    ((ScreenAccessor) screen).easyshulkerboxes$callRenderTooltip(matrices, stack, mouseX, mouseY);
+        if (!(screen instanceof AbstractContainerScreen<?> containerScreen)) return;
+        if (EasyShulkerBoxes.CONFIG.get(ClientConfig.class).carriedItemTooltips.isActive()) {
+            ItemStack stack = containerScreen.getMenu().getCarried();
+            if (!stack.isEmpty()) {
+                if (!renderProviderItemTooltip(screen, matrices, mouseX, mouseY, stack)) {
+                    Slot slot = CommonScreens.INSTANCE.getHoveredSlot(containerScreen);
+                    if (slot != null) {
+                        renderProviderItemTooltip(screen, matrices, mouseX, mouseY, slot.getItem());
+                    }
                 }
             }
         }
+    }
+
+    private static boolean renderProviderItemTooltip(Screen screen, PoseStack matrices, int mouseX, int mouseY, ItemStack stack) {
+        if (ItemContainerProvidersListener.INSTANCE.get(stack) != null) {
+            ((ScreenAccessor) screen).easyshulkerboxes$callRenderTooltip(matrices, stack, mouseX, mouseY);
+            return true;
+        }
+        return false;
     }
 
     public static Optional<Unit> onBeforeMouseScroll(Screen screen, double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         // allows to scroll between filled slots on a container items tooltip to select the slot to be interacted with next
-        if (!shouldHandleMouseScroll(screen)) return Optional.empty();
-        if (!EasyShulkerBoxes.CONFIG.get(ServerConfig.class).allowSlotCycling) return Optional.empty();
-        Slot slot = CommonScreens.INSTANCE.getHoveredSlot((AbstractContainerScreen<?>) screen);
-        if (slot != null) {
-            ItemStack stack = slot.getItem();
-            ItemContainerProvider provider = ItemContainerProvidersListener.INSTANCE.get(stack.getItem());
-            if (provider != null && provider.hasItemContainerData(stack)) {
-                if (verticalAmount != 0.0) {
-                    if (EasyShulkerBoxes.CONFIG.get(ClientConfig.class).extractSingleItem.isActive()) {
-                        int mouseButton = verticalAmount > 0 ? InputConstants.MOUSE_BUTTON_RIGHT : InputConstants.MOUSE_BUTTON_LEFT;
-                        ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$slotClicked(slot, slot.index, mouseButton, ClickType.PICKUP);
-                    } else {
-                        Minecraft minecraft = CommonScreens.INSTANCE.getMinecraft(screen);
-                        int currentContainerSlot = ContainerSlotHelper.getCurrentContainerSlot(minecraft.player);
-                        SimpleContainer container = provider.getItemContainer(stack, minecraft.player, false);
-                        currentContainerSlot = ContainerSlotHelper.findClosestSlotWithContent(container, currentContainerSlot, verticalAmount < 0);
-                        ContainerSlotHelper.setCurrentContainerSlot(minecraft.player, currentContainerSlot);
-                    }
+        if (verticalAmount == 0.0F || !(screen instanceof AbstractContainerScreen<?> containerScreen)) return Optional.empty();
+        Slot slot = CommonScreens.INSTANCE.getHoveredSlot(containerScreen);
+        if (EasyShulkerBoxes.CONFIG.get(ClientConfig.class).precisionMode.isActive()) {
+            if (slot != null) {
+                if (ItemContainerProvidersListener.INSTANCE.get(containerScreen.getMenu().getCarried()) != null || ItemContainerProvidersListener.INSTANCE.get(slot.getItem()) != null) {
+                    int mouseButton = verticalAmount > 0 ? InputConstants.MOUSE_BUTTON_RIGHT : InputConstants.MOUSE_BUTTON_LEFT;
+                    ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$slotClicked(slot, slot.index, mouseButton, ClickType.PICKUP);
+                    return Optional.of(Unit.INSTANCE);
                 }
+            }
+        } else if (EasyShulkerBoxes.CONFIG.get(ServerConfig.class).allowSlotCycling && EasyShulkerBoxes.CONFIG.get(ClientConfig.class).revealContents.isActive()) {
+            ItemStack stack = containerScreen.getMenu().getCarried();
+            if (!stack.isEmpty() && !EasyShulkerBoxes.CONFIG.get(ClientConfig.class).carriedItemTooltips.isActive()) {
+                return Optional.empty();
+            }
+            ItemContainerProvider provider = ItemContainerProvidersListener.INSTANCE.get(stack);
+            if (slot != null && (provider == null || !provider.hasItemContainerData(stack))) {
+                provider = ItemContainerProvidersListener.INSTANCE.get(slot.getItem());
+                stack = slot.getItem();
+            }
+            if (provider != null && provider.hasItemContainerData(stack)) {
+                Minecraft minecraft = CommonScreens.INSTANCE.getMinecraft(screen);
+                int currentContainerSlot = ContainerSlotHelper.getCurrentContainerSlot(minecraft.player);
+                SimpleContainer container = provider.getItemContainer(stack, minecraft.player, false);
+                currentContainerSlot = ContainerSlotHelper.findClosestSlotWithContent(container, currentContainerSlot, verticalAmount < 0);
+                ContainerSlotHelper.setCurrentContainerSlot(minecraft.player, currentContainerSlot);
                 return Optional.of(Unit.INSTANCE);
             }
         }
         return Optional.empty();
-    }
-
-    private static boolean shouldHandleMouseScroll(Screen screen) {
-        if (!(screen instanceof AbstractContainerScreen<?>)) return false;
-        return EasyShulkerBoxes.CONFIG.get(ClientConfig.class).revealContents.isActive();
     }
 
     public static Optional<Unit> onPlaySoundAtPosition(Entity entity, SoundEvent sound, SoundSource source, float volume, float pitch) {
@@ -111,7 +120,7 @@ public class ClientInputActionHandler {
     public static void ensureHasSentContainerClientInput(Screen screen, Player player) {
         if (!(screen instanceof AbstractContainerScreen<?>)) return;
         int currentContainerSlot = ContainerSlotHelper.getCurrentContainerSlot(player);
-        boolean extractSingleItem = EasyShulkerBoxes.CONFIG.get(ClientConfig.class).extractSingleItem.isActive();
+        boolean extractSingleItem = EasyShulkerBoxes.CONFIG.get(ClientConfig.class).precisionMode.isActive();
         if (currentContainerSlot != lastSentContainerSlot || extractSingleItem != lastSentExtractSingleItem) {
             lastSentContainerSlot = currentContainerSlot;
             lastSentExtractSingleItem = extractSingleItem;

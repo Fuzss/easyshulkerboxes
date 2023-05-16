@@ -21,6 +21,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,8 +42,8 @@ public class ItemContainerProvidersListener extends SimpleJsonResourceReloadList
     }
 
     @Nullable
-    public ItemContainerProvider get(ItemLike item) {
-        return this.providers.get(item.asItem());
+    public ItemContainerProvider get(ItemStack stack) {
+        return stack.isEmpty() ? null : this.providers.get(stack.getItem());
     }
 
     @Override

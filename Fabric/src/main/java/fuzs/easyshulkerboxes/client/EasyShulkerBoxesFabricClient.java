@@ -6,7 +6,7 @@ import fuzs.easyshulkerboxes.api.event.PlayLevelSoundEvents;
 import fuzs.easyshulkerboxes.client.handler.ClientInputActionHandler;
 import fuzs.easyshulkerboxes.client.handler.EnderChestMenuClientHandler;
 import fuzs.easyshulkerboxes.client.handler.KeyBindingTogglesHandler;
-import fuzs.easyshulkerboxes.client.handler.MouseDragHandler;
+import fuzs.easyshulkerboxes.client.handler.MouseDraggingHandler;
 import fuzs.puzzleslib.client.core.ClientFactories;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
@@ -35,14 +35,14 @@ public class EasyShulkerBoxesFabricClient implements ClientModInitializer {
                     return ClientInputActionHandler.onBeforeMouseScroll(screen, mouseX, mouseY, horizontalAmount, verticalAmount).isEmpty();
                 });
                 ScreenMouseEvents.allowMouseClick(_screen).register((Screen screen, double mouseX, double mouseY, int button) -> {
-                    return MouseDragHandler.INSTANCE.onBeforeMousePressed(screen, mouseX, mouseY, button).isEmpty();
+                    return MouseDraggingHandler.INSTANCE.onBeforeMousePressed(screen, mouseX, mouseY, button).isEmpty();
                 });
                 ScreenMouseEvents.allowMouseClick(_screen).addPhaseOrdering(BEFORE_PHASE, Event.DEFAULT_PHASE);
                 ScreenMouseEvents.allowMouseClick(_screen).register(BEFORE_PHASE, (Screen screen, double mouseX, double mouseY, int button) -> {
                     return ClientInputActionHandler.onBeforeMousePressed(screen, mouseX, mouseY, button).isEmpty();
                 });
                 ScreenMouseEvents.allowMouseRelease(_screen).register((Screen screen, double mouseX, double mouseY, int button) -> {
-                    return MouseDragHandler.INSTANCE.onBeforeMouseRelease(screen, mouseX, mouseY, button).isEmpty();
+                    return MouseDraggingHandler.INSTANCE.onBeforeMouseRelease(screen, mouseX, mouseY, button).isEmpty();
                 });
                 ScreenKeyboardEvents.allowKeyPress(_screen).register((Screen screen, int key, int scancode, int modifiers) -> {
                     return KeyBindingTogglesHandler.onBeforeKeyPressed(screen, key, scancode, modifiers).isEmpty();
@@ -54,8 +54,8 @@ public class EasyShulkerBoxesFabricClient implements ClientModInitializer {
                 ScreenEvents.afterRender(_screen).register(ClientInputActionHandler::onAfterRender);
             }
         });
-        MouseDragEvents.BEFORE.register(MouseDragHandler.INSTANCE::onBeforeMouseDragged);
-        PlayLevelSoundEvents.ENTITY.register(MouseDragHandler.INSTANCE::onPlaySoundAtPosition);
+        MouseDragEvents.BEFORE.register(MouseDraggingHandler.INSTANCE::onBeforeMouseDragged);
+        PlayLevelSoundEvents.ENTITY.register(MouseDraggingHandler.INSTANCE::onPlaySoundAtPosition);
         PlayLevelSoundEvents.ENTITY.register(ClientInputActionHandler::onPlaySoundAtPosition);
     }
 }

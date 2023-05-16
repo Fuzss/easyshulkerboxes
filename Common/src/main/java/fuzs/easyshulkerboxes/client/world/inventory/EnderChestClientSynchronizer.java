@@ -13,6 +13,7 @@ public class EnderChestClientSynchronizer implements ContainerSynchronizer {
 
     @Override
     public void sendInitialData(AbstractContainerMenu abstractContainerMenu, NonNullList<ItemStack> nonNullList, ItemStack itemStack, int[] is) {
+
     }
 
     @Override

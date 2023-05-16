@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
-public class ClientMapTooltip extends ExpandableClientTooltipComponent {
+public class ClientMapTooltip extends ExpandableClientTooltipComponentImpl {
     private static final ResourceLocation MAP_BACKGROUND_CHECKERBOARD = new ResourceLocation("textures/map/map_background_checkerboard.png");
 
     private final int mapId;

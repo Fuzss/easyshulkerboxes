@@ -1,7 +1,7 @@
 package fuzs.easyshulkerboxes.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import fuzs.easyshulkerboxes.client.handler.MouseDragHandler;
+import fuzs.easyshulkerboxes.client.handler.MouseDraggingHandler;
 import fuzs.easyshulkerboxes.client.helper.ItemDecorationHelper;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
@@ -27,7 +27,7 @@ abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> ext
         // this was supposed to render on the Forge container foreground event, but the blitOffset wouldn't behave
         // (it was rendering in front of items and behaved differently on the creative screen and there were also difference between Forge and Fabric for some reason)
         // so here goes the mixin ¯\_(ツ)_/¯
-        if (MouseDragHandler.INSTANCE.containerDragSlots.contains(slot)) {
+        if (MouseDraggingHandler.INSTANCE.containerDragSlots.contains(slot)) {
             GuiComponent.fill(poseStack, slot.x, slot.y, slot.x + 16, slot.y + 16, -2130706433);
         }
     }

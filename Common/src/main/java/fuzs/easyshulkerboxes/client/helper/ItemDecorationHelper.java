@@ -75,7 +75,7 @@ public class ItemDecorationHelper {
     }
 
     public static void render(Font font, ItemStack stack, int itemPosX, int itemPosY, float blitOffset) {
-        ItemContainerProvider provider = ItemContainerProvidersListener.INSTANCE.get(stack.getItem());
+        ItemContainerProvider provider = ItemContainerProvidersListener.INSTANCE.get(stack);
         if (provider == null) return;
         resetRenderState();
         DynamicItemDecorator itemDecorator = DECORATORS_CACHE.computeIfAbsent(provider, $ -> ItemDecorationHelper.getDynamicItemDecorator((AbstractContainerScreen<?> screen, ItemStack containerStack, ItemStack carriedStack) -> {
