@@ -78,8 +78,9 @@ public class ClientInputActionHandler {
     public static Optional<Unit> onBeforeMouseScroll(Screen screen, double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         // allows to scroll between filled slots on a container items tooltip to select the slot to be interacted with next
         if (verticalAmount == 0.0F || !(screen instanceof AbstractContainerScreen<?> containerScreen)) return Optional.empty();
+        if (!EasyShulkerBoxes.CONFIG.get(ClientConfig.class).revealContents.isActive()) return Optional.empty();
         Slot slot = CommonScreens.INSTANCE.getHoveredSlot(containerScreen);
-        if (EasyShulkerBoxes.CONFIG.get(ClientConfig.class).precisionMode.isActive()) {
+        if (precisionModeAllowedAndActive()) {
             if (slot != null) {
                 if (ItemContainerProvidersListener.INSTANCE.get(containerScreen.getMenu().getCarried()) != null || ItemContainerProvidersListener.INSTANCE.get(slot.getItem()) != null) {
                     int mouseButton = verticalAmount > 0 ? InputConstants.MOUSE_BUTTON_RIGHT : InputConstants.MOUSE_BUTTON_LEFT;
@@ -87,7 +88,7 @@ public class ClientInputActionHandler {
                     return Optional.of(Unit.INSTANCE);
                 }
             }
-        } else if (EasyShulkerBoxes.CONFIG.get(ServerConfig.class).allowSlotCycling && EasyShulkerBoxes.CONFIG.get(ClientConfig.class).revealContents.isActive()) {
+        } else if (EasyShulkerBoxes.CONFIG.get(ServerConfig.class).allowSlotCycling) {
             ItemStack stack = containerScreen.getMenu().getCarried();
             if (!stack.isEmpty() && !EasyShulkerBoxes.CONFIG.get(ClientConfig.class).carriedItemTooltips.isActive()) {
                 return Optional.empty();
@@ -117,10 +118,14 @@ public class ClientInputActionHandler {
         return Optional.empty();
     }
 
+    public static boolean precisionModeAllowedAndActive() {
+        return EasyShulkerBoxes.CONFIG.get(ServerConfig.class).allowPrecisionMode && EasyShulkerBoxes.CONFIG.get(ClientConfig.class).precisionMode.isActive();
+    }
+
     public static void ensureHasSentContainerClientInput(Screen screen, Player player) {
         if (!(screen instanceof AbstractContainerScreen<?>)) return;
         int currentContainerSlot = ContainerSlotHelper.getCurrentContainerSlot(player);
-        boolean extractSingleItem = EasyShulkerBoxes.CONFIG.get(ClientConfig.class).precisionMode.isActive();
+        boolean extractSingleItem = precisionModeAllowedAndActive();
         if (currentContainerSlot != lastSentContainerSlot || extractSingleItem != lastSentExtractSingleItem) {
             lastSentContainerSlot = currentContainerSlot;
             lastSentExtractSingleItem = extractSingleItem;

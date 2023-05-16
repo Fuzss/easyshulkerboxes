@@ -3,9 +3,11 @@ package fuzs.easyshulkerboxes.client.gui.screens.inventory.tooltip;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
+import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.easyshulkerboxes.client.core.ClientAbstractions;
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.world.inventory.helper.ContainerSlotHelper;
+import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProvidersListener;
 import fuzs.puzzleslib.client.gui.screens.CommonScreens;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -108,15 +110,21 @@ public abstract class AbstractClientContainerItemTooltip extends ExpandableClien
 
     private static boolean willTooltipBeMoved(Minecraft minecraft, Font font, int mouseX, int mouseY) {
         if (!(minecraft.screen instanceof AbstractContainerScreen<?> containerScreen)) return false;
-        Slot slot = CommonScreens.INSTANCE.getHoveredSlot(containerScreen);
-        if (slot != null && slot.hasItem()) {
-            List<ClientTooltipComponent> tooltipComponents = ClientAbstractions.INSTANCE.getTooltipComponents(containerScreen, font, mouseX, mouseY, slot.getItem());
-            int maxWidth = tooltipComponents.stream().mapToInt(tooltipComponent -> tooltipComponent.getWidth(font)).max().orElse(0);
-            // actual mouseX, tooltip components are passed the adjusted position where the tooltip should be rendered
-            mouseX = (int) (minecraft.mouseHandler.xpos() * (double) minecraft.getWindow().getGuiScaledWidth() / (double) minecraft.getWindow().getScreenWidth());
-            return mouseX + 12 + maxWidth > containerScreen.width;
+        ItemStack stack = containerScreen.getMenu().getCarried();
+        ItemContainerProvider provider = ItemContainerProvidersListener.INSTANCE.get(stack);
+        if (provider == null || !provider.hasItemContainerData(stack)) {
+            Slot slot = CommonScreens.INSTANCE.getHoveredSlot(containerScreen);
+            if (slot != null && slot.hasItem()) {
+                stack = slot.getItem();
+            } else {
+                return false;
+            }
         }
-        return false;
+        List<ClientTooltipComponent> tooltipComponents = ClientAbstractions.INSTANCE.getTooltipComponents(containerScreen, font, mouseX, mouseY, stack);
+        int maxWidth = tooltipComponents.stream().mapToInt(tooltipComponent -> tooltipComponent.getWidth(font)).max().orElse(0);
+        // actual mouseX, tooltip components are passed the adjusted position where the tooltip should be rendered
+        mouseX = (int) (minecraft.mouseHandler.xpos() * (double) minecraft.getWindow().getGuiScaledWidth() / (double) minecraft.getWindow().getScreenWidth());
+        return mouseX + 12 + maxWidth > containerScreen.width;
     }
 
     private boolean defaultSize() {

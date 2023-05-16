@@ -3,16 +3,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
-## [v4.4.0-1.19.2] - 2022-12-09
+## [v4.4.0-1.19.2] - 2023-05-17
 ### Added
 - Added a fully data-driven system for defining support for Easy Shulker Boxes' features for any item using data packs
-- This system allows users to manually add support for other mods (intended for backpack and shulker box mods, check out the documentation on GitHub)
-- Default support is available for the following mods: Bag Of Holding (Forge+Fabric), Backpacked (Forge), Inmis (Fabric), Simple Backpack (Fabric), Reinforced Shulker Boxes (Fabric)
-- Also note that mod support only works for the default config settings of those mods. When changing backpack sizes in a mod, you'll have to provide your own data pack to adjust the sizes for Easy Shulker Boxes
+  - This system allows users to manually add support for other mods (intended for backpack and shulker box mods, check out the documentation on GitHub)
+  - Default support is available for the following mods: Bag Of Holding (Forge+Fabric), Backpacked (Forge), Inmis (Fabric), Simple Backpack (Fabric), Reinforced Shulker Boxes (Fabric)
+  - Also note that mod support only works for the default config settings of those mods. When changing backpack sizes in a mod, you'll have to provide your own data pack to adjust the sizes for Easy Shulker Boxes
+- Added Precision Mode, hold the `Ctrl` key (`Cmd` on Mac) to activate, allows for extracting / inserting only a single item from a container item instead of all items from the selected slot
+  - In precision mode left-clicking inserts an item, and right-clicking extracts a single item, overriding vanilla mouse interactions
+  - The scroll wheel can also be used for quickly moving items
+  - Works great with the slot scrolling and item dragging features already present
+- Added a key to render the item tooltip for the currently carried stack to aid with using precision mode
 ### Changed
 - Container item indicators (the small `+` shown when holding an item stack) now comes in different colors, showing if other stacks of the same item were found in the container
 ### Fixed
-- Fixed bundle interactions not working on servers
+- Fixed bundle interactions not working on servers due to a required Mixin only being registered client-side
 - Fixed bundles still showing the vanilla tooltip image when empty
 - Fixed compatibility with Mouse Tweaks mod
 ### Removed

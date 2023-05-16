@@ -72,7 +72,7 @@ public class ItemContainerProviderBuilder {
 
     public ItemContainerProvider toBlockEntityProvider() {
         this.checkInventorySize("block_entity");
-        Objects.requireNonNull(this.blockEntityType, this.getMessage("block_entity_type", "block_entity"));
+        Objects.requireNonNull(this.blockEntityType, getErrorMessage("block_entity_type", "block_entity"));
         BlockEntityProvider provider = new BlockEntityProvider(this.blockEntityType, this.inventoryWidth, this.inventoryHeight, this.dyeColor, this.nbtKey);
         if (this.anyGameMode) provider.anyGameMode();
         return provider;
@@ -80,13 +80,13 @@ public class ItemContainerProviderBuilder {
 
     public ItemContainerProvider toBlockEntityViewProvider() {
         this.checkInventorySize("block_entity_view");
-        Objects.requireNonNull(this.blockEntityType, this.getMessage("block_entity_type", "block_entity_view"));
+        Objects.requireNonNull(this.blockEntityType, getErrorMessage("block_entity_type", "block_entity_view"));
         return new BlockEntityViewProvider(this.blockEntityType, this.inventoryWidth, this.inventoryHeight, this.dyeColor, this.nbtKey);
     }
 
     public ItemContainerProvider toBundleProvider() {
         if (this.capacity == -1)
-            throw new IllegalStateException(this.getMessage("capacity", "bundle"));
+            throw new IllegalStateException(getErrorMessage("capacity", "bundle"));
         return new BundleProvider(this.capacity, this.dyeColor, this.nbtKey);
     }
 
@@ -96,12 +96,12 @@ public class ItemContainerProviderBuilder {
 
     private void checkInventorySize(String type) {
         if (this.inventoryWidth == -1)
-            throw new IllegalStateException(this.getMessage("inventory_width", type));
+            throw new IllegalStateException(getErrorMessage("inventory_width", type));
         if (this.inventoryHeight == -1)
-            throw new IllegalStateException(this.getMessage("inventory_height", type));
+            throw new IllegalStateException(getErrorMessage("inventory_height", type));
     }
 
-    private String getMessage(String jsonKey, String providerType) {
+    private static String getErrorMessage(String jsonKey, String providerType) {
         return "'%s' not set for provider of type '%s'".formatted(jsonKey, providerType);
     }
 }

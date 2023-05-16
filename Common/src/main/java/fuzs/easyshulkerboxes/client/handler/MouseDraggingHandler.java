@@ -44,7 +44,7 @@ public class MouseDraggingHandler {
         if (validMouseButton(button) && provider != null && provider.allowsPlayerInteractions(carriedStack, minecraft.player)) {
             Slot slot = ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$findSlot(mouseX, mouseY);
             if (slot != null) {
-                if (slot.hasItem() && !EasyShulkerBoxes.CONFIG.get(ClientConfig.class).precisionMode.isActive()) {
+                if (slot.hasItem() && !ClientInputActionHandler.precisionModeAllowedAndActive()) {
                     this.containerDragType = ContainerDragType.INSERT;
                 } else {
                     this.containerDragType = ContainerDragType.REMOVE;
@@ -75,7 +75,7 @@ public class MouseDraggingHandler {
                 boolean interact = false;
                 if (this.containerDragType == ContainerDragType.INSERT && slot.hasItem() && provider.canAddItem(carriedStack, slot.getItem(), minecraft.player)) {
                     interact = true;
-                } else if (this.containerDragType == ContainerDragType.REMOVE && (button == InputConstants.MOUSE_BUTTON_RIGHT && !slot.hasItem() || button == InputConstants.MOUSE_BUTTON_LEFT && slot.hasItem() && EasyShulkerBoxes.CONFIG.get(ClientConfig.class).precisionMode.isActive())) {
+                } else if (this.containerDragType == ContainerDragType.REMOVE && (button == InputConstants.MOUSE_BUTTON_RIGHT && !slot.hasItem() || slot.hasItem() && ClientInputActionHandler.precisionModeAllowedAndActive())) {
                     if (!provider.getItemContainer(carriedStack, minecraft.player, false).isEmpty()) {
                         interact = true;
                     }
@@ -116,7 +116,7 @@ public class MouseDraggingHandler {
 
     private static boolean validMouseButton(int button) {
         if (button == InputConstants.MOUSE_BUTTON_LEFT) {
-            return EasyShulkerBoxes.CONFIG.get(ClientConfig.class).precisionMode.isActive();
+            return ClientInputActionHandler.precisionModeAllowedAndActive();
         }
         return button == InputConstants.MOUSE_BUTTON_RIGHT;
     }

@@ -20,14 +20,14 @@ public class ClientConfig implements ConfigCore {
     @Config(name = "selected_item_tooltips", description = {"Show a tooltip for the item currently selected in a container item's tooltip next to the main tooltip.", ACTIVATION_TYPE_MESSAGE})
     @Config.AllowedValues(values = {"KEY", "ALWAYS", "SHIFT", "CONTROL", "ALT"})
     String selectedItemTooltipsRaw = KeyBindingTogglesHandler.ALWAYS.getIdentifier();
-    @Config(name = "precision_mode", description = {"Select a modifier key required to be held to extract/insert only a single item from a container item instead of everything from the selected slot.", "In precision mode left-clicking inserts an item, and right-clicking extracts an item. The scroll wheel can also be used."})
+    @Config(name = "precision_mode", description = {"Select a modifier key required to be held to use precision mode.", ServerConfig.PRECISION_MODE_MESSAGE})
     @Config.AllowedValues(values = {"SHIFT", "CONTROL", "ALT"})
     String extractSingleItemRaw = KeyBindingTogglesHandler.CONTROL.getIdentifier();
     @Config(description = "Disable sounds from inserting and extracting items from playing, as they trigger quite often with all the new interactions.")
     public boolean disableInteractionSounds = true;
     @Config(name = "carried_item_tooltips", description = {"Always show item tooltips while interacting with container items, even when the cursor is currently carrying an item.", ACTIVATION_TYPE_MESSAGE})
     @Config.AllowedValues(values = {"KEY", "ALWAYS", "SHIFT", "CONTROL", "ALT"})
-    String carriedItemTooltipsRaw = KeyBindingTogglesHandler.CARRIED_ITEM_TOOLTIPS_KEY.getIdentifier();
+    String carriedItemTooltipsRaw = KeyBindingTogglesHandler.ALT.getIdentifier();
 
     public HeldActivationType revealContents;
     public HeldActivationType selectedItemTooltips;
