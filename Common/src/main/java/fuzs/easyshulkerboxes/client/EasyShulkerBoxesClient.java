@@ -1,11 +1,11 @@
 package fuzs.easyshulkerboxes.client;
 
-import fuzs.easyshulkerboxes.client.core.HeldActivationType;
-import fuzs.easyshulkerboxes.client.core.KeyMappingProvider;
-import fuzs.easyshulkerboxes.client.gui.screens.inventory.tooltip.ClientContainerItemTooltip;
+import fuzs.easyshulkerboxes.impl.client.core.HeldActivationType;
+import fuzs.easyshulkerboxes.impl.client.core.KeyMappingProvider;
+import fuzs.easyshulkerboxes.api.client.container.v1.tooltip.ClientContainerItemTooltip;
 import fuzs.easyshulkerboxes.client.gui.screens.inventory.tooltip.ClientMapTooltip;
 import fuzs.easyshulkerboxes.client.gui.screens.inventory.tooltip.ModClientBundleTooltip;
-import fuzs.easyshulkerboxes.world.inventory.tooltip.ContainerItemTooltip;
+import fuzs.easyshulkerboxes.api.container.v1.tooltip.ContainerItemTooltip;
 import fuzs.easyshulkerboxes.world.inventory.tooltip.MapTooltip;
 import fuzs.easyshulkerboxes.world.inventory.tooltip.ModBundleTooltip;
 import fuzs.puzzleslib.client.core.ClientModConstructor;

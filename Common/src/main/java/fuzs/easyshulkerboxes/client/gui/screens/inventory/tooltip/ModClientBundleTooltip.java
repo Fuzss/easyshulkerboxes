@@ -1,5 +1,6 @@
 package fuzs.easyshulkerboxes.client.gui.screens.inventory.tooltip;
 
+import fuzs.easyshulkerboxes.api.client.container.v1.tooltip.AbstractClientContainerItemTooltip;
 import fuzs.easyshulkerboxes.world.inventory.tooltip.ModBundleTooltip;
 
 public class ModClientBundleTooltip extends AbstractClientContainerItemTooltip {

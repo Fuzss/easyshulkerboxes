@@ -23,6 +23,7 @@ abstract class ShulkerBoxBlockMixin extends BaseEntityBlock {
 
     @Inject(method = "appendHoverText", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;contains(Ljava/lang/String;I)Z", ordinal = 1, shift = At.Shift.BEFORE), cancellable = true)
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag, CallbackInfo callback) {
+        // TODO do not move with rest of api impl
         callback.cancel();
     }
 }

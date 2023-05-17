@@ -1,7 +1,7 @@
 package fuzs.easyshulkerboxes.handler;
 
-import fuzs.easyshulkerboxes.capability.EnderChestMenuCapability;
-import fuzs.easyshulkerboxes.init.ModRegistry;
+import fuzs.easyshulkerboxes.impl.capability.EnderChestMenuCapability;
+import fuzs.easyshulkerboxes.impl.init.ModRegistry;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;

@@ -1,18 +1,20 @@
 package fuzs.easyshulkerboxes.integration.reinforcedshulkerboxes;
 
-import fuzs.easyshulkerboxes.world.item.container.BlockEntityProvider;
-import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProvidersListener;
+import fuzs.easyshulkerboxes.api.container.v1.ItemContainerProvider;
+import fuzs.easyshulkerboxes.api.container.v1.BlockEntityProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.BiConsumer;
+
 public class ReinforcedShulkerBoxesIntegration {
 
-    public static void registerProviders() {
+    public static void registerProviders(BiConsumer<ResourceLocation, ItemContainerProvider> consumer) {
         for (ShulkerBoxMaterial material : ShulkerBoxMaterial.values()) {
-            ItemContainerProvidersListener.registerBuiltInProvider(material.id(), BlockEntityProvider.shulkerBoxProvider(material.id(), material.width, material.height, null));
+            consumer.accept(material.id(), BlockEntityProvider.shulkerBoxProvider(material.id(), material.width, material.height, null));
             for (DyeColor dyeColor : DyeColor.values()) {
-                ItemContainerProvidersListener.registerBuiltInProvider(material.id(dyeColor), BlockEntityProvider.shulkerBoxProvider(material.id(), material.width, material.height, dyeColor));
+                consumer.accept(material.id(dyeColor), BlockEntityProvider.shulkerBoxProvider(material.id(), material.width, material.height, dyeColor));
             }
         }
     }

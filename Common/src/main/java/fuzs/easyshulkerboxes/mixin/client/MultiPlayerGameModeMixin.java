@@ -1,6 +1,6 @@
 package fuzs.easyshulkerboxes.mixin.client;
 
-import fuzs.easyshulkerboxes.client.handler.ClientInputActionHandler;
+import fuzs.easyshulkerboxes.impl.client.handler.ClientInputActionHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.world.entity.player.Player;

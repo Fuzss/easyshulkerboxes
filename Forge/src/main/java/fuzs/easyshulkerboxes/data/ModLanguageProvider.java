@@ -1,10 +1,10 @@
 package fuzs.easyshulkerboxes.data;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.client.core.HeldActivationType;
-import fuzs.easyshulkerboxes.client.core.KeyBackedActivationType;
-import fuzs.easyshulkerboxes.client.gui.screens.inventory.tooltip.ExpandableClientTooltipComponentImpl;
-import fuzs.easyshulkerboxes.client.handler.KeyBindingTogglesHandler;
+import fuzs.easyshulkerboxes.impl.client.core.HeldActivationType;
+import fuzs.easyshulkerboxes.impl.client.core.KeyBackedActivationType;
+import fuzs.easyshulkerboxes.api.client.container.v1.tooltip.ExpandableClientTooltipComponent;
+import fuzs.easyshulkerboxes.impl.client.handler.KeyBindingTogglesHandler;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -17,7 +17,7 @@ public class ModLanguageProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
-        this.add(ExpandableClientTooltipComponentImpl.REVEAL_CONTENTS_TRANSLATION_KEY, "%s %s to reveal contents");
+        this.add(ExpandableClientTooltipComponent.REVEAL_CONTENTS_TRANSLATION_KEY, "%s %s to reveal contents");
         this.add(HeldActivationType.TOOLTIP_HOLD_TRANSLATION_KEY, "Hold");
         this.add(KeyBackedActivationType.TOOLTIP_PRESS_TRANSLATION_KEY, "Press");
         this.add(KeyBindingTogglesHandler.VISUAL_ITEM_CONTENTS_KEY.getKeyMapping(), "Toggle Visual Item Contents");

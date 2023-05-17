@@ -1,6 +1,6 @@
 package fuzs.easyshulkerboxes.mixin.client;
 
-import fuzs.easyshulkerboxes.client.helper.ItemDecorationHelper;
+import fuzs.easyshulkerboxes.impl.client.helper.ItemDecorationHelper;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.item.ItemStack;

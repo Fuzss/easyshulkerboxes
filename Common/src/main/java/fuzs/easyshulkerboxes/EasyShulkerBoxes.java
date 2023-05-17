@@ -1,15 +1,18 @@
 package fuzs.easyshulkerboxes;
 
-import fuzs.easyshulkerboxes.config.ClientConfig;
-import fuzs.easyshulkerboxes.config.ServerConfig;
-import fuzs.easyshulkerboxes.init.ModRegistry;
+import fuzs.easyshulkerboxes.api.container.v1.ItemContainerProviderSerializers;
+import fuzs.easyshulkerboxes.impl.config.ClientConfig;
+import fuzs.easyshulkerboxes.impl.config.ServerConfig;
+import fuzs.easyshulkerboxes.impl.init.ModRegistry;
+import fuzs.easyshulkerboxes.impl.network.S2CSyncItemContainerProvider;
+import fuzs.easyshulkerboxes.impl.network.client.C2SContainerClientInputMessage;
 import fuzs.easyshulkerboxes.network.S2CEnderChestSetContentMessage;
 import fuzs.easyshulkerboxes.network.S2CEnderChestSetSlotMessage;
-import fuzs.easyshulkerboxes.network.S2CSyncItemContainerProvider;
-import fuzs.easyshulkerboxes.network.client.C2SContainerClientInputMessage;
 import fuzs.easyshulkerboxes.network.client.C2SEnderChestMenuMessage;
 import fuzs.easyshulkerboxes.network.client.C2SEnderChestSetSlotMessage;
-import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProviders;
+import fuzs.easyshulkerboxes.world.item.container.EnderChestProvider;
+import fuzs.easyshulkerboxes.api.container.v1.ItemContainerProviderBuilder;
+import fuzs.easyshulkerboxes.world.item.container.MapProvider;
 import fuzs.puzzleslib.config.ConfigHolder;
 import fuzs.puzzleslib.core.CommonFactories;
 import fuzs.puzzleslib.core.ModConstructor;
@@ -35,8 +38,8 @@ public class EasyShulkerBoxes implements ModConstructor {
         CONFIG.bakeConfigs(MOD_ID);
         ModRegistry.touch();
         registerMessages();
-        // it's ok to already do this here since only vanilla items are accessed, any content from mods is solely referenced by id
-        ItemContainerProviders.registerAllBuiltInProviders();
+        ItemContainerProviderSerializers.register(EnderChestProvider.class, EasyShulkerBoxes.id("ender_chest"), ItemContainerProviderBuilder.fromJson(ItemContainerProviderBuilder::toEnderChestProvider));
+        ItemContainerProviderSerializers.register(MapProvider.class, EasyShulkerBoxes.id("map"), jsonElement -> new MapProvider());
     }
 
     private static void registerMessages() {

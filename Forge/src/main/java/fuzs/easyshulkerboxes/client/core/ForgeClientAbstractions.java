@@ -1,5 +1,6 @@
 package fuzs.easyshulkerboxes.client.core;
 
+import fuzs.easyshulkerboxes.impl.client.core.ClientAbstractions;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;

@@ -3,6 +3,7 @@ package fuzs.easyshulkerboxes.client.gui.screens.inventory.tooltip;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+import fuzs.easyshulkerboxes.api.client.container.v1.tooltip.ExpandableClientTooltipComponent;
 import fuzs.easyshulkerboxes.world.inventory.tooltip.MapTooltip;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -13,7 +14,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
-public class ClientMapTooltip extends ExpandableClientTooltipComponentImpl {
+public class ClientMapTooltip extends ExpandableClientTooltipComponent {
     private static final ResourceLocation MAP_BACKGROUND_CHECKERBOARD = new ResourceLocation("textures/map/map_background_checkerboard.png");
 
     private final int mapId;

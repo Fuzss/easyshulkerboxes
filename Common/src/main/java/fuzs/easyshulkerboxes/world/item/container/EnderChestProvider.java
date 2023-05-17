@@ -1,9 +1,10 @@
 package fuzs.easyshulkerboxes.world.item.container;
 
 import com.google.gson.JsonObject;
-import fuzs.easyshulkerboxes.capability.EnderChestMenuCapability;
-import fuzs.easyshulkerboxes.init.ModRegistry;
-import fuzs.easyshulkerboxes.world.inventory.tooltip.ContainerItemTooltip;
+import fuzs.easyshulkerboxes.api.container.v1.TooltipItemContainerProvider;
+import fuzs.easyshulkerboxes.impl.capability.EnderChestMenuCapability;
+import fuzs.easyshulkerboxes.impl.init.ModRegistry;
+import fuzs.easyshulkerboxes.api.container.v1.tooltip.ContainerItemTooltip;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -53,12 +54,14 @@ public class EnderChestProvider implements TooltipItemContainerProvider {
 
     @Override
     public void broadcastContainerChanges(Player player) {
-        // will only actually broadcast when in creative menu as that menu needs manual syncing
         if (player.level.isClientSide) {
+            // will only actually broadcast when in creative menu as that menu needs manual syncing
             ModRegistry.ENDER_CHEST_MENU_CAPABILITY.maybeGet(player)
                     .map(EnderChestMenuCapability::getEnderChestMenu)
                     .ifPresent(AbstractContainerMenu::broadcastChanges);
         } else if (player.containerMenu instanceof ChestMenu menu && menu.getContainer() == player.getEnderChestInventory()) {
+            // sync full state, client ender chest will otherwise likely be messed up when using item interactions
+            // for the ender chest inside the ender chest menu due to packet spam and corresponding delays
             ModRegistry.ENDER_CHEST_MENU_CAPABILITY.maybeGet(player)
                     .map(EnderChestMenuCapability::getEnderChestMenu)
                     .ifPresent(AbstractContainerMenu::broadcastFullState);

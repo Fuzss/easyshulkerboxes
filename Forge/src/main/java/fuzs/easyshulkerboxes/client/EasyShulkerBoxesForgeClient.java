@@ -1,10 +1,10 @@
 package fuzs.easyshulkerboxes.client;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.client.handler.ClientInputActionHandler;
+import fuzs.easyshulkerboxes.impl.client.handler.ClientInputActionHandler;
 import fuzs.easyshulkerboxes.client.handler.EnderChestMenuClientHandler;
-import fuzs.easyshulkerboxes.client.handler.KeyBindingTogglesHandler;
-import fuzs.easyshulkerboxes.client.handler.MouseDraggingHandler;
+import fuzs.easyshulkerboxes.impl.client.handler.KeyBindingTogglesHandler;
+import fuzs.easyshulkerboxes.impl.client.handler.MouseDraggingHandler;
 import fuzs.puzzleslib.client.core.ClientFactories;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ScreenEvent;

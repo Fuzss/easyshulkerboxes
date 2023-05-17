@@ -1,26 +1,63 @@
 package fuzs.easyshulkerboxes.data;
 
-import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProvidersListener;
-import net.minecraft.data.CachedOutput;
+import fuzs.easyshulkerboxes.api.container.v1.BlockEntityProvider;
+import fuzs.easyshulkerboxes.api.container.v1.BlockEntityViewProvider;
+import fuzs.easyshulkerboxes.api.container.v1.BundleProvider;
+import fuzs.easyshulkerboxes.api.container.v1.data.AbstractItemContainerProvider;
+import fuzs.easyshulkerboxes.integration.backpacked.BackpackedIntegration;
+import fuzs.easyshulkerboxes.integration.bagofholding.BagOfHoldingIntegration;
+import fuzs.easyshulkerboxes.integration.inmis.InmisIntegration;
+import fuzs.easyshulkerboxes.integration.reinforcedshulkerboxes.ReinforcedShulkerBoxesIntegration;
+import fuzs.easyshulkerboxes.integration.simplebackpack.SimpleBackpackIntegration;
+import fuzs.easyshulkerboxes.world.item.container.*;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DataProvider;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
-import java.io.IOException;
-
-public class ModItemContainerProvider implements DataProvider {
-    private final DataGenerator dataGenerator;
+public class ModItemContainerProvider extends AbstractItemContainerProvider {
 
     public ModItemContainerProvider(DataGenerator dataGenerator) {
-        this.dataGenerator = dataGenerator;
+        super(dataGenerator);
     }
 
     @Override
-    public void run(CachedOutput output) throws IOException {
-        ItemContainerProvidersListener.serializeBuiltInProviders(output, this.dataGenerator.getOutputFolder());
+    protected void registerBuiltInProviders() {
+        this.registerVanillaProviders();
+        BagOfHoldingIntegration.registerProviders(this::add);
+        BackpackedIntegration.registerProviders(this::add);
+        SimpleBackpackIntegration.registerProviders(this::add);
+        InmisIntegration.registerProviders(this::add);
+        ReinforcedShulkerBoxesIntegration.registerProviders(this::add);
     }
 
-    @Override
-    public String getName() {
-        return "Item Container Provider";
+    private void registerVanillaProviders() {
+        this.registerShulkerBoxProviders();
+        this.add(Items.ENDER_CHEST, new EnderChestProvider());
+        this.add(Items.BUNDLE, new BundleProvider(64));
+        this.add(Items.FILLED_MAP, new MapProvider());
+        this.add(Items.DROPPER, new BlockEntityProvider(BlockEntityType.DROPPER, 3, 3));
+        this.add(Items.DISPENSER, new BlockEntityProvider(BlockEntityType.DISPENSER, 3, 3));
+        this.add(Items.CHEST, new BlockEntityProvider(BlockEntityType.CHEST, 9, 3));
+        this.add(Items.TRAPPED_CHEST, new BlockEntityProvider(BlockEntityType.TRAPPED_CHEST, 9, 3));
+        this.add(Items.BARREL, new BlockEntityProvider(BlockEntityType.BARREL, 9, 3));
+        this.add(Items.HOPPER, new BlockEntityProvider(BlockEntityType.HOPPER, 5, 1));
+        this.add(Items.FURNACE, new BlockEntityViewProvider(BlockEntityType.FURNACE, 3, 1));
+        this.add(Items.BLAST_FURNACE, new BlockEntityViewProvider(BlockEntityType.BLAST_FURNACE, 3, 1));
+        this.add(Items.SMOKER, new BlockEntityViewProvider(BlockEntityType.SMOKER, 3, 1));
+        this.add(Items.BREWING_STAND, new BlockEntityViewProvider(BlockEntityType.BREWING_STAND, 5, 1));
+        this.add(Items.CAMPFIRE, new BlockEntityViewProvider(BlockEntityType.CAMPFIRE, 4, 1));
+        this.add(Items.SOUL_CAMPFIRE, new BlockEntityViewProvider(BlockEntityType.CAMPFIRE, 4, 1));
+    }
+
+    private void registerShulkerBoxProviders() {
+        this.add(Items.SHULKER_BOX, BlockEntityProvider.shulkerBoxProvider(BlockEntityType.SHULKER_BOX, 9, 3, null));
+        // only affects vanilla shulker boxes, other mods might add shulker boxes with a different inventory size
+        for (DyeColor dyeColor : DyeColor.values()) {
+            Item item = ShulkerBoxBlock.getBlockByColor(dyeColor).asItem();
+            this.add(item, BlockEntityProvider.shulkerBoxProvider(BlockEntityType.SHULKER_BOX, 9, 3, dyeColor));
+        }
     }
 }

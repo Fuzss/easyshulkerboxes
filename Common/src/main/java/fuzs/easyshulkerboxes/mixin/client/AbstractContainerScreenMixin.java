@@ -1,8 +1,8 @@
 package fuzs.easyshulkerboxes.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import fuzs.easyshulkerboxes.client.handler.MouseDraggingHandler;
-import fuzs.easyshulkerboxes.client.helper.ItemDecorationHelper;
+import fuzs.easyshulkerboxes.impl.client.handler.MouseDraggingHandler;
+import fuzs.easyshulkerboxes.impl.client.helper.ItemDecorationHelper;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -40,6 +40,7 @@ abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> ext
         // (it was rendering in front of items and behaved differently on the creative screen and there were also difference between Forge and Fabric for some reason)
         // so here goes the mixin ¯\_(ツ)_/¯
         if (MouseDraggingHandler.INSTANCE.containerDragSlots.contains(slot)) {
+            // slots will sometimes be added to dragged slots when simply clicking on a slot, so don't render our overlay then
             if (MouseDraggingHandler.INSTANCE.containerDragSlots.size() > 1 || !this.isHovering(slot, this.easyshulkerboxes$mouseX, this.easyshulkerboxes$mouseY)) {
                 GuiComponent.fill(poseStack, slot.x, slot.y, slot.x + 16, slot.y + 16, -2130706433);
             }

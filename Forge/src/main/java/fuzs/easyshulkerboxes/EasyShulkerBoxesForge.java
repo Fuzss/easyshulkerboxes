@@ -1,12 +1,12 @@
 package fuzs.easyshulkerboxes;
 
-import fuzs.easyshulkerboxes.capability.ContainerClientInputCapability;
-import fuzs.easyshulkerboxes.capability.EnderChestMenuCapability;
 import fuzs.easyshulkerboxes.data.ModItemContainerProvider;
 import fuzs.easyshulkerboxes.data.ModLanguageProvider;
 import fuzs.easyshulkerboxes.handler.EnderChestMenuHandler;
-import fuzs.easyshulkerboxes.init.ModRegistry;
-import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProvidersListener;
+import fuzs.easyshulkerboxes.impl.capability.ContainerClientInputCapability;
+import fuzs.easyshulkerboxes.impl.capability.EnderChestMenuCapability;
+import fuzs.easyshulkerboxes.impl.init.ModRegistry;
+import fuzs.easyshulkerboxes.impl.world.item.container.ItemContainerProviders;
 import fuzs.puzzleslib.capability.ForgeCapabilityController;
 import fuzs.puzzleslib.core.CommonFactories;
 import net.minecraft.data.DataGenerator;
@@ -43,15 +43,15 @@ public class EasyShulkerBoxesForge {
             EnderChestMenuHandler.onLivingTick(evt.getEntity());
         });
         MinecraftForge.EVENT_BUS.addListener((final AddReloadListenerEvent evt) -> {
-            evt.addListener(ItemContainerProvidersListener.INSTANCE);
+            evt.addListener(ItemContainerProviders.INSTANCE);
         });
         MinecraftForge.EVENT_BUS.addListener((final OnDatapackSyncEvent evt) -> {
             ServerPlayer player = evt.getPlayer();
             if (player != null) {
-                ItemContainerProvidersListener.INSTANCE.sendProvidersToPlayer(player);
+                ItemContainerProviders.INSTANCE.sendProvidersToPlayer(player);
             } else {
                 for (ServerPlayer serverPlayer : evt.getPlayerList().getPlayers()) {
-                    ItemContainerProvidersListener.INSTANCE.sendProvidersToPlayer(serverPlayer);
+                    ItemContainerProviders.INSTANCE.sendProvidersToPlayer(serverPlayer);
                 }
             }
         });
