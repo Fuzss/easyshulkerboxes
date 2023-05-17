@@ -1,6 +1,6 @@
-package fuzs.easyshulkerboxes.api.container.v1;
+package fuzs.easyshulkerboxes.api.container.v1.provider;
 
-import fuzs.easyshulkerboxes.impl.world.item.container.ContainerItemHelper;
+import fuzs.easyshulkerboxes.api.container.v1.ContainerItemHelper;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
@@ -19,9 +19,9 @@ public interface TooltipItemContainerProvider extends ItemContainerProvider {
     @Override
     default Optional<TooltipComponent> getTooltipImage(ItemStack containerStack, Player player) {
         SimpleContainer container = this.getItemContainer(containerStack, player, false);
-        NonNullList<ItemStack> items = ContainerItemHelper.containerToList(container);
-        return Optional.of(this.createTooltipImageComponent(containerStack, items));
+        NonNullList<ItemStack> items = ContainerItemHelper.INSTANCE.convertContainerToList(container);
+        return Optional.of(this.createTooltipImageComponent(containerStack, player, items));
     }
 
-    TooltipComponent createTooltipImageComponent(ItemStack containerStack, NonNullList<ItemStack> items);
+    TooltipComponent createTooltipImageComponent(ItemStack containerStack, Player player, NonNullList<ItemStack> items);
 }

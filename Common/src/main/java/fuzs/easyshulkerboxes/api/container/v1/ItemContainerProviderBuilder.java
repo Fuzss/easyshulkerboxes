@@ -3,8 +3,8 @@ package fuzs.easyshulkerboxes.api.container.v1;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import fuzs.easyshulkerboxes.world.item.container.EnderChestProvider;
-import fuzs.easyshulkerboxes.impl.world.item.container.ContainerItemHelper;
+import fuzs.easyshulkerboxes.api.container.v1.provider.*;
+import fuzs.easyshulkerboxes.impl.world.item.container.ItemInteractionHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -53,7 +53,7 @@ public class ItemContainerProviderBuilder {
         this.inventoryWidth = GsonHelper.getAsInt(jsonObject, "inventory_width", -1);
         this.inventoryHeight = GsonHelper.getAsInt(jsonObject, "inventory_height", -1);
         this.dyeColor = DyeColor.byName(GsonHelper.getAsString(jsonObject, "background_color", ""), null);
-        this.nbtKey = GsonHelper.getAsString(jsonObject, "nbt_key", ContainerItemHelper.TAG_ITEMS).split("/");
+        this.nbtKey = GsonHelper.getAsString(jsonObject, "nbt_key", ItemInteractionHelper.TAG_ITEMS).split("/");
         this.filterContainerItems = GsonHelper.getAsBoolean(jsonObject, "filter_container_items", false);
         if (jsonObject.has("block_entity_type")) {
             ResourceLocation blockEntityTypeKey = new ResourceLocation(GsonHelper.getAsString(jsonObject, "block_entity_type"));
@@ -85,8 +85,9 @@ public class ItemContainerProviderBuilder {
     }
 
     public ItemContainerProvider toBundleProvider() {
-        if (this.capacity == -1)
+        if (this.capacity == -1) {
             throw new IllegalStateException(getErrorMessage("capacity", "bundle"));
+        }
         return new BundleProvider(this.capacity, this.dyeColor, this.nbtKey);
     }
 

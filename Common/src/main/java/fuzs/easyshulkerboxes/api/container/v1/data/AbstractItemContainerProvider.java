@@ -2,7 +2,7 @@ package fuzs.easyshulkerboxes.api.container.v1.data;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
-import fuzs.easyshulkerboxes.api.container.v1.ItemContainerProvider;
+import fuzs.easyshulkerboxes.api.container.v1.provider.ItemContainerProvider;
 import fuzs.easyshulkerboxes.api.container.v1.ItemContainerProviderSerializers;
 import fuzs.easyshulkerboxes.impl.world.item.container.ItemContainerProviders;
 import net.minecraft.core.Registry;

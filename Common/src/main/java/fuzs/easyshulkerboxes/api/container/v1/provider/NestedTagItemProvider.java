@@ -1,10 +1,11 @@
-package fuzs.easyshulkerboxes.api.container.v1;
+package fuzs.easyshulkerboxes.api.container.v1.provider;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import fuzs.easyshulkerboxes.impl.world.item.container.ContainerItemHelper;
+import fuzs.easyshulkerboxes.api.container.v1.ContainerItemHelper;
+import fuzs.easyshulkerboxes.impl.world.item.container.ItemInteractionHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -30,15 +31,15 @@ public abstract class NestedTagItemProvider implements TooltipItemContainerProvi
 
     public NestedTagItemProvider(@Nullable DyeColor dyeColor, String... nbtKey) {
         this.dyeColor = dyeColor;
-        this.backgroundColor = ContainerItemHelper.getBackgroundColor(dyeColor);
-        this.nbtKey = nbtKey.length == 0 ? new String[]{ContainerItemHelper.TAG_ITEMS} : nbtKey;
+        this.backgroundColor = ContainerItemHelper.INSTANCE.getBackgroundColor(dyeColor);
+        this.nbtKey = nbtKey.length == 0 ? new String[]{ItemInteractionHelper.TAG_ITEMS} : nbtKey;
     }
 
-    public float[] getBackgroundColor() {
+    protected float[] getBackgroundColor() {
         return this.backgroundColor;
     }
 
-    public String getNbtKey() {
+    protected String getNbtKey() {
         return this.nbtKey[this.nbtKey.length - 1];
     }
 
@@ -75,7 +76,8 @@ public abstract class NestedTagItemProvider implements TooltipItemContainerProvi
 
     @Override
     public boolean hasItemContainerData(ItemStack containerStack) {
-        return ContainerItemHelper.hasItemContainerTag(containerStack, this, this.getNbtKey());
+        CompoundTag tag = this.getItemContainerData(containerStack);
+        return tag != null && tag.contains(this.getNbtKey());
     }
 
     @Nullable
@@ -134,7 +136,7 @@ public abstract class NestedTagItemProvider implements TooltipItemContainerProvi
         if (this.dyeColor != null) {
             jsonObject.addProperty("background_color", this.dyeColor.getName());
         }
-        if (this.nbtKey.length != 1 || !this.nbtKey[0].equals(ContainerItemHelper.TAG_ITEMS)) {
+        if (this.nbtKey.length != 1 || !this.nbtKey[0].equals(ItemInteractionHelper.TAG_ITEMS)) {
             jsonObject.addProperty("nbt_key", String.join("/", this.nbtKey));
         }
         if (!this.values.isEmpty()) {

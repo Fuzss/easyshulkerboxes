@@ -1,9 +1,9 @@
 package fuzs.easyshulkerboxes.integration.inmis;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.api.container.v1.ItemContainerProvider;
+import fuzs.easyshulkerboxes.api.container.v1.provider.ItemContainerProvider;
 import fuzs.easyshulkerboxes.api.container.v1.ItemContainerProviderSerializers;
-import fuzs.easyshulkerboxes.world.item.container.EnderChestProvider;
+import fuzs.easyshulkerboxes.api.container.v1.provider.EnderChestProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.Nullable;

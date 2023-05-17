@@ -3,7 +3,7 @@ package fuzs.easyshulkerboxes.impl.client.handler;
 import com.google.common.collect.Sets;
 import com.mojang.blaze3d.platform.InputConstants;
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.api.container.v1.ItemContainerProvider;
+import fuzs.easyshulkerboxes.api.container.v1.provider.ItemContainerProvider;
 import fuzs.easyshulkerboxes.impl.config.ClientConfig;
 import fuzs.easyshulkerboxes.impl.config.ServerConfig;
 import fuzs.easyshulkerboxes.mixin.client.accessor.AbstractContainerScreenAccessor;

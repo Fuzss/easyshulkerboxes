@@ -1,7 +1,7 @@
-package fuzs.easyshulkerboxes.network;
+package fuzs.easyshulkerboxes.impl.network;
 
 import fuzs.easyshulkerboxes.impl.capability.EnderChestMenuCapability;
-import fuzs.easyshulkerboxes.client.world.inventory.EnderChestClientSynchronizer;
+import fuzs.easyshulkerboxes.impl.client.world.inventory.EnderChestClientSynchronizer;
 import fuzs.easyshulkerboxes.impl.init.ModRegistry;
 import fuzs.puzzleslib.network.Message;
 import net.minecraft.core.NonNullList;

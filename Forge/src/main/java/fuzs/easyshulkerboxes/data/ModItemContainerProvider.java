@@ -1,8 +1,9 @@
 package fuzs.easyshulkerboxes.data;
 
-import fuzs.easyshulkerboxes.api.container.v1.BlockEntityProvider;
-import fuzs.easyshulkerboxes.api.container.v1.BlockEntityViewProvider;
-import fuzs.easyshulkerboxes.api.container.v1.BundleProvider;
+import fuzs.easyshulkerboxes.api.container.v1.provider.BlockEntityProvider;
+import fuzs.easyshulkerboxes.api.container.v1.provider.BlockEntityViewProvider;
+import fuzs.easyshulkerboxes.api.container.v1.provider.BundleProvider;
+import fuzs.easyshulkerboxes.api.container.v1.provider.EnderChestProvider;
 import fuzs.easyshulkerboxes.api.container.v1.data.AbstractItemContainerProvider;
 import fuzs.easyshulkerboxes.integration.backpacked.BackpackedIntegration;
 import fuzs.easyshulkerboxes.integration.bagofholding.BagOfHoldingIntegration;

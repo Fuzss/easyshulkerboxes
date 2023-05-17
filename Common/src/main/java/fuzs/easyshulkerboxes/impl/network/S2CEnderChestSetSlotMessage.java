@@ -1,4 +1,4 @@
-package fuzs.easyshulkerboxes.network;
+package fuzs.easyshulkerboxes.impl.network;
 
 import fuzs.easyshulkerboxes.impl.capability.EnderChestMenuCapability;
 import fuzs.easyshulkerboxes.impl.init.ModRegistry;

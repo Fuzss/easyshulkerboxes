@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.api.container.v1.ItemContainerProvider;
+import fuzs.easyshulkerboxes.api.container.v1.provider.ItemContainerProvider;
 import fuzs.easyshulkerboxes.api.container.v1.ItemContainerProviderSerializers;
 import fuzs.easyshulkerboxes.impl.network.S2CSyncItemContainerProvider;
 import fuzs.puzzleslib.core.ModLoaderEnvironment;

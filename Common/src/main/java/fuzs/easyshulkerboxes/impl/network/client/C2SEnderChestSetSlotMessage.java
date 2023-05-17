@@ -1,8 +1,8 @@
-package fuzs.easyshulkerboxes.network.client;
+package fuzs.easyshulkerboxes.impl.network.client;
 
 import fuzs.easyshulkerboxes.impl.capability.EnderChestMenuCapability;
 import fuzs.easyshulkerboxes.impl.init.ModRegistry;
-import fuzs.easyshulkerboxes.network.S2CEnderChestSetSlotMessage;
+import fuzs.easyshulkerboxes.impl.network.S2CEnderChestSetSlotMessage;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

@@ -1,8 +1,9 @@
-package fuzs.easyshulkerboxes.api.container.v1;
+package fuzs.easyshulkerboxes.api.container.v1.provider;
 
 import com.google.gson.JsonObject;
+import fuzs.easyshulkerboxes.api.container.v1.ContainerItemHelper;
 import fuzs.easyshulkerboxes.api.container.v1.tooltip.ContainerItemTooltip;
-import fuzs.easyshulkerboxes.impl.world.item.container.ContainerItemHelper;
+import fuzs.easyshulkerboxes.impl.world.item.container.ItemInteractionHelper;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +18,7 @@ public class SimpleItemProvider extends NestedTagItemProvider {
     private boolean filterContainerItems;
 
     public SimpleItemProvider(int inventoryWidth, int inventoryHeight) {
-        this(inventoryWidth, inventoryHeight, null, ContainerItemHelper.TAG_ITEMS);
+        this(inventoryWidth, inventoryHeight, null, ItemInteractionHelper.TAG_ITEMS);
     }
 
     public SimpleItemProvider(int inventoryWidth, int inventoryHeight, @Nullable DyeColor dyeColor, String... nbtKey) {
@@ -31,21 +32,22 @@ public class SimpleItemProvider extends NestedTagItemProvider {
         return this;
     }
 
-    public int getInventoryWidth() {
+    protected int getInventoryWidth() {
         return this.inventoryWidth;
     }
 
-    public int getInventoryHeight() {
+    protected int getInventoryHeight() {
         return this.inventoryHeight;
     }
 
-    public int getInventorySize() {
+    protected int getInventorySize() {
         return this.getInventoryWidth() * this.getInventoryHeight();
     }
 
     @Override
     public SimpleContainer getItemContainer(ItemStack containerStack, Player player, boolean allowSaving) {
-        return ContainerItemHelper.loadItemContainer(containerStack, this, this.getInventorySize(), allowSaving, this.getNbtKey());
+        int inventorySize = this.getInventorySize();
+        return ContainerItemHelper.INSTANCE.loadItemContainer(containerStack, this, inventorySize, allowSaving, this.getNbtKey());
     }
 
     @Override
@@ -54,7 +56,7 @@ public class SimpleItemProvider extends NestedTagItemProvider {
     }
 
     @Override
-    public TooltipComponent createTooltipImageComponent(ItemStack containerStack, NonNullList<ItemStack> items) {
+    public TooltipComponent createTooltipImageComponent(ItemStack containerStack, Player player, NonNullList<ItemStack> items) {
         return new ContainerItemTooltip(items, this.getInventoryWidth(), this.getInventoryHeight(), this.getBackgroundColor());
     }
 

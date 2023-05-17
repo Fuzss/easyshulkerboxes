@@ -1,8 +1,7 @@
 package fuzs.easyshulkerboxes.integration.backpacked;
 
-import com.google.common.collect.ImmutableList;
-import fuzs.easyshulkerboxes.api.container.v1.ItemContainerProvider;
-import fuzs.easyshulkerboxes.api.container.v1.SimpleItemProvider;
+import fuzs.easyshulkerboxes.api.container.v1.provider.ItemContainerProvider;
+import fuzs.easyshulkerboxes.api.container.v1.provider.SimpleItemProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 
@@ -14,7 +13,7 @@ public class BackpackedIntegration {
     /**
      * copied from Backpacked's config
      */
-    private static final List<String> DISALLOWED_ITEMS = ImmutableList.copyOf(new ArrayList<>() {{
+    private static final List<String> DISALLOWED_ITEMS = new ArrayList<>() {{
         this.add("travelersbackpack:custom_travelers_backpack");
         this.add("pinesbarrels:better_barrel");
         this.add("quark:seed_pouch");
@@ -64,7 +63,7 @@ public class BackpackedIntegration {
         this.add("create:black_toolbox");
         this.add("mekanism:personal_chest");
         this.add("supplementaries:sack");
-    }});
+    }};
 
     public static void registerProviders(BiConsumer<ResourceLocation, ItemContainerProvider> consumer) {
         consumer.accept(id("backpack"), new SimpleItemProvider(9, 1, DyeColor.BROWN).filterContainerItems().disallowValues(DISALLOWED_ITEMS));

@@ -1,7 +1,7 @@
 package fuzs.easyshulkerboxes.mixin;
 
-import fuzs.easyshulkerboxes.api.container.v1.ItemContainerProvider;
-import fuzs.easyshulkerboxes.impl.world.item.container.ContainerItemHelper;
+import fuzs.easyshulkerboxes.api.container.v1.provider.ItemContainerProvider;
+import fuzs.easyshulkerboxes.impl.world.item.container.ItemInteractionHelper;
 import fuzs.easyshulkerboxes.impl.world.item.container.ItemContainerProviders;
 import fuzs.puzzleslib.proxy.Proxy;
 import net.minecraft.world.entity.SlotAccess;
@@ -25,7 +25,7 @@ abstract class ItemStackMixin {
         ItemStack containerStack = ItemStack.class.cast(this);
         ItemContainerProvider provider = ItemContainerProviders.INSTANCE.get(containerStack);
         if (provider != null && provider.allowsPlayerInteractions(containerStack, player)) {
-            boolean result = ContainerItemHelper.overrideStackedOnOther(() -> provider.getItemContainer(containerStack, player, true), slot, clickAction, player, stack -> provider.getAcceptableItemCount(containerStack, stack, player));
+            boolean result = ItemInteractionHelper.overrideStackedOnOther(() -> provider.getItemContainer(containerStack, player, true), slot, clickAction, player, stack -> provider.getAcceptableItemCount(containerStack, stack, player));
             if (result) provider.broadcastContainerChanges(player);
             callback.setReturnValue(result);
         }
@@ -36,7 +36,7 @@ abstract class ItemStackMixin {
         ItemStack containerStack = ItemStack.class.cast(this);
         ItemContainerProvider provider = ItemContainerProviders.INSTANCE.get(containerStack);
         if (provider != null && provider.allowsPlayerInteractions(containerStack, player)) {
-            boolean result = ContainerItemHelper.overrideOtherStackedOnMe(() -> provider.getItemContainer(containerStack, player, true), stackOnMe, slot, clickAction, player, slotAccess, stack -> provider.getAcceptableItemCount(containerStack, stack, player));
+            boolean result = ItemInteractionHelper.overrideOtherStackedOnMe(() -> provider.getItemContainer(containerStack, player, true), stackOnMe, slot, clickAction, player, slotAccess, stack -> provider.getAcceptableItemCount(containerStack, stack, player));
             if (result) provider.broadcastContainerChanges(player);
             callback.setReturnValue(result);
         }

@@ -1,4 +1,4 @@
-package fuzs.easyshulkerboxes.api.container.v1;
+package fuzs.easyshulkerboxes.api.container.v1.provider;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;

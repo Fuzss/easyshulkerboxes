@@ -1,4 +1,4 @@
-package fuzs.easyshulkerboxes.api.container.v1;
+package fuzs.easyshulkerboxes.api.container.v1.provider;
 
 import com.google.gson.JsonObject;
 import net.minecraft.core.Registry;

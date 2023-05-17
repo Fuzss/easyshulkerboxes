@@ -2,7 +2,7 @@ package fuzs.easyshulkerboxes;
 
 import fuzs.easyshulkerboxes.data.ModItemContainerProvider;
 import fuzs.easyshulkerboxes.data.ModLanguageProvider;
-import fuzs.easyshulkerboxes.handler.EnderChestMenuHandler;
+import fuzs.easyshulkerboxes.impl.handler.EnderChestMenuHandler;
 import fuzs.easyshulkerboxes.impl.capability.ContainerClientInputCapability;
 import fuzs.easyshulkerboxes.impl.capability.EnderChestMenuCapability;
 import fuzs.easyshulkerboxes.impl.init.ModRegistry;

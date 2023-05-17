@@ -1,8 +1,8 @@
-package fuzs.easyshulkerboxes.world.inventory;
+package fuzs.easyshulkerboxes.impl.world.inventory;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.network.S2CEnderChestSetContentMessage;
-import fuzs.easyshulkerboxes.network.S2CEnderChestSetSlotMessage;
+import fuzs.easyshulkerboxes.impl.network.S2CEnderChestSetContentMessage;
+import fuzs.easyshulkerboxes.impl.network.S2CEnderChestSetSlotMessage;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;

@@ -1,7 +1,6 @@
-package fuzs.easyshulkerboxes.world.item.container;
+package fuzs.easyshulkerboxes.api.container.v1.provider;
 
 import com.google.gson.JsonObject;
-import fuzs.easyshulkerboxes.api.container.v1.TooltipItemContainerProvider;
 import fuzs.easyshulkerboxes.impl.capability.EnderChestMenuCapability;
 import fuzs.easyshulkerboxes.impl.init.ModRegistry;
 import fuzs.easyshulkerboxes.api.container.v1.tooltip.ContainerItemTooltip;
@@ -48,7 +47,7 @@ public class EnderChestProvider implements TooltipItemContainerProvider {
     }
 
     @Override
-    public TooltipComponent createTooltipImageComponent(ItemStack containerStack, NonNullList<ItemStack> items) {
+    public TooltipComponent createTooltipImageComponent(ItemStack containerStack, Player player, NonNullList<ItemStack> items) {
         return new ContainerItemTooltip(items, 9, 3, DEFAULT_ENDER_CHEST_COLOR);
     }
 

@@ -1,7 +1,7 @@
-package fuzs.easyshulkerboxes.network.client;
+package fuzs.easyshulkerboxes.impl.network.client;
 
-import fuzs.easyshulkerboxes.handler.EnderChestMenuHandler;
-import fuzs.easyshulkerboxes.world.inventory.EnderChestSynchronizer;
+import fuzs.easyshulkerboxes.impl.handler.EnderChestMenuHandler;
+import fuzs.easyshulkerboxes.impl.world.inventory.EnderChestSynchronizer;
 import fuzs.puzzleslib.network.Message;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;

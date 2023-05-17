@@ -5,7 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.api.container.v1.ItemContainerProvider;
+import fuzs.easyshulkerboxes.api.container.v1.provider.ItemContainerProvider;
 import fuzs.easyshulkerboxes.impl.config.ClientConfig;
 import fuzs.easyshulkerboxes.impl.world.item.container.ItemContainerProviders;
 import fuzs.easyshulkerboxes.mixin.client.accessor.AbstractContainerMenuAccessor;

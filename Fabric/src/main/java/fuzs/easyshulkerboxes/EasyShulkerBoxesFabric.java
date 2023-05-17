@@ -2,7 +2,7 @@ package fuzs.easyshulkerboxes;
 
 import fuzs.easyshulkerboxes.api.event.entity.living.LivingEvents;
 import fuzs.easyshulkerboxes.core.FabricResourceReloadListener;
-import fuzs.easyshulkerboxes.handler.EnderChestMenuHandler;
+import fuzs.easyshulkerboxes.impl.handler.EnderChestMenuHandler;
 import fuzs.easyshulkerboxes.impl.world.item.container.ItemContainerProviders;
 import fuzs.puzzleslib.core.CommonFactories;
 import net.fabricmc.api.ModInitializer;

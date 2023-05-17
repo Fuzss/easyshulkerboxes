@@ -4,7 +4,7 @@ import fuzs.easyshulkerboxes.EasyShulkerBoxes;
 import fuzs.easyshulkerboxes.api.client.event.MouseDragEvents;
 import fuzs.easyshulkerboxes.api.event.PlayLevelSoundEvents;
 import fuzs.easyshulkerboxes.impl.client.handler.ClientInputActionHandler;
-import fuzs.easyshulkerboxes.client.handler.EnderChestMenuClientHandler;
+import fuzs.easyshulkerboxes.impl.client.handler.EnderChestMenuClientHandler;
 import fuzs.easyshulkerboxes.impl.client.handler.KeyBindingTogglesHandler;
 import fuzs.easyshulkerboxes.impl.client.handler.MouseDraggingHandler;
 import fuzs.puzzleslib.client.core.ClientFactories;

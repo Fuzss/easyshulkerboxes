@@ -12,9 +12,4 @@ public interface BundleItemAccessor {
     static int easyshulkerboxes$getWeight(ItemStack stack) {
         throw new IllegalStateException();
     }
-
-    @Invoker("getContentWeight")
-    static int easyshulkerboxes$getContentWeight(ItemStack stack) {
-        throw new IllegalStateException();
-    }
 }

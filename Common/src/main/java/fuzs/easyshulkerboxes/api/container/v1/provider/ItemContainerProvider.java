@@ -1,6 +1,7 @@
-package fuzs.easyshulkerboxes.api.container.v1;
+package fuzs.easyshulkerboxes.api.container.v1.provider;
 
 import com.google.gson.JsonObject;
+import fuzs.easyshulkerboxes.api.container.v1.ItemContainerProviderSerializers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.SimpleContainer;

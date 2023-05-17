@@ -1,7 +1,7 @@
 package fuzs.easyshulkerboxes.integration.bagofholding;
 
-import fuzs.easyshulkerboxes.api.container.v1.ItemContainerProvider;
-import fuzs.easyshulkerboxes.api.container.v1.SimpleItemProvider;
+import fuzs.easyshulkerboxes.api.container.v1.provider.ItemContainerProvider;
+import fuzs.easyshulkerboxes.api.container.v1.provider.SimpleItemProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 

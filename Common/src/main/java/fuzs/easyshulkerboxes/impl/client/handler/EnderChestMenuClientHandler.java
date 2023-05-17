@@ -1,8 +1,8 @@
-package fuzs.easyshulkerboxes.client.handler;
+package fuzs.easyshulkerboxes.impl.client.handler;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.handler.EnderChestMenuHandler;
-import fuzs.easyshulkerboxes.network.client.C2SEnderChestMenuMessage;
+import fuzs.easyshulkerboxes.impl.handler.EnderChestMenuHandler;
+import fuzs.easyshulkerboxes.impl.network.client.C2SEnderChestMenuMessage;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
