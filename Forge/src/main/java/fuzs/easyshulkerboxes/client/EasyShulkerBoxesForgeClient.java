@@ -53,6 +53,9 @@ public class EasyShulkerBoxesForgeClient {
         MinecraftForge.EVENT_BUS.addListener((final ScreenEvent.Render.Post evt) -> {
             ClientInputActionHandler.onAfterRender(evt.getScreen(), evt.getPoseStack(), evt.getMouseX(), evt.getMouseY(), evt.getPartialTick());
         });
+        MinecraftForge.EVENT_BUS.addListener((final ScreenEvent.MouseButtonReleased.Pre evt) -> {
+            ClientInputActionHandler.onBeforeMouseRelease(evt.getScreen(), evt.getMouseX(), evt.getMouseY(), evt.getButton()).ifPresent(unit -> evt.setCanceled(true));
+        });
         MinecraftForge.EVENT_BUS.addListener((final PlayLevelSoundEvent.AtEntity evt) -> {
             MouseDraggingHandler.INSTANCE.onPlaySoundAtPosition(evt.getEntity(), evt.getSound(), evt.getSource(), evt.getOriginalVolume(), evt.getOriginalPitch()).ifPresent(unit -> evt.setCanceled(true));
         });

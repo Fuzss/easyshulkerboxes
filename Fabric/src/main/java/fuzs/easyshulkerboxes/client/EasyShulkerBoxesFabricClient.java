@@ -52,6 +52,9 @@ public class EasyShulkerBoxesFabricClient implements ClientModInitializer {
                     return ClientInputActionHandler.onBeforeKeyPressed(screen, key, scancode, modifiers).isEmpty();
                 });
                 ScreenEvents.afterRender(_screen).register(ClientInputActionHandler::onAfterRender);
+                ScreenMouseEvents.allowMouseRelease(_screen).register((Screen screen, double mouseX, double mouseY, int button) -> {
+                    return ClientInputActionHandler.onBeforeMouseRelease(screen, mouseX, mouseY, button).isEmpty();
+                });
             }
         });
         MouseDragEvents.BEFORE.register(MouseDraggingHandler.INSTANCE::onBeforeMouseDragged);

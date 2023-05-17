@@ -3,12 +3,10 @@ package fuzs.easyshulkerboxes.client.gui.screens.inventory.tooltip;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.easyshulkerboxes.api.world.item.container.ItemContainerProvider;
 import fuzs.easyshulkerboxes.client.core.ClientAbstractions;
+import fuzs.easyshulkerboxes.client.handler.ClientInputActionHandler;
 import fuzs.easyshulkerboxes.config.ClientConfig;
 import fuzs.easyshulkerboxes.world.inventory.helper.ContainerSlotHelper;
-import fuzs.easyshulkerboxes.world.item.storage.ItemContainerProvidersListener;
-import fuzs.puzzleslib.client.gui.screens.CommonScreens;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
@@ -19,7 +17,6 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -110,16 +107,8 @@ public abstract class AbstractClientContainerItemTooltip extends ExpandableClien
 
     private static boolean willTooltipBeMoved(Minecraft minecraft, Font font, int mouseX, int mouseY) {
         if (!(minecraft.screen instanceof AbstractContainerScreen<?> containerScreen)) return false;
-        ItemStack stack = containerScreen.getMenu().getCarried();
-        ItemContainerProvider provider = ItemContainerProvidersListener.INSTANCE.get(stack);
-        if (provider == null || !provider.hasItemContainerData(stack)) {
-            Slot slot = CommonScreens.INSTANCE.getHoveredSlot(containerScreen);
-            if (slot != null && slot.hasItem()) {
-                stack = slot.getItem();
-            } else {
-                return false;
-            }
-        }
+        ItemStack stack = ClientInputActionHandler.getContainerStack(containerScreen, true);
+        if (stack.isEmpty()) return false;
         List<ClientTooltipComponent> tooltipComponents = ClientAbstractions.INSTANCE.getTooltipComponents(containerScreen, font, mouseX, mouseY, stack);
         int maxWidth = tooltipComponents.stream().mapToInt(tooltipComponent -> tooltipComponent.getWidth(font)).max().orElse(0);
         // actual mouseX, tooltip components are passed the adjusted position where the tooltip should be rendered

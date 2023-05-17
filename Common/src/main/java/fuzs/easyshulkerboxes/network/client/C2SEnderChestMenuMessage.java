@@ -1,5 +1,6 @@
 package fuzs.easyshulkerboxes.network.client;
 
+import fuzs.easyshulkerboxes.handler.EnderChestMenuHandler;
 import fuzs.easyshulkerboxes.world.inventory.EnderChestSynchronizer;
 import fuzs.puzzleslib.network.Message;
 import net.minecraft.network.FriendlyByteBuf;
@@ -24,7 +25,7 @@ public class C2SEnderChestMenuMessage implements Message<C2SEnderChestMenuMessag
 
             @Override
             public void handle(C2SEnderChestMenuMessage message, Player player, Object gameInstance) {
-                fuzs.easyshulkerboxes.handler.EnderChestMenuHandler.openEnderChestMenu(player).ifPresent(menu -> {
+                EnderChestMenuHandler.openEnderChestMenu(player).ifPresent(menu -> {
                     menu.setSynchronizer(new EnderChestSynchronizer((ServerPlayer) player));
                 });
             }

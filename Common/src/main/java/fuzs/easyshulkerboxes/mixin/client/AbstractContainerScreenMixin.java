@@ -10,15 +10,27 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractContainerScreen.class)
 abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> extends Screen {
+    @Unique
+    private int easyshulkerboxes$mouseX;
+    @Unique
+    private int easyshulkerboxes$mouseY;
 
     protected AbstractContainerScreenMixin(Component component) {
         super(component);
+    }
+
+    @Inject(method = "render", at = @At("HEAD"))
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick, CallbackInfo callback) {
+        this.easyshulkerboxes$mouseX = mouseX;
+        this.easyshulkerboxes$mouseY = mouseY;
     }
 
     // having 'remap = false' on here crashes Forge on start-up for some reason
@@ -28,8 +40,15 @@ abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> ext
         // (it was rendering in front of items and behaved differently on the creative screen and there were also difference between Forge and Fabric for some reason)
         // so here goes the mixin ¯\_(ツ)_/¯
         if (MouseDraggingHandler.INSTANCE.containerDragSlots.contains(slot)) {
-            GuiComponent.fill(poseStack, slot.x, slot.y, slot.x + 16, slot.y + 16, -2130706433);
+            if (MouseDraggingHandler.INSTANCE.containerDragSlots.size() > 1 || !this.isHovering(slot, this.easyshulkerboxes$mouseX, this.easyshulkerboxes$mouseY)) {
+                GuiComponent.fill(poseStack, slot.x, slot.y, slot.x + 16, slot.y + 16, -2130706433);
+            }
         }
+    }
+
+    @Shadow
+    private boolean isHovering(Slot slot, double mouseX, double mouseY) {
+        throw new RuntimeException();
     }
 
     @Inject(method = "renderSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderGuiItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V", shift = At.Shift.BEFORE))

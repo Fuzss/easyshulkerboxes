@@ -120,7 +120,7 @@ public class ItemDecorationHelper {
     private enum ItemDecoratorType {
         NONE("", -1),
         SPACE("+", ChatFormatting.YELLOW),
-        PRESENT_AND_SPACE("+", ChatFormatting.GREEN),
+        PRESENT_AND_SPACE("+", ChatFormatting.AQUA),
         PRESENT_NO_SPACE("+", ChatFormatting.RED);
 
         private final String text;

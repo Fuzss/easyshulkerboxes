@@ -42,7 +42,7 @@ public class MouseDraggingHandler {
         ItemContainerProvider provider = ItemContainerProvidersListener.INSTANCE.get(carriedStack);
         Minecraft minecraft = CommonScreens.INSTANCE.getMinecraft(screen);
         if (validMouseButton(button) && provider != null && provider.allowsPlayerInteractions(carriedStack, minecraft.player)) {
-            Slot slot = ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$findSlot(mouseX, mouseY);
+            Slot slot = ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$callFindSlot(mouseX, mouseY);
             if (slot != null) {
                 if (slot.hasItem() && !ClientInputActionHandler.precisionModeAllowedAndActive()) {
                     this.containerDragType = ContainerDragType.INSERT;
@@ -65,7 +65,7 @@ public class MouseDraggingHandler {
                 this.containerDragSlots.clear();
                 return Optional.empty();
             }
-            Slot slot = ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$findSlot(mouseX, mouseY);
+            Slot slot = ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$callFindSlot(mouseX, mouseY);
             AbstractContainerMenu menu = ((AbstractContainerScreen<?>) screen).getMenu();
             if (slot != null && menu.canDragTo(slot) && !this.containerDragSlots.contains(slot)) {
                 ItemStack carriedStack = menu.getCarried();
@@ -75,13 +75,14 @@ public class MouseDraggingHandler {
                 boolean interact = false;
                 if (this.containerDragType == ContainerDragType.INSERT && slot.hasItem() && provider.canAddItem(carriedStack, slot.getItem(), minecraft.player)) {
                     interact = true;
-                } else if (this.containerDragType == ContainerDragType.REMOVE && (button == InputConstants.MOUSE_BUTTON_RIGHT && !slot.hasItem() || slot.hasItem() && ClientInputActionHandler.precisionModeAllowedAndActive())) {
-                    if (!provider.getItemContainer(carriedStack, minecraft.player, false).isEmpty()) {
+                } else if (this.containerDragType == ContainerDragType.REMOVE) {
+                    boolean normalInteraction = button == InputConstants.MOUSE_BUTTON_RIGHT && !slot.hasItem() && !provider.getItemContainer(carriedStack, minecraft.player, false).isEmpty();
+                    if (normalInteraction || slot.hasItem() && ClientInputActionHandler.precisionModeAllowedAndActive()) {
                         interact = true;
                     }
                 }
                 if (interact) {
-                    ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$slotClicked(slot, slot.index, button, ClickType.PICKUP);
+                    ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$callSlotClicked(slot, slot.index, button, ClickType.PICKUP);
                     this.containerDragSlots.add(slot);
                     return Optional.of(Unit.INSTANCE);
                 }

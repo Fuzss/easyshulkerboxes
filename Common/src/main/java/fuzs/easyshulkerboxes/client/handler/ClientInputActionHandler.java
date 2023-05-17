@@ -26,6 +26,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class ClientInputActionHandler {
@@ -36,6 +37,7 @@ public class ClientInputActionHandler {
         // this must be sent before any slot click action is performed server side, by vanilla this can be caused by either mouse clicks (normal menu interactions)
         // or key presses (hotbar keys for swapping items to those slots)
         // this is already added via mixin to where vanilla sends the click packet, but creative screen doesn't use it, and you never know with other mods...
+        if (!(screen instanceof AbstractContainerScreen<?>)) return Optional.empty();
         Minecraft minecraft = CommonScreens.INSTANCE.getMinecraft(screen);
         ensureHasSentContainerClientInput(screen, minecraft.player);
         return Optional.empty();
@@ -45,8 +47,19 @@ public class ClientInputActionHandler {
         // this must be sent before any slot click action is performed server side, by vanilla this can be caused by either mouse clicks (normal menu interactions)
         // or key presses (hotbar keys for swapping items to those slots)
         // this is already added via mixin to where vanilla sends the click packet, but creative screen doesn't use it, and you never know with other mods...
+        if (!(screen instanceof AbstractContainerScreen<?>)) return Optional.empty();
         Minecraft minecraft = CommonScreens.INSTANCE.getMinecraft(screen);
         ensureHasSentContainerClientInput(screen, minecraft.player);
+        return Optional.empty();
+    }
+
+    public static Optional<Unit> onBeforeMouseRelease(Screen screen, double mouseX, double mouseY, int button) {
+        if (!(screen instanceof AbstractContainerScreen<?> containerScreen)) return Optional.empty();
+        // prevent vanilla double click feature from interfering with our precision mode, adding an unnecessary delay when quickly inserting items via left-click
+        // it wouldn't work anyway, and right-click is fine, leading to inconsistent behavior
+        if (precisionModeAllowedAndActive() && !getContainerStack(containerScreen, false).isEmpty()) {
+            ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$setDoubleclick(false);
+        }
         return Optional.empty();
     }
 
@@ -54,15 +67,11 @@ public class ClientInputActionHandler {
         // renders vanilla item tooltips when a stack is carried and the cursor hovers over a container item
         // intended to be used with single item extraction/insertion feature to be able to continuously see what's going on in the container item
         if (!(screen instanceof AbstractContainerScreen<?> containerScreen)) return;
-        if (EasyShulkerBoxes.CONFIG.get(ClientConfig.class).carriedItemTooltips.isActive()) {
-            ItemStack stack = containerScreen.getMenu().getCarried();
+        if (!EasyShulkerBoxes.CONFIG.get(ClientConfig.class).carriedItemTooltips.isActive()) return;
+        if (!containerScreen.getMenu().getCarried().isEmpty()) {
+            ItemStack stack = getContainerStack(containerScreen, false);
             if (!stack.isEmpty()) {
-                if (!renderProviderItemTooltip(screen, matrices, mouseX, mouseY, stack)) {
-                    Slot slot = CommonScreens.INSTANCE.getHoveredSlot(containerScreen);
-                    if (slot != null) {
-                        renderProviderItemTooltip(screen, matrices, mouseX, mouseY, slot.getItem());
-                    }
-                }
+                ((ScreenAccessor) screen).easyshulkerboxes$callRenderTooltip(matrices, stack, mouseX, mouseY);
             }
         }
     }
@@ -77,37 +86,52 @@ public class ClientInputActionHandler {
 
     public static Optional<Unit> onBeforeMouseScroll(Screen screen, double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         // allows to scroll between filled slots on a container items tooltip to select the slot to be interacted with next
-        if (verticalAmount == 0.0F || !(screen instanceof AbstractContainerScreen<?> containerScreen)) return Optional.empty();
+        if (verticalAmount == 0.0 || !(screen instanceof AbstractContainerScreen<?> containerScreen)) return Optional.empty();
         if (!EasyShulkerBoxes.CONFIG.get(ClientConfig.class).revealContents.isActive()) return Optional.empty();
         Slot slot = CommonScreens.INSTANCE.getHoveredSlot(containerScreen);
         if (precisionModeAllowedAndActive()) {
             if (slot != null) {
                 if (ItemContainerProvidersListener.INSTANCE.get(containerScreen.getMenu().getCarried()) != null || ItemContainerProvidersListener.INSTANCE.get(slot.getItem()) != null) {
-                    int mouseButton = verticalAmount > 0 ? InputConstants.MOUSE_BUTTON_RIGHT : InputConstants.MOUSE_BUTTON_LEFT;
-                    ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$slotClicked(slot, slot.index, mouseButton, ClickType.PICKUP);
+                    int mouseButton = (EasyShulkerBoxes.CONFIG.get(ClientConfig.class).invertPrecisionModeScrolling ? verticalAmount < 0.0 : verticalAmount > 0.0) ? InputConstants.MOUSE_BUTTON_RIGHT : InputConstants.MOUSE_BUTTON_LEFT;
+                    ((AbstractContainerScreenAccessor) screen).easyshulkerboxes$callSlotClicked(slot, slot.index, mouseButton, ClickType.PICKUP);
                     return Optional.of(Unit.INSTANCE);
                 }
             }
         } else if (EasyShulkerBoxes.CONFIG.get(ServerConfig.class).allowSlotCycling) {
-            ItemStack stack = containerScreen.getMenu().getCarried();
-            if (!stack.isEmpty() && !EasyShulkerBoxes.CONFIG.get(ClientConfig.class).carriedItemTooltips.isActive()) {
+            ItemStack carriedStack = containerScreen.getMenu().getCarried();
+            if (!carriedStack.isEmpty() && !EasyShulkerBoxes.CONFIG.get(ClientConfig.class).carriedItemTooltips.isActive()) {
                 return Optional.empty();
             }
-            ItemContainerProvider provider = ItemContainerProvidersListener.INSTANCE.get(stack);
-            if (slot != null && (provider == null || !provider.hasItemContainerData(stack))) {
-                provider = ItemContainerProvidersListener.INSTANCE.get(slot.getItem());
-                stack = slot.getItem();
-            }
-            if (provider != null && provider.hasItemContainerData(stack)) {
+            ItemStack stack = getContainerStack(containerScreen, true);
+            if (!stack.isEmpty()) {
                 Minecraft minecraft = CommonScreens.INSTANCE.getMinecraft(screen);
                 int currentContainerSlot = ContainerSlotHelper.getCurrentContainerSlot(minecraft.player);
+                ItemContainerProvider provider = ItemContainerProvidersListener.INSTANCE.get(stack);
+                Objects.requireNonNull(provider, "provider is null");
                 SimpleContainer container = provider.getItemContainer(stack, minecraft.player, false);
-                currentContainerSlot = ContainerSlotHelper.findClosestSlotWithContent(container, currentContainerSlot, verticalAmount < 0);
+                currentContainerSlot = ContainerSlotHelper.findClosestSlotWithContent(container, currentContainerSlot, verticalAmount < 0.0);
                 ContainerSlotHelper.setCurrentContainerSlot(minecraft.player, currentContainerSlot);
                 return Optional.of(Unit.INSTANCE);
             }
         }
         return Optional.empty();
+    }
+
+    public static ItemStack getContainerStack(AbstractContainerScreen<?> screen, boolean requireItemContainerData) {
+        ItemStack stack = screen.getMenu().getCarried();
+        ItemContainerProvider provider = ItemContainerProvidersListener.INSTANCE.get(stack);
+        if (provider != null && (!requireItemContainerData || provider.hasItemContainerData(stack))) {
+            return stack;
+        }
+        Slot slot = CommonScreens.INSTANCE.getHoveredSlot(screen);
+        if (slot != null) {
+            stack = slot.getItem();
+            provider = ItemContainerProvidersListener.INSTANCE.get(stack);
+            if (provider != null && (!requireItemContainerData || provider.hasItemContainerData(stack))) {
+                return stack;
+            }
+        }
+        return ItemStack.EMPTY;
     }
 
     public static Optional<Unit> onPlaySoundAtPosition(Entity entity, SoundEvent sound, SoundSource source, float volume, float pitch) {

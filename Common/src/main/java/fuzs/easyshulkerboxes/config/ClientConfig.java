@@ -28,6 +28,8 @@ public class ClientConfig implements ConfigCore {
     @Config(name = "carried_item_tooltips", description = {"Always show item tooltips while interacting with container items, even when the cursor is currently carrying an item.", ACTIVATION_TYPE_MESSAGE})
     @Config.AllowedValues(values = {"KEY", "ALWAYS", "SHIFT", "CONTROL", "ALT"})
     String carriedItemTooltipsRaw = KeyBindingTogglesHandler.ALT.getIdentifier();
+    @Config(description = "Invert scroll wheel direction for extracting / inserting items from a container item in precision mode.")
+    public boolean invertPrecisionModeScrolling = false;
 
     public HeldActivationType revealContents;
     public HeldActivationType selectedItemTooltips;

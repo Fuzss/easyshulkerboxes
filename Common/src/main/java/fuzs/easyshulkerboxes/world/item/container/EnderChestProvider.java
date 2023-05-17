@@ -10,6 +10,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -54,7 +55,13 @@ public class EnderChestProvider implements TooltipItemContainerProvider {
     public void broadcastContainerChanges(Player player) {
         // will only actually broadcast when in creative menu as that menu needs manual syncing
         if (player.level.isClientSide) {
-            ModRegistry.ENDER_CHEST_MENU_CAPABILITY.maybeGet(player).map(EnderChestMenuCapability::getEnderChestMenu).ifPresent(AbstractContainerMenu::broadcastChanges);
+            ModRegistry.ENDER_CHEST_MENU_CAPABILITY.maybeGet(player)
+                    .map(EnderChestMenuCapability::getEnderChestMenu)
+                    .ifPresent(AbstractContainerMenu::broadcastChanges);
+        } else if (player.containerMenu instanceof ChestMenu menu && menu.getContainer() == player.getEnderChestInventory()) {
+            ModRegistry.ENDER_CHEST_MENU_CAPABILITY.maybeGet(player)
+                    .map(EnderChestMenuCapability::getEnderChestMenu)
+                    .ifPresent(AbstractContainerMenu::broadcastFullState);
         }
     }
 
