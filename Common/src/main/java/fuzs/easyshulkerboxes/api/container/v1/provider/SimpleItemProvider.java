@@ -6,6 +6,7 @@ import fuzs.easyshulkerboxes.api.container.v1.tooltip.ContainerItemTooltip;
 import fuzs.easyshulkerboxes.impl.world.item.container.ItemInteractionHelper;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.DyeColor;
@@ -16,6 +17,8 @@ public class SimpleItemProvider extends NestedTagItemProvider {
     private final int inventoryWidth;
     private final int inventoryHeight;
     private boolean filterContainerItems;
+    @Nullable
+    private EquipmentSlot equipmentSlot;
 
     public SimpleItemProvider(int inventoryWidth, int inventoryHeight) {
         this(inventoryWidth, inventoryHeight, null, ItemInteractionHelper.TAG_ITEMS);
@@ -32,6 +35,11 @@ public class SimpleItemProvider extends NestedTagItemProvider {
         return this;
     }
 
+    public SimpleItemProvider equipmentSlot(@Nullable EquipmentSlot equipmentSlot) {
+        this.equipmentSlot = equipmentSlot;
+        return this;
+    }
+
     protected int getInventoryWidth() {
         return this.inventoryWidth;
     }
@@ -42,6 +50,11 @@ public class SimpleItemProvider extends NestedTagItemProvider {
 
     protected int getInventorySize() {
         return this.getInventoryWidth() * this.getInventoryHeight();
+    }
+
+    @Override
+    public boolean allowsPlayerInteractions(ItemStack containerStack, Player player) {
+        return super.allowsPlayerInteractions(containerStack, player) && (player.getAbilities().instabuild || this.equipmentSlot == null || player.getItemBySlot(this.equipmentSlot) == containerStack);
     }
 
     @Override
@@ -66,6 +79,9 @@ public class SimpleItemProvider extends NestedTagItemProvider {
         jsonObject.addProperty("inventory_height", this.getInventoryHeight());
         if (this.filterContainerItems) {
             jsonObject.addProperty("filter_container_items", true);
+        }
+        if (this.equipmentSlot != null) {
+            jsonObject.addProperty("equipment_slot", this.equipmentSlot.name());
         }
         super.toJson(jsonObject);
     }

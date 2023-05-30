@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v4.4.1-1.19.2] - 2023-05-30
+### Added
+- Added an optional slot definition where an item needs to be equipped for allowing inventory interactions
+### Removed
+- Removed default integration for the Backpacked mod, as preventing interactions when an item is placed in a custom slot (such as Backpacked's own slot, or Curios and Trinkets slots) is currently not supported
+
 ## [v4.4.0-1.19.2] - 2023-05-17
 ### Added
 - Added a fully data-driven system for defining support for Easy Shulker Boxes' features for any item using data packs

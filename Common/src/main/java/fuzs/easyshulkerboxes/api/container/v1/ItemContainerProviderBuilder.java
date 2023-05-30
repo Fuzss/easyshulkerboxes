@@ -4,10 +4,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fuzs.easyshulkerboxes.api.container.v1.provider.*;
+import fuzs.easyshulkerboxes.impl.client.helper.GsonEnumHelper;
 import fuzs.easyshulkerboxes.impl.world.item.container.ItemInteractionHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.Nullable;
@@ -28,6 +30,8 @@ public class ItemContainerProviderBuilder {
     private int capacity;
     private List<String> disallowedItems;
     private boolean anyGameMode;
+    @Nullable
+    private EquipmentSlot equipmentSlot;
 
     private ItemContainerProviderBuilder() {
 
@@ -63,11 +67,12 @@ public class ItemContainerProviderBuilder {
         JsonArray disallowedItemsData = GsonHelper.getAsJsonArray(jsonObject, "disallowed_items", new JsonArray());
         this.disallowedItems = StreamSupport.stream(disallowedItemsData.spliterator(), false).map(JsonElement::getAsString).toList();
         this.anyGameMode = GsonHelper.getAsBoolean(jsonObject, "any_game_mode", false);
+        this.equipmentSlot = GsonEnumHelper.getAsEnum(jsonObject, "equipment_slot", EquipmentSlot.class, null);
     }
 
     public ItemContainerProvider toSimpleItemContainerProvider() {
         this.checkInventorySize("item");
-        return new SimpleItemProvider(this.inventoryWidth, this.inventoryHeight, this.dyeColor, this.nbtKey);
+        return new SimpleItemProvider(this.inventoryWidth, this.inventoryHeight, this.dyeColor, this.nbtKey).equipmentSlot(this.equipmentSlot);
     }
 
     public ItemContainerProvider toBlockEntityProvider() {
@@ -75,13 +80,13 @@ public class ItemContainerProviderBuilder {
         Objects.requireNonNull(this.blockEntityType, getErrorMessage("block_entity_type", "block_entity"));
         BlockEntityProvider provider = new BlockEntityProvider(this.blockEntityType, this.inventoryWidth, this.inventoryHeight, this.dyeColor, this.nbtKey);
         if (this.anyGameMode) provider.anyGameMode();
-        return provider;
+        return provider.equipmentSlot(this.equipmentSlot);
     }
 
     public ItemContainerProvider toBlockEntityViewProvider() {
         this.checkInventorySize("block_entity_view");
         Objects.requireNonNull(this.blockEntityType, getErrorMessage("block_entity_type", "block_entity_view"));
-        return new BlockEntityViewProvider(this.blockEntityType, this.inventoryWidth, this.inventoryHeight, this.dyeColor, this.nbtKey);
+        return new BlockEntityViewProvider(this.blockEntityType, this.inventoryWidth, this.inventoryHeight, this.dyeColor, this.nbtKey).equipmentSlot(this.equipmentSlot);
     }
 
     public ItemContainerProvider toBundleProvider() {

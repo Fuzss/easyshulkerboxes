@@ -56,6 +56,7 @@ right-clicked from the hotbar. This provider is intended for backpack items from
 | `nbt_key`                | `false`  | The string key used in the item nbt tag to store inventory contents, defaults to `Items`. This is treated like a path with parts separated by `/` in case the inventory contents tag is not on the root level of the item tag. |
 | `disallowed_items`       | `false`  | Json array of items and item tags included by their internal identifier not allowed to be put into the container belonging to this item. Empty by default.                                                                     |
 | `filter_container_items` | `false`  | Are shulker boxes (and similar modded items) **NOT** allowed to be put into the container belonging to this item, defaults to `false`.                                                                                         |
+| `equipment_slot`         | `false`  | An equipment slot the item needs to be placed in to allow for inventory interactions in survival mode, like the chest slot for a backpack.                                                                                     |
 
 </details>
 
@@ -79,6 +80,7 @@ interacted with (adding/removing items) in creative mode by default.
 | `disallowed_items`       | `false`  | Json array of items and item tags included by their internal identifier not allowed to be put into the container belonging to this item. Empty by default.                                                                     |
 | `filter_container_items` | `false`  | Are shulker boxes (and similar modded items) **NOT** allowed to be put into the container belonging to this item, defaults to `false`.                                                                                         |
 | `any_game_mode`          | `false`  | Can the player interact with the item's inventory in any game mode, not just creative, defaults to `false`. This is enabled for the built-in shulker box providers.                                                            |
+| `equipment_slot`         | `false`  | An equipment slot the item needs to be placed in to allow for inventory interactions in survival mode, like the chest slot for a backpack.                                                                                     |
 
 </details>
 

@@ -28,7 +28,7 @@ public class ModItemContainerProvider extends AbstractItemContainerProvider {
     protected void registerBuiltInProviders() {
         this.registerVanillaProviders();
         BagOfHoldingIntegration.registerProviders(this::add);
-        BackpackedIntegration.registerProviders(this::add);
+//        BackpackedIntegration.registerProviders(this::add);
         SimpleBackpackIntegration.registerProviders(this::add);
         InmisIntegration.registerProviders(this::add);
         ReinforcedShulkerBoxesIntegration.registerProviders(this::add);
