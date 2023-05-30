@@ -1,9 +1,0 @@
-{
-  "item.container.tooltip.hold": "Hold",
-  "item.container.tooltip.press": "Press",
-  "item.container.tooltip.revealContents": "%s %s to reveal contents",
-  "key.categories.easyshulkerboxes": "Easy Shulker Boxes",
-  "key.toggleCarriedItemTooltips": "Toggle Carried Item Tooltips",
-  "key.toggleSelectedItemTooltips": "Toggle Selected Item Tooltips",
-  "key.toggleVisualItemContents": "Toggle Visual Item Contents"
-}

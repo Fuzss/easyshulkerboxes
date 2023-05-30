@@ -1,5 +1,5 @@
 {
-  "type": "easyshulkerboxes:item",
+  "type": "iteminteractionscore:item",
   "background_color": "white",
   "filter_container_items": true,
   "inventory_height": 3,

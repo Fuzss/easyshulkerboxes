@@ -1,5 +1,5 @@
 {
-  "type": "easyshulkerboxes:block_entity",
+  "type": "iteminteractionscore:block_entity",
   "any_game_mode": true,
   "background_color": "orange",
   "block_entity_type": "reinfshulker:netherite_shulker_box",

@@ -1,9 +1,9 @@
 package fuzs.easyshulkerboxes.integration.simplebackpack;
 
-import fuzs.easyshulkerboxes.api.container.v1.provider.ItemContainerProvider;
-import fuzs.easyshulkerboxes.api.container.v1.provider.BundleProvider;
-import fuzs.easyshulkerboxes.api.container.v1.provider.EnderChestProvider;
-import fuzs.easyshulkerboxes.api.container.v1.provider.SimpleItemProvider;
+import fuzs.iteminteractionscore.api.container.v1.provider.BundleProvider;
+import fuzs.iteminteractionscore.api.container.v1.provider.EnderChestProvider;
+import fuzs.iteminteractionscore.api.container.v1.provider.ItemContainerProvider;
+import fuzs.iteminteractionscore.api.container.v1.provider.SimpleItemProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 

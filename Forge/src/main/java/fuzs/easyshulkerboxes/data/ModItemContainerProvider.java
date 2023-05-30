@@ -1,17 +1,14 @@
 package fuzs.easyshulkerboxes.data;
 
-import fuzs.easyshulkerboxes.api.container.v1.provider.BlockEntityProvider;
-import fuzs.easyshulkerboxes.api.container.v1.provider.BlockEntityViewProvider;
-import fuzs.easyshulkerboxes.api.container.v1.provider.BundleProvider;
-import fuzs.easyshulkerboxes.api.container.v1.provider.EnderChestProvider;
-import fuzs.easyshulkerboxes.api.container.v1.data.AbstractItemContainerProvider;
-import fuzs.easyshulkerboxes.integration.backpacked.BackpackedIntegration;
-import fuzs.easyshulkerboxes.integration.bagofholding.BagOfHoldingIntegration;
 import fuzs.easyshulkerboxes.integration.inmis.InmisIntegration;
 import fuzs.easyshulkerboxes.integration.reinforcedshulkerboxes.ReinforcedShulkerBoxesIntegration;
 import fuzs.easyshulkerboxes.integration.simplebackpack.SimpleBackpackIntegration;
-import fuzs.easyshulkerboxes.world.item.container.*;
-import net.minecraft.data.DataGenerator;
+import fuzs.easyshulkerboxes.world.item.container.MapProvider;
+import fuzs.iteminteractionscore.api.container.v1.data.AbstractItemContainerProvider;
+import fuzs.iteminteractionscore.api.container.v1.provider.BlockEntityProvider;
+import fuzs.iteminteractionscore.api.container.v1.provider.BlockEntityViewProvider;
+import fuzs.iteminteractionscore.api.container.v1.provider.EnderChestProvider;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -20,15 +17,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class ModItemContainerProvider extends AbstractItemContainerProvider {
 
-    public ModItemContainerProvider(DataGenerator dataGenerator) {
-        super(dataGenerator);
+    public ModItemContainerProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
     protected void registerBuiltInProviders() {
         this.registerVanillaProviders();
-        BagOfHoldingIntegration.registerProviders(this::add);
-//        BackpackedIntegration.registerProviders(this::add);
         SimpleBackpackIntegration.registerProviders(this::add);
         InmisIntegration.registerProviders(this::add);
         ReinforcedShulkerBoxesIntegration.registerProviders(this::add);
@@ -37,7 +32,6 @@ public class ModItemContainerProvider extends AbstractItemContainerProvider {
     private void registerVanillaProviders() {
         this.registerShulkerBoxProviders();
         this.add(Items.ENDER_CHEST, new EnderChestProvider());
-        this.add(Items.BUNDLE, new BundleProvider(64));
         this.add(Items.FILLED_MAP, new MapProvider());
         this.add(Items.DROPPER, new BlockEntityProvider(BlockEntityType.DROPPER, 3, 3));
         this.add(Items.DISPENSER, new BlockEntityProvider(BlockEntityType.DISPENSER, 3, 3));
