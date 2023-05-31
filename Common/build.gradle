@@ -16,7 +16,7 @@ dependencies {
     }
 
     // Item Interactions Core
-    modApi "fuzs.iteminteractionscore:iteminteractionscore-common:5.0.1"
+    modApi "fuzs.iteminteractionscore:iteminteractionscore-common:${libs.versions.iteminteractionscore.get()}"
 
     // Puzzles Lib
     modApi "fuzs.puzzleslib:puzzleslib-common:${puzzlesVersion}"

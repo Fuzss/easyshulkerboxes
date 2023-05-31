@@ -49,7 +49,7 @@ dependencies {
     modApi "net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}"
 
     // Item Interactions Core
-    modApi include("fuzs.iteminteractionscore:iteminteractionscore-fabric:5.0.1")
+    modApi include("fuzs.iteminteractionscore:iteminteractionscore-fabric:${libs.versions.iteminteractionscore.get()}")
 
     // Quality of Life Mods
     modLocalRuntime "com.terraformersmc:modmenu:5.0.2"

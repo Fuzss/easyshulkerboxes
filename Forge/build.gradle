@@ -116,9 +116,9 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // Item Interactions Core
-    api fg.deobf("fuzs.iteminteractionscore:iteminteractionscore-forge:5.0.1")
-    jarJar fg.deobf("fuzs.iteminteractionscore:iteminteractionscore-forge:5.0.1") {
-        jarJar.ranged(it, "[5.0.0,)")
+    api fg.deobf("fuzs.iteminteractionscore:iteminteractionscore-forge:${libs.versions.iteminteractionscore.get()}")
+    jarJar fg.deobf("fuzs.iteminteractionscore:iteminteractionscore-forge:${libs.versions.iteminteractionscore.get()}") {
+        jarJar.ranged(it, "[${libs.versions.iteminteractionscore.get()},)")
         transitive = false
     }
 

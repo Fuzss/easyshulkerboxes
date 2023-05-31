@@ -1,7 +1,4 @@
-// 1.19.3	2023-05-30T16:03:16.303431	Item Container Provider
-cb89daac36897a1c18e3cc8aae8ba3a3acf43d18 data/bagofholding/item_container_providers/golden_bag_of_holding.json
-57a90ab16655e11e2382b5842e42eab532c62d5a data/bagofholding/item_container_providers/iron_bag_of_holding.json
-22f034c089b6e4b5fe1794c222c4f76524ef61d8 data/bagofholding/item_container_providers/leather_bag_of_holding.json
+// 1.19.3	2023-05-31T00:47:54.847331	Item Container Provider
 f6c9452f12d66d08e7030e38ad58ab391e862cae data/inmis/item_container_providers/baby_backpack.json
 55a8fa2d747b5437f1a832d8117c691855eca82e data/inmis/item_container_providers/bejeweled_backpack.json
 ca48b0b9bbb592c2021d8c80065794ce5efb28e5 data/inmis/item_container_providers/blazing_backpack.json

@@ -14,7 +14,7 @@ public class SimpleBackpackIntegration {
     public static void registerProviders(BiConsumer<ResourceLocation, ItemContainerProvider> consumer) {
         consumer.accept(id("ender_pack"), new EnderChestProvider());
         consumer.accept(id("backpack"), new SimpleItemProvider(9, 6, DyeColor.BROWN, "backpack/Items").filterContainerItems());
-        consumer.accept(id("simple_bundle"), new BundleProvider(3456));
+        consumer.accept(id("simple_bundle"), new BundleProvider(3456, DyeColor.BROWN));
     }
 
     public static ResourceLocation id(String path) {

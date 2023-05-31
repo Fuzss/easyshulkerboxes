@@ -7,6 +7,7 @@ import fuzs.easyshulkerboxes.world.item.container.MapProvider;
 import fuzs.iteminteractionscore.api.container.v1.data.AbstractItemContainerProvider;
 import fuzs.iteminteractionscore.api.container.v1.provider.BlockEntityProvider;
 import fuzs.iteminteractionscore.api.container.v1.provider.BlockEntityViewProvider;
+import fuzs.iteminteractionscore.api.container.v1.provider.BundleProvider;
 import fuzs.iteminteractionscore.api.container.v1.provider.EnderChestProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.DyeColor;
@@ -32,6 +33,7 @@ public class ModItemContainerProvider extends AbstractItemContainerProvider {
     private void registerVanillaProviders() {
         this.registerShulkerBoxProviders();
         this.add(Items.ENDER_CHEST, new EnderChestProvider());
+        this.add(Items.BUNDLE, new BundleProvider(64, DyeColor.BROWN));
         this.add(Items.FILLED_MAP, new MapProvider());
         this.add(Items.DROPPER, new BlockEntityProvider(BlockEntityType.DROPPER, 3, 3));
         this.add(Items.DISPENSER, new BlockEntityProvider(BlockEntityType.DISPENSER, 3, 3));
