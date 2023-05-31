@@ -41,7 +41,7 @@ dependencies {
     minecraft "com.mojang:minecraft:${minecraftVersion}"
     mappings loom.layered() {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${minecraftVersion}:${parchmentMappingsVersion}@zip")
+        parchment("org.parchmentmc.data:parchment-${parchmentMinecraftVersion}:${parchmentMappingsVersion}@zip")
     }
 
     // Fabric
@@ -52,8 +52,8 @@ dependencies {
     modApi include("fuzs.iteminteractionscore:iteminteractionscore-fabric:${libs.versions.iteminteractionscore.get()}")
 
     // Quality of Life Mods
-    modLocalRuntime "com.terraformersmc:modmenu:5.0.2"
-    modLocalRuntime "curse.maven:configured-fabric-667378:4441611"
+    modLocalRuntime "com.terraformersmc:modmenu:6.2.2"
+//    modLocalRuntime "curse.maven:configured-fabric-667378:4441611"
 
     // Puzzles Lib
     modApi "fuzs.puzzleslib:puzzleslib-fabric:${puzzlesVersion}"

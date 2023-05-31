@@ -36,13 +36,13 @@ public class ClientMapTooltip extends ExpandableClientTooltipComponent {
     }
 
     @Override
-    public void renderExpandedImage(Font font, int mouseX, int mouseY, PoseStack poseStack, ItemRenderer itemRenderer, int blitOffset) {
+    public void renderExpandedImage(Font font, int mouseX, int mouseY, PoseStack poseStack, ItemRenderer itemRenderer) {
         // thanks cartography table screen
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, MAP_BACKGROUND_CHECKERBOARD);
-        GuiComponent.blit(poseStack, mouseX, mouseY, blitOffset, 0, 0, 64, 64, 64, 64);
         poseStack.pushPose();
+        GuiComponent.blit(poseStack, mouseX, mouseY, 0, 0, 0, 64, 64, 64, 64);
         poseStack.translate(mouseX + 3, mouseY + 3, 500.0);
         poseStack.scale(0.45F, 0.45F, 1.0F);
         MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
