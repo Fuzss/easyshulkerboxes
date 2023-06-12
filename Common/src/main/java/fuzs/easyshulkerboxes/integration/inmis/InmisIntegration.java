@@ -26,9 +26,12 @@ public class InmisIntegration {
         consumer.accept(id("withered_backpack"), provider(11, 6, DyeColor.BLACK));
         consumer.accept(id("endless_backpack"), provider(15, 6, DyeColor.CYAN));
         consumer.accept(id("ender_pouch"), new EnderChestProvider());
+    }
+
+    public static void registerSerializers() {
         ItemContainerProviderSerializers.register(InmisProvider.class, EasyShulkerBoxes.id("inmis"), InmisProvider::fromJson);
     }
-    
+
     private static ItemContainerProvider provider(int inventoryWidth, int inventoryHeight, @Nullable DyeColor dyeColor) {
         return new InmisProvider(inventoryWidth, inventoryHeight, dyeColor, "Inventory").disallowValues(DISALLOWED_ITEMS);
     }
