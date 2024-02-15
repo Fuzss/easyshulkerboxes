@@ -1,0 +1,9 @@
+{
+  "type": "easyshulkerboxes:block_entity",
+  "any_game_mode": true,
+  "background_color": "magenta",
+  "block_entity_type": "reinfshulker:iron_shulker_box",
+  "filter_container_items": true,
+  "inventory_height": 6,
+  "inventory_width": 9
+}
