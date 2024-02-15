@@ -1,9 +1,9 @@
 package fuzs.easyshulkerboxes.integration.inmis;
 
 import fuzs.easyshulkerboxes.EasyShulkerBoxes;
-import fuzs.puzzlesapi.api.iteminteractions.v1.ItemContainerProviderSerializers;
-import fuzs.puzzlesapi.api.iteminteractions.v1.provider.EnderChestProvider;
-import fuzs.puzzlesapi.api.iteminteractions.v1.provider.ItemContainerProvider;
+import fuzs.iteminteractions.api.v1.ItemContainerProviderSerializers;
+import fuzs.iteminteractions.api.v1.provider.EnderChestProvider;
+import fuzs.iteminteractions.api.v1.provider.ItemContainerProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.Nullable;

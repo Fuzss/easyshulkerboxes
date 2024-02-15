@@ -3,7 +3,7 @@ package fuzs.easyshulkerboxes.client.gui.screens.inventory.tooltip;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.Tesselator;
 import fuzs.easyshulkerboxes.world.inventory.tooltip.MapTooltip;
-import fuzs.puzzlesapi.api.client.iteminteractions.v1.tooltip.ExpandableClientTooltipComponent;
+import fuzs.iteminteractions.api.v1.client.tooltip.ExpandableClientTooltipComponent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

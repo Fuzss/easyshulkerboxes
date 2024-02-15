@@ -2,7 +2,7 @@ package fuzs.easyshulkerboxes.world.item.container;
 
 import com.google.gson.JsonObject;
 import fuzs.easyshulkerboxes.world.inventory.tooltip.MapTooltip;
-import fuzs.puzzlesapi.api.iteminteractions.v1.provider.ItemContainerProvider;
+import fuzs.iteminteractions.api.v1.provider.ItemContainerProvider;
 import fuzs.puzzleslib.api.core.v1.Proxy;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

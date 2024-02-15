@@ -9,7 +9,7 @@
   "authors": [
     "${modAuthor}"
   ],
-  
+
   "contact": {
     "homepage": "${modPageUrl}",
     "issues": "${modIssueUrl}",
@@ -31,14 +31,15 @@
   },
 
   "mixins": [
-    "${modId}.common.mixins.json"
+    "${modId}.common.mixins.json",
+    "${modId}.fabric.mixins.json"
   ],
 
   "depends": {
     "fabricloader": ">=${minFabricVersion}",
     "fabric-api": ">=${minFabricApiVersion}",
     "puzzleslib": ">=${minPuzzlesVersion}",
-    "puzzlesapi": "*",
+    "iteminteractions": "*",
     "minecraft": "${minecraftVersion}",
     "java": ">=17"
   }

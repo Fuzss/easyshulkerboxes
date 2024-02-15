@@ -1,7 +1,7 @@
 package fuzs.easyshulkerboxes.integration.reinforcedshulkerboxes;
 
-import fuzs.puzzlesapi.api.iteminteractions.v1.provider.BlockEntityProvider;
-import fuzs.puzzlesapi.api.iteminteractions.v1.provider.ItemContainerProvider;
+import fuzs.iteminteractions.api.v1.provider.BlockEntityProvider;
+import fuzs.iteminteractions.api.v1.provider.ItemContainerProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.Nullable;

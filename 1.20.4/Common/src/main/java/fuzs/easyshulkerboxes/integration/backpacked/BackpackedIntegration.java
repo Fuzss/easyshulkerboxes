@@ -1,7 +1,7 @@
 package fuzs.easyshulkerboxes.integration.backpacked;
 
-import fuzs.puzzlesapi.api.iteminteractions.v1.provider.ItemContainerProvider;
-import fuzs.puzzlesapi.api.iteminteractions.v1.provider.SimpleItemProvider;
+import fuzs.iteminteractions.api.v1.provider.ItemContainerProvider;
+import fuzs.iteminteractions.api.v1.provider.SimpleItemProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 
