@@ -1,0 +1,9 @@
+{
+  "item.container.tooltip.hold": "按住",
+  "item.container.tooltip.press": "按",
+  "item.container.tooltip.revealContents": "%s %s 以查看内容物",
+  "key.categories.easyshulkerboxes": "轻松潜影盒管理",
+  "key.toggleCarriedItemTooltips": "切换携带物品信息显示",
+  "key.toggleSelectedItemTooltips": "切换选定物品信息显示",
+  "key.toggleVisualItemContents": "切换内容物显示"
+}
