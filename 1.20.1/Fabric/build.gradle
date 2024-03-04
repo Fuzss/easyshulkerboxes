@@ -1,4 +1,4 @@
-apply from: 'https://raw.githubusercontent.com/Fuzss/modresources/main/gradle/fabric.gradle'
+apply from: 'https://raw.githubusercontent.com/Fuzss/modresources/main/gradle/v1/fabric.gradle'
 
 def versionCatalog = extensions.getByType(VersionCatalogsExtension).named("libs")
 

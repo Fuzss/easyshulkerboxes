@@ -20,4 +20,4 @@ pluginManagement {
     }
 }
 
-apply from: 'https://raw.githubusercontent.com/Fuzss/modresources/main/gradle/settings.gradle'
+apply from: 'https://raw.githubusercontent.com/Fuzss/modresources/main/gradle/v1/settings.gradle'
