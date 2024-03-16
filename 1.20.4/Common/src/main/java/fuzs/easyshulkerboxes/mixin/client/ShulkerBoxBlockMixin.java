@@ -1,5 +1,6 @@
 package fuzs.easyshulkerboxes.mixin.client;
 
+import fuzs.iteminteractions.api.v1.ContainerItemHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -22,7 +23,9 @@ abstract class ShulkerBoxBlockMixin extends BaseEntityBlock {
     }
 
     @Inject(method = "appendHoverText", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;contains(Ljava/lang/String;I)Z", ordinal = 1, shift = At.Shift.BEFORE), cancellable = true)
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag, CallbackInfo callback) {
-        callback.cancel();
+    public void appendHoverText(ItemStack itemStack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag, CallbackInfo callback) {
+        if (!ContainerItemHelper.INSTANCE.getItemContainerBehavior(itemStack).isEmpty()) {
+            callback.cancel();
+        }
     }
 }

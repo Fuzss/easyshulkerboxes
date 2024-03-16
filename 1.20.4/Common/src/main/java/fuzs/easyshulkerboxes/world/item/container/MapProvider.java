@@ -17,6 +17,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+/**
+ * TODO make this extend {@link fuzs.iteminteractions.api.v1.provider.ItemContainerProviderImpl} when access is fixed.
+ */
 public class MapProvider implements ItemContainerProvider {
 
     @Override
