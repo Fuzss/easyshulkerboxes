@@ -1,0 +1,6 @@
+{
+  "type": "easyshulkerboxes:block_entity_view",
+  "block_entity_type": "minecraft:dispenser",
+  "inventory_height": 3,
+  "inventory_width": 3
+}
