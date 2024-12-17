@@ -1,0 +1,13 @@
+{
+  "type": "iteminteractions:container",
+  "disallowed_item_contents": [],
+  "equipment_slots": "any",
+  "filter_container_items": false,
+  "interaction_permissions": "never",
+  "inventory_height": 3,
+  "inventory_width": 3,
+  "supported_items": [
+    "minecraft:dispenser",
+    "minecraft:dropper"
+  ]
+}
