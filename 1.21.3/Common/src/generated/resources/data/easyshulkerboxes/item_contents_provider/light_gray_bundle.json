@@ -1,0 +1,7 @@
+{
+  "type": "iteminteractions:bundle",
+  "background_color": "light_gray",
+  "capacity_multiplier": 1,
+  "disallowed_item_contents": [],
+  "supported_items": "minecraft:light_gray_bundle"
+}

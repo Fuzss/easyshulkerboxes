@@ -7,23 +7,28 @@ import fuzs.puzzleslib.api.core.v1.utility.ResourceLocationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.MapRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.state.MapRenderState;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.saveddata.maps.MapId;
-import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
 public class ClientMapContentsTooltip extends ExpandableClientContentsTooltip {
-    private static final ResourceLocation MAP_BACKGROUND_CHECKERBOARD = ResourceLocationHelper.withDefaultNamespace("textures/map/map_background_checkerboard.png");
+    private static final ResourceLocation MAP_BACKGROUND_CHECKERBOARD = ResourceLocationHelper.withDefaultNamespace(
+            "textures/map/map_background_checkerboard.png");
 
-    private final MapId mapId;
-    private final MapItemSavedData savedData;
+    private final MapRenderer mapRenderer;
+    private final MapRenderState mapRenderState;
 
     public ClientMapContentsTooltip(MapContentsTooltip tooltip) {
-        this.mapId = tooltip.mapId();
-        this.savedData = tooltip.savedData();
+        Minecraft minecraft = Minecraft.getInstance();
+        this.mapRenderer = minecraft.getMapRenderer();
+        this.mapRenderState = new MapRenderState();
+        this.mapRenderer.extractRenderState(tooltip.mapId(), tooltip.savedData(), this.mapRenderState);
     }
 
     @Override
-    public int getExpandedHeight() {
+    public int getExpandedHeight(Font font) {
         return 64;
     }
 
@@ -35,13 +40,13 @@ public class ClientMapContentsTooltip extends ExpandableClientContentsTooltip {
     @Override
     public void renderExpandedImage(Font font, int mouseX, int mouseY, GuiGraphics guiGraphics) {
         // thanks cartography table screen
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         guiGraphics.pose().pushPose();
-        guiGraphics.blit(MAP_BACKGROUND_CHECKERBOARD, mouseX, mouseY, 0, 0, 0, 64, 64, 64, 64);
+        guiGraphics.blit(RenderType::guiTextured, MAP_BACKGROUND_CHECKERBOARD, mouseX, mouseY, 0, 0, 64, 64, 64, 64);
         guiGraphics.pose().translate(mouseX + 3, mouseY + 3, 500.0);
         guiGraphics.pose().scale(0.45F, 0.45F, 1.0F);
-        Minecraft minecraft = Minecraft.getInstance();
-        minecraft.gameRenderer.getMapRenderer().render(guiGraphics.pose(), guiGraphics.bufferSource(), this.mapId, this.savedData, true, 15728880);
+        guiGraphics.drawSpecial((MultiBufferSource bufferSource) -> {
+            this.mapRenderer.render(this.mapRenderState, guiGraphics.pose(), bufferSource, true, 0XF000F0);
+        });
         guiGraphics.pose().popPose();
     }
 }

@@ -3,10 +3,14 @@ package fuzs.easyshulkerboxes.data;
 import fuzs.easyshulkerboxes.world.item.container.MapProvider;
 import fuzs.iteminteractions.api.v1.DyeBackedColor;
 import fuzs.iteminteractions.api.v1.data.AbstractItemContentsProvider;
+import fuzs.iteminteractions.api.v1.provider.ItemContentsProvider;
 import fuzs.iteminteractions.api.v1.provider.impl.BundleProvider;
 import fuzs.iteminteractions.api.v1.provider.impl.ContainerProvider;
 import fuzs.iteminteractions.api.v1.provider.impl.EnderChestProvider;
 import fuzs.puzzleslib.api.data.v2.core.DataProviderContext;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -19,53 +23,61 @@ public class ModItemContentsProvider extends AbstractItemContentsProvider {
     }
 
     @Override
-    public void addItemProviders() {
-        this.registerVanillaProviders();
+    public void addItemProviders(HolderLookup.Provider registries) {
+        HolderLookup.RegistryLookup<Item> items = registries.lookupOrThrow(Registries.ITEM);
+        this.registerShulkerBoxProviders(items);
+        this.registerBundleProviders(items);
+        this.registerVanillaProviders(items);
     }
 
-    private void registerVanillaProviders() {
-        this.registerShulkerBoxProviders();
-        this.add(new EnderChestProvider(), Items.ENDER_CHEST);
-        this.add(new BundleProvider(1, DyeBackedColor.fromDyeColor(DyeColor.BROWN)), Items.BUNDLE);
-        this.add(new MapProvider(), Items.FILLED_MAP);
-        this.add("dispenser",
+    private void registerVanillaProviders(HolderLookup.RegistryLookup<Item> items) {
+        this.add(items, new EnderChestProvider(), Items.ENDER_CHEST);
+        this.add(items, new MapProvider(), Items.FILLED_MAP);
+        this.add(items,
+                "dispenser",
                 new ContainerProvider(3, 3).interactionPermissions(ContainerProvider.InteractionPermissions.NEVER),
                 Items.DISPENSER,
-                Items.DROPPER
-        );
-        this.add("chest",
+                Items.DROPPER);
+        this.add(items,
+                "chest",
                 new ContainerProvider(9, 3).interactionPermissions(ContainerProvider.InteractionPermissions.NEVER),
                 Items.CHEST,
                 Items.TRAPPED_CHEST,
-                Items.BARREL
-        );
-        this.add(new ContainerProvider(5, 1).interactionPermissions(ContainerProvider.InteractionPermissions.NEVER),
-                Items.HOPPER
-        );
-        this.add("furnace",
+                Items.BARREL);
+        this.add(items,
+                new ContainerProvider(5, 1).interactionPermissions(ContainerProvider.InteractionPermissions.NEVER),
+                Items.HOPPER);
+        this.add(items,
+                "furnace",
                 new ContainerProvider(3, 1).interactionPermissions(ContainerProvider.InteractionPermissions.NEVER),
                 Items.FURNACE,
                 Items.BLAST_FURNACE,
-                Items.SMOKER
-        );
-        this.add(new ContainerProvider(5, 1).interactionPermissions(ContainerProvider.InteractionPermissions.NEVER),
-                Items.BREWING_STAND
-        );
-        this.add("campfire",
+                Items.SMOKER);
+        this.add(items,
+                new ContainerProvider(5, 1).interactionPermissions(ContainerProvider.InteractionPermissions.NEVER),
+                Items.BREWING_STAND);
+        this.add(items,
+                "campfire",
                 new ContainerProvider(4, 1).interactionPermissions(ContainerProvider.InteractionPermissions.NEVER),
                 Items.CAMPFIRE,
-                Items.SOUL_CAMPFIRE
-        );
+                Items.SOUL_CAMPFIRE);
     }
 
-    private void registerShulkerBoxProviders() {
-        this.add(new ContainerProvider(9, 3).filterContainerItems(true), Items.SHULKER_BOX);
-        // only affects vanilla shulker boxes, other mods might add shulker boxes with a different inventory size
+    private void registerShulkerBoxProviders(HolderLookup.RegistryLookup<Item> items) {
+        this.add(items, new ContainerProvider(9, 3).filterContainerItems(true), Items.SHULKER_BOX);
         for (DyeColor dyeColor : DyeColor.values()) {
-            Item item = ShulkerBoxBlock.getBlockByColor(dyeColor).asItem();
-            this.add(new ContainerProvider(9, 3, DyeBackedColor.fromDyeColor(dyeColor)).filterContainerItems(true),
-                    item
-            );
+            ItemContentsProvider provider = new ContainerProvider(9,
+                    3,
+                    DyeBackedColor.fromDyeColor(dyeColor)).filterContainerItems(true);
+            this.add(items, provider, ShulkerBoxBlock.getBlockByColor(dyeColor).asItem());
+        }
+    }
+
+    private void registerBundleProviders(HolderLookup.RegistryLookup<Item> items) {
+        this.add(items, new BundleProvider(DyeBackedColor.fromDyeColor(DyeColor.BROWN)), Items.BUNDLE);
+        for (DyeColor dyeColor : DyeColor.values()) {
+            ItemContentsProvider provider = new BundleProvider(DyeBackedColor.fromDyeColor(dyeColor));
+            this.add(items, provider, BundleItem.getByColor(dyeColor));
         }
     }
 }
