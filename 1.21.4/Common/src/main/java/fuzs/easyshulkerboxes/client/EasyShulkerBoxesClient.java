@@ -24,8 +24,7 @@ public class EasyShulkerBoxesClient implements ClientModConstructor {
 
     @Override
     public void onConstructMod() {
-        ClientAbstractions.INSTANCE.registerConfigScreenFactory(EasyShulkerBoxes.MOD_ID,
-                new String[]{"iteminteractions"});
+        ClientAbstractions.INSTANCE.registerConfigScreenFactory(EasyShulkerBoxes.MOD_ID, "iteminteractions");
         registerEventHandlers();
     }
 
