@@ -1,7 +1,6 @@
 {
   "type": "iteminteractions:container",
   "background_color": "magenta",
-  "disallowed_item_contents": [],
   "equipment_slots": "any",
   "filter_container_items": true,
   "interaction_permissions": "always",
