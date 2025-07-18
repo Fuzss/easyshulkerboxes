@@ -7,9 +7,3 @@ dependencies {
     // Item Interactions
     modApi(include(libs.iteminteractions.neoforge.get()))
 }
-
-tasks.withType(net.fabricmc.loom.task.AbstractRunTask).configureEach {
-    doFirst {
-        patchLaunchCfg()
-    }
-}
