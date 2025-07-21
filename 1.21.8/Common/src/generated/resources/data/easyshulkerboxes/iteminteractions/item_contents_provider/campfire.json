@@ -1,7 +1,6 @@
 {
   "type": "iteminteractions:container",
   "equipment_slots": "any",
-  "filter_container_items": false,
   "interaction_permissions": "never",
   "inventory_height": 1,
   "inventory_width": 4,

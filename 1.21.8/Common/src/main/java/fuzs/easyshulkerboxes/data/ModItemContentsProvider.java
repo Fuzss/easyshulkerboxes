@@ -74,9 +74,12 @@ public class ModItemContentsProvider extends AbstractItemContentsProvider {
     }
 
     private void registerBundleProviders(HolderLookup.RegistryLookup<Item> items) {
-        this.add(items, new BundleProvider(DyeBackedColor.fromDyeColor(DyeColor.BROWN)), Items.BUNDLE);
+        this.add(items,
+                new BundleProvider(DyeBackedColor.fromDyeColor(DyeColor.BROWN)).filterContainerItems(true),
+                Items.BUNDLE);
         for (DyeColor dyeColor : DyeColor.values()) {
-            ItemContentsProvider provider = new BundleProvider(DyeBackedColor.fromDyeColor(dyeColor));
+            ItemContentsProvider provider = new BundleProvider(DyeBackedColor.fromDyeColor(dyeColor)).filterContainerItems(
+                    true);
             this.add(items, provider, BundleItem.getByColor(dyeColor));
         }
     }

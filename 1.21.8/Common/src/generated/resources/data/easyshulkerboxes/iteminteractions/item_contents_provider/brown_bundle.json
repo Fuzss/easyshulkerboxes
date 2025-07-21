@@ -2,5 +2,9 @@
   "type": "iteminteractions:bundle",
   "background_color": "brown",
   "capacity_multiplier": 1,
+  "item_contents": {
+    "disallow": true,
+    "filter_container_items": true
+  },
   "supported_items": "minecraft:brown_bundle"
 }

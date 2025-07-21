@@ -2,9 +2,12 @@
   "type": "iteminteractions:container",
   "background_color": "black",
   "equipment_slots": "any",
-  "filter_container_items": true,
   "interaction_permissions": "always",
   "inventory_height": 3,
   "inventory_width": 9,
+  "item_contents": {
+    "disallow": true,
+    "filter_container_items": true
+  },
   "supported_items": "minecraft:black_shulker_box"
 }
