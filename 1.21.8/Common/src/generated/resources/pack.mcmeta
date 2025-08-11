@@ -1,0 +1,10 @@
+{
+  "pack": {
+    "description": "Resources for Easy Shulker Boxes",
+    "pack_format": 81,
+    "supported_formats": [
+      0,
+      2147483647
+    ]
+  }
+}
