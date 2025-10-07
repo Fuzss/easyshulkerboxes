@@ -1,0 +1,12 @@
+{
+  "type": "iteminteractions:container",
+  "equipment_slots": "any",
+  "interaction_permissions": "never",
+  "inventory_height": 1,
+  "inventory_width": 3,
+  "supported_items": [
+    "minecraft:furnace",
+    "minecraft:blast_furnace",
+    "minecraft:smoker"
+  ]
+}

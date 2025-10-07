@@ -1,0 +1,11 @@
+{
+  "type": "iteminteractions:container",
+  "equipment_slots": "any",
+  "interaction_permissions": "never",
+  "inventory_height": 1,
+  "inventory_width": 4,
+  "supported_items": [
+    "minecraft:campfire",
+    "minecraft:soul_campfire"
+  ]
+}
