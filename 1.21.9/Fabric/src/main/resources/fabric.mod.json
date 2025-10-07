@@ -40,7 +40,6 @@
     "fabric-api": ">=${minFabricApiVersion}",
     "puzzleslib": ">=${minPuzzlesVersion}",
     "iteminteractions": "*",
-    "minecraft": "${minecraftVersion}",
-    "java": ">=17"
+    "minecraft": ">=${minecraftVersion}- <${upcomingMinecraftVersion}-"
   }
 }
