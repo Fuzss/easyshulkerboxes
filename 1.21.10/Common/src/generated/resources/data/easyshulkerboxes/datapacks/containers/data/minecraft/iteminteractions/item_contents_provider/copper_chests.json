@@ -1,0 +1,8 @@
+{
+  "type": "iteminteractions:container",
+  "equipment_slots": "any",
+  "interaction_permissions": "never",
+  "inventory_height": 3,
+  "inventory_width": 9,
+  "supported_items": "#minecraft:copper_chests"
+}

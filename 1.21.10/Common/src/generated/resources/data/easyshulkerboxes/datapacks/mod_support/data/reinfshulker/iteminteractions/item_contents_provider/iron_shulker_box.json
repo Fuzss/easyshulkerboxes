@@ -1,0 +1,12 @@
+{
+  "type": "iteminteractions:container",
+  "equipment_slots": "any",
+  "interaction_permissions": "always",
+  "inventory_height": 6,
+  "inventory_width": 9,
+  "item_contents": {
+    "disallow": true,
+    "filter_container_items": true
+  },
+  "supported_items": "reinfshulker:iron_shulker_box"
+}
