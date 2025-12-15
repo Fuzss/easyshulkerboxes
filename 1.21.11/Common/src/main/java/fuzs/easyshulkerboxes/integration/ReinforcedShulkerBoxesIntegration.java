@@ -3,10 +3,10 @@ package fuzs.easyshulkerboxes.integration;
 import fuzs.iteminteractions.api.v1.DyeBackedColor;
 import fuzs.iteminteractions.api.v1.provider.ItemContentsProvider;
 import fuzs.iteminteractions.api.v1.provider.impl.ContainerProvider;
-import fuzs.puzzleslib.api.core.v1.utility.ResourceLocationHelper;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 
@@ -16,7 +16,7 @@ public final class ReinforcedShulkerBoxesIntegration {
         // NO-OP
     }
 
-    public static void registerModProviders(BiConsumer<ResourceLocation, ItemContentsProvider> providerRegistrar) {
+    public static void registerModProviders(BiConsumer<Identifier, ItemContentsProvider> providerRegistrar) {
         for (ShulkerBoxMaterial material : ShulkerBoxMaterial.values()) {
             providerRegistrar.accept(material.id(),
                     new ContainerProvider(material.width, material.height, null).filterContainerItems(true));
@@ -29,8 +29,8 @@ public final class ReinforcedShulkerBoxesIntegration {
         }
     }
 
-    public static ResourceLocation id(String path) {
-        return ResourceLocationHelper.fromNamespaceAndPath("reinfshulker", path);
+    public static Identifier id(String path) {
+        return Identifier.fromNamespaceAndPath("reinfshulker", path);
     }
 
     private enum ShulkerBoxMaterial {
@@ -50,11 +50,11 @@ public final class ReinforcedShulkerBoxesIntegration {
             this.height = height;
         }
 
-        public ResourceLocation id() {
+        public Identifier id() {
             return this.id(null);
         }
 
-        public ResourceLocation id(@Nullable DyeColor dyeColor) {
+        public Identifier id(@Nullable DyeColor dyeColor) {
             String path = this.name + "_shulker_box";
             if (dyeColor != null) path = "%s_%s".formatted(dyeColor.getSerializedName(), path);
             return ReinforcedShulkerBoxesIntegration.id(path);

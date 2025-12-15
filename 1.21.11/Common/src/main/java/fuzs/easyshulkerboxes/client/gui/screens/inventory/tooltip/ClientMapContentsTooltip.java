@@ -2,20 +2,20 @@ package fuzs.easyshulkerboxes.client.gui.screens.inventory.tooltip;
 
 import fuzs.easyshulkerboxes.world.inventory.tooltip.MapContentsTooltip;
 import fuzs.iteminteractions.api.v1.client.tooltip.ExpandableClientContentsTooltip;
-import fuzs.puzzleslib.api.core.v1.utility.ResourceLocationHelper;
+import net.minecraft.resources.Identifier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MapRenderer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.state.MapRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ClientMapContentsTooltip extends ExpandableClientContentsTooltip {
-    private static final ResourceLocation MAP_BACKGROUND_CHECKERBOARD = ResourceLocationHelper.withDefaultNamespace(
+    private static final Identifier MAP_BACKGROUND_CHECKERBOARD = Identifier.withDefaultNamespace(
             "textures/map/map_background_checkerboard.png");
 
     private final MapRenderer mapRenderer = Minecraft.getInstance().getMapRenderer();

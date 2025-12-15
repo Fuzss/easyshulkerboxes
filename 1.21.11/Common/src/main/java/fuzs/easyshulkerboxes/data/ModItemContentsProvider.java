@@ -8,14 +8,14 @@ import fuzs.iteminteractions.api.v1.provider.ItemContentsProvider;
 import fuzs.iteminteractions.api.v1.provider.impl.BundleProvider;
 import fuzs.iteminteractions.api.v1.provider.impl.ContainerProvider;
 import fuzs.iteminteractions.api.v1.provider.impl.EnderChestProvider;
-import fuzs.puzzleslib.api.core.v1.utility.ResourceLocationHelper;
+import net.minecraft.resources.Identifier;
 import fuzs.puzzleslib.api.data.v2.core.DataProviderContext;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataProvider;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.DyeColor;
@@ -65,12 +65,12 @@ public abstract class ModItemContentsProvider extends AbstractItemContentsProvid
     }
 
     public final void registerContainerProviders(HolderLookup.RegistryLookup<Item> itemLookup) {
-        this.add(ResourceLocationHelper.withDefaultNamespace("dispenser"),
+        this.add(Identifier.withDefaultNamespace("dispenser"),
                 new ContainerProvider(3,
                         3).interactionPermissions(ContainerProvider.InteractionPermissions.CREATIVE_ONLY),
                 Items.DISPENSER,
                 Items.DROPPER);
-        this.add(ResourceLocationHelper.withDefaultNamespace("chest"),
+        this.add(Identifier.withDefaultNamespace("chest"),
                 new ContainerProvider(9,
                         3).interactionPermissions(ContainerProvider.InteractionPermissions.CREATIVE_ONLY),
                 Items.CHEST,
@@ -82,7 +82,7 @@ public abstract class ModItemContentsProvider extends AbstractItemContentsProvid
                 ItemTags.COPPER_CHESTS);
         this.add(new ContainerProvider(5,
                 1).interactionPermissions(ContainerProvider.InteractionPermissions.CREATIVE_ONLY), Items.HOPPER);
-        this.add(ResourceLocationHelper.withDefaultNamespace("furnace"),
+        this.add(Identifier.withDefaultNamespace("furnace"),
                 new ContainerProvider(3,
                         1).interactionPermissions(ContainerProvider.InteractionPermissions.CREATIVE_ONLY),
                 Items.FURNACE,
@@ -90,7 +90,7 @@ public abstract class ModItemContentsProvider extends AbstractItemContentsProvid
                 Items.SMOKER);
         this.add(new ContainerProvider(5,
                 1).interactionPermissions(ContainerProvider.InteractionPermissions.CREATIVE_ONLY), Items.BREWING_STAND);
-        this.add(ResourceLocationHelper.withDefaultNamespace("campfire"),
+        this.add(Identifier.withDefaultNamespace("campfire"),
                 new ContainerProvider(4,
                         1).interactionPermissions(ContainerProvider.InteractionPermissions.CREATIVE_ONLY),
                 Items.CAMPFIRE,
@@ -102,10 +102,10 @@ public abstract class ModItemContentsProvider extends AbstractItemContentsProvid
     }
 
     public final void registerModProviders(HolderLookup.RegistryLookup<Item> itemLookup) {
-        ReinforcedShulkerBoxesIntegration.registerModProviders((ResourceLocation resourceLocation, ItemContentsProvider provider) -> {
+        ReinforcedShulkerBoxesIntegration.registerModProviders((Identifier identifier, ItemContentsProvider provider) -> {
             Holder<Item> holder = Holder.Reference.createStandAlone(itemLookup,
-                    ResourceKey.create(Registries.ITEM, resourceLocation));
-            this.add(resourceLocation, provider, holder);
+                    ResourceKey.create(Registries.ITEM, identifier));
+            this.add(identifier, provider, holder);
         });
     }
 }
