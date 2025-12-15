@@ -1,0 +1,10 @@
+{
+  "type": "iteminteractions:bundle",
+  "background_color": "cyan",
+  "capacity_multiplier": 1,
+  "item_contents": {
+    "disallow": true,
+    "filter_container_items": true
+  },
+  "supported_items": "minecraft:cyan_bundle"
+}

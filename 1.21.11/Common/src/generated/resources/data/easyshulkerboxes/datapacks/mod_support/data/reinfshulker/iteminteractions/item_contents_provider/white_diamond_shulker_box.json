@@ -1,0 +1,13 @@
+{
+  "type": "iteminteractions:container",
+  "background_color": "white",
+  "equipment_slots": "any",
+  "interaction_permissions": "always",
+  "inventory_height": 9,
+  "inventory_width": 12,
+  "item_contents": {
+    "disallow": true,
+    "filter_container_items": true
+  },
+  "supported_items": "reinfshulker:white_diamond_shulker_box"
+}
